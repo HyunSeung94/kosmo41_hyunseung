@@ -4,7 +4,7 @@ public class Quiz4 {
 
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
-		int num;
+		int num = 0;
 		int num1 = 0;
 		
 		do {
@@ -18,3 +18,4 @@ public class Quiz4 {
 	}
 
 }
+
