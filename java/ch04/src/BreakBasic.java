@@ -12,8 +12,8 @@ public class BreakBasic {
 				break;  // while문을 탈출								
 			}
 			
-			num++;  
-			//num = num +2;
+			//num++;  
+			num = num +2;
 		}
 		if(search)
 			System.out.println("찾는 정수 : " + num);

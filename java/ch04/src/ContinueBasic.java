@@ -7,7 +7,7 @@ public class ContinueBasic {
 		
 		while(num < 100) {
 			num++;
-			if(((num % 5) != 0) || ((num % 7) != 0))
+			if(((num % 5) != 0) || ((num % 7) != 0))  //  num이 5일때%5가 0이성립되지만 %7은 성립이안되므로
 			{		
 				continue;
 			}
