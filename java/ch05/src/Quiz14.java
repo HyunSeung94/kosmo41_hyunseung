@@ -15,11 +15,12 @@ public class Quiz14 {
 
 		for (A = 0; A <= 9; A++) {
 			for (Z = 9; Z <= 9; Z--) {
-				if (A == Z)
-				continue;
+
 				sum = (10 * A + Z) + (10 * Z + A);
-				if(sum==99)
-					System.out.println("결과값: "+A +Z+"+"+Z+A+" = "+sum);
+
+				if (sum == 99)
+					System.out.println("결과값: " + A + Z + "+" + Z + A + " = " + sum);
+
 			}
 		}
 	}

@@ -3,13 +3,13 @@ public class Constants {
 
 	public static void main(String[] args) {
 		final int MAX_SIZE = 100;
-		final char CONST_CHAR = 'ìƒ';
+		final char CONST_CHAR = '»ó';
 		final int CONST_ASSIGNED;
 		
-		CONST_ASSIGNED = 12;    //í• ë‹¹í•˜ì§€ ì•Šì•˜ë˜ ìƒìˆ˜ì˜ ê°’ í• ë‹¹
-		System.out.println("ìƒìˆ˜1 : " + MAX_SIZE);
-		System.out.println("ìƒìˆ˜2 : " + CONST_CHAR);
-		System.out.println("ìƒìˆ˜3 : " + CONST_ASSIGNED);
+		CONST_ASSIGNED = 12;    //ÇÒ´çÇÏÁö ¾Ê¾Ò´ø »ó¼öÀÇ °ª ÇÒ´ç
+		System.out.println("»ó¼ö1 : " + MAX_SIZE);
+		System.out.println("»ó¼ö2 : " + CONST_CHAR);
+		System.out.println("»ó¼ö3 : " + CONST_ASSIGNED);
 	}
 
 }
