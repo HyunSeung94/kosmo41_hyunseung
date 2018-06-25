@@ -1,7 +1,7 @@
-//¹®Á¦ 05-07
-//ÇĞ»ıÀÇ ±³³» ÀüÃ¼ Æò±ÕÁ¡¼ö¿¡ ´ëÇÑ ÇĞÁ¡À» Ãâ·ÂÇÏ´Â ÇÁ·Î±×·¥À» ÀÛ¼ºÇÏ¶ó.
-//½ÇÇà½Ã ±¹¾î, ¿µ¾î, ¼öÇĞÀÇ Á¡¼ö¸¦ Â÷·Ê·Î ÀÔ·Â¹ŞÀº ÈÄ Æò±ÕÀ» ±¸ÇÑ ÈÄ
-//90Á¡ÀÌ»ó A, 80Á¡ÀÌ»ó B, 70Á¡ÀÌ»ó C, 50Á¡ÀÌ»ó D, ±× ¹Ì¸¸ÀÌ¸é F¸¦ Ãâ·ÂÇÑ´Ù.
+//ë¬¸ì œ 05-07
+//í•™ìƒì˜ êµë‚´ ì „ì²´ í‰ê· ì ìˆ˜ì— ëŒ€í•œ í•™ì ì„ ì¶œë ¥í•˜ëŠ” í”„ë¡œê·¸ë¨ì„ ì‘ì„±í•˜ë¼.
+//ì‹¤í–‰ì‹œ êµ­ì–´, ì˜ì–´, ìˆ˜í•™ì˜ ì ìˆ˜ë¥¼ ì°¨ë¡€ë¡œ ì…ë ¥ë°›ì€ í›„ í‰ê· ì„ êµ¬í•œ í›„
+//90ì ì´ìƒ A, 80ì ì´ìƒ B, 70ì ì´ìƒ C, 50ì ì´ìƒ D, ê·¸ ë¯¸ë§Œì´ë©´ Fë¥¼ ì¶œë ¥í•œë‹¤.
 import java.util.Scanner;
 
 public class Quiz7 {
@@ -9,31 +9,26 @@ public class Quiz7 {
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 		int sum = 0;
-		System.out.println("±¹¾î Á¡¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println("êµ­ì–´ ì ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”");
 		int A = s.nextInt();
 		System.out.println(sum+A);
-		System.out.println("¿µ¾î Á¡¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println("ì˜ì–´ ì ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”");
 		int B = s.nextInt();
 		System.out.println(sum+B);
-		System.out.println("¼öÇĞ Á¡¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println("ìˆ˜í•™ ì ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”");
 		int C = s.nextInt();
 		System.out.println(sum+C);
 		
 		int f = ((sum+A+B+C)/3);
 		if(f >= 90 ) 
-			System.out.println("ÇĞÁ¡ A");
+			System.out.println("í•™ì  A");
 		else if(f >= 80 )
-			System.out.println("ÇĞÁ¡ B");
+			System.out.println("í•™ì  B");
 		else if(f >= 70)
-			System.out.println("ÇĞÁ¡ C");
+			System.out.println("í•™ì  C");
 		else if(f >= 50)
-			System.out.println("ÇĞÁ¡ D");
+			System.out.println("í•™ì  D");
 		else if(f < 50)
-			System.out.println("ÇĞÁ¡ F");
-		
-		
-		
-
+			System.out.println("í•™ì  F");
 	}
-
 }

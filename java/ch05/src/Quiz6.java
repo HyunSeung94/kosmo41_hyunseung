@@ -1,22 +1,16 @@
-//¹®Á¦ 05-06
-//»ç¿ëÀÚ·ÎºÎÅÍ Á¤¼ö ÇÏ³ª¸¦ ÀÔ·Â¹ÞÀº ÈÄ ±× ¼ö¿¡ ÇØ´çÇÏ´Â ±¸±¸´ÜÀ» ¿ª¼øÀ¸·Î Ãâ·ÂÇÏ½Ã¿À.		
+//ë¬¸ì œ 05-06
+//ì‚¬ìš©ìžë¡œë¶€í„° ì •ìˆ˜ í•˜ë‚˜ë¥¼ ìž…ë ¥ë°›ì€ í›„ ê·¸ ìˆ˜ì— í•´ë‹¹í•˜ëŠ” êµ¬êµ¬ë‹¨ì„ ì—­ìˆœìœ¼ë¡œ ì¶œë ¥í•˜ì‹œì˜¤.
+	
 import java.util.Scanner;
 
 public class Quiz6 {
 
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
-		System.out.println("Á¤¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println("ì •ìˆ˜ë¥¼ ìž…ë ¥í•˜ì„¸ìš”");
 		int z = s.nextInt();
 			for(int j = 9; j > 0; j-- ) {
 				System.out.println(z + " x " + j + " = " + (z * j));
 			}
 		}
-	
-			  
-				
-				
-		
-
-	
 	}

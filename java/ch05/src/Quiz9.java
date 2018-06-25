@@ -1,6 +1,5 @@
-//¹®Á¦ 05-09  
-//1ºÎÅÍ 100±îÁö Á¤¼öÁß¿¡¼­ Â¦¼öÀÇ ÇÕÀ» ±¸ÇÏ¶ó. ´Ü do~while¹®À» ÀÌ¿ëÇÏ¶ó
-
+//ë¬¸ì œ 05-09  
+//1ë¶€í„° 100ê¹Œì§€ ì •ìˆ˜ì¤‘ì—ì„œ ì§ìˆ˜ì˜ í•©ì„ êµ¬í•˜ë¼. ë‹¨ do~whileë¬¸ì„ ì´ìš©í•˜ë¼
 public class Quiz9 {
 
 	public static void main(String[] args) {
@@ -14,10 +13,7 @@ public class Quiz9 {
 				num++;			 
 			 }while(num <= 100);
 		
-		System.out.println(" 1 ~100 ±îÁö Â¦¼öÀÇ ÇÕ = "  + sum);
+		System.out.println(" 1 ~100 ê¹Œì§€ ì§ìˆ˜ì˜ í•© = "  + sum);
 
 		}
 }
-
-
-

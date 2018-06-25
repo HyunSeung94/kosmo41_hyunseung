@@ -1,15 +1,14 @@
-/*
-¹®Á¦ 05-11
-Á¤¼ö ÇÏ³ª¸¦ ÀÔ·Â¹ŞÀºÈÄ ±× ¼öÀÇ
-ÆÑÅä¸®¾ó ÇÔ¼öÀÇ °á°ú¸¦ Ãâ·ÂÇÏ´Â ÇÁ·Î±×·¥À» while¹®À» ÀÌ¿ëÇÏ¿© ±¸ÇöÇÏ½Ã¿À.
-Ãâ·Â¿¹) ÀÔ·ÂÁ¤¼ö : 5*4*3*2*1 = 120
+/*ë¬¸ì œ 05-11
+ì •ìˆ˜ í•˜ë‚˜ë¥¼ ì…ë ¥ë°›ì€í›„ ê·¸ ìˆ˜ì˜
+íŒ©í† ë¦¬ì–¼ í•¨ìˆ˜ì˜ ê²°ê³¼ë¥¼ ì¶œë ¥í•˜ëŠ” í”„ë¡œê·¸ë¨ì„ whileë¬¸ì„ ì´ìš©í•˜ì—¬ êµ¬í˜„í•˜ì‹œì˜¤.
+ì¶œë ¥ì˜ˆ) ì…ë ¥ì •ìˆ˜ : 5*4*3*2*1 = 120
  */
 import java.util.Scanner;
 public class Quiz11 {
 
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
-		System.out.println(" Á¤¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println(" ì •ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”");
 		int num = s.nextInt();
 		int sum = 1;
 		
@@ -19,7 +18,7 @@ public class Quiz11 {
 			System.out.println(sum);
 			num--;			
 		}
-		System.out.println(" ÆÑÅä¸®¾ó ÇÔ¼ö °á°ú = " + sum);
+		System.out.println(" íŒ©í† ë¦¬ì–¼ í•¨ìˆ˜ ê²°ê³¼ = " + sum);
 
 	}
 
