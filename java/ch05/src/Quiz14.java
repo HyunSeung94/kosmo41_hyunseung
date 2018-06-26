@@ -9,6 +9,7 @@
 public class Quiz14 {
 
 	public static void main(String[] args) {
+
 		int A = 0;
 		int Z = 0;
 		int sum = 0;
