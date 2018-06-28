@@ -11,7 +11,7 @@ noon, level 과 같은 단어들이 회문에 속한다.
 회문이 아닙니다.
 */
 import java.util.Scanner;
-public class Quiz5 {
+public class Quiz13_5 {
 
 	public static void main(String[] args) {
 		
