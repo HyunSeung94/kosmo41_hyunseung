@@ -1,3 +1,4 @@
+
 /*문제5
 ( 01.수업용 문서 - 06.입력글자 배열로 문서 참조 )
 회문(Palindrome)은 앞 or 뒤에서 읽어도 동일한 단어를 뜻한다.
@@ -11,10 +12,11 @@ noon, level 과 같은 단어들이 회문에 속한다.
 회문이 아닙니다.
 */
 import java.util.Scanner;
+
 public class Quiz13_5 {
 
 	public static void main(String[] args) {
-		
+
 		Scanner s = new Scanner(System.in);
 
 		System.out.println("단어를 입력해주세요");
@@ -22,14 +24,13 @@ public class Quiz13_5 {
 
 		String[] arr = new String[word.length()]; // 스트링을 담을 배열
 
-		for(int i=0;i<arr.length;i++){ //스트링을 한글자씩 끊어 배열에 저장
+		for (int i = 0; i < arr.length; i++) { // 스트링을 한글자씩 끊어 배열에 저장
 			arr[i] = Character.toString(word.charAt(i));
 		}
 
-// 출력 테스트용… 실제 사용시 안써도 됨.
-		for(int i=0;i<arr.length;i++){
-			System.out.print(arr[i]);
-		}
+		// 출력 테스트용… 실제 사용시 안써도 됨.
+		String a ; String b ;
+		a = ar
+
 	}
 }
-	
