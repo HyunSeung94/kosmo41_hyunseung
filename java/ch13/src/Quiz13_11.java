@@ -1,38 +1,15 @@
-
-/*내가 생각한 숫자를 컴퓨터가 맞춘다.
-내가 생각한 숫자보다 크면 h 라고 입력한다.
-내가 생각한 숫자보다 작으면 l 이라고 입력한다.
-내가 생각한  숫자와 같으면 y 라고 입력한다.
- */
-import java.util.Random;
-import java.util.Scanner;
-
+/*중복되지 않는 3개의 정수를 생성한다.
+사용자는 3개의 숫자를 입력한다.
+생성된 3개의 숫자를 맞추는데 위치까지 정확히 맞춰야 한다.숫자와 숫자의 위치까지 일치하면 strike 로 판정한다.
+숫자는 맞지만 위치가 틀렸다면 ball로 판정한다.
+숫자3개가 모두 일치하지 않으면  out으로 판정한다.
+3 strike 가 되면 게임은 종료된다.
+시도한 횟수를 표시한다.
+*/
 public class Quiz13_11 {
 
 	public static void main(String[] args) {
-		System.out.println("내가 생각한 숫자를 컴퓨터가 맞춘다. 1~100 범위");
-		System.out.println("내가 생각한 숫자보다 크면 h 라고 입력한다.");
-		System.out.println("내가 생각한 숫자보다 작으면 l 이라고 입력한다.");
-		System.out.println("내가 생각한  숫자와 같으면 y 라고 입력한다");
-		Scanner s = new Scanner(System.in);
-		int max = 100;  int min = 0;
-		String text;
-		while(true) {
-			System.out.println("is it = "+(min+max)/2);
-			text = s.next();
-			if(text.equals("h")) {
-				min = (min + max) / 2;
-			}
-			else if(text.equals("l")) {
-				max = (min + max) / 2;
 
-			}
-			else if(text.equals("y")) {
-				System.out.println("끝이요.");
-				break;
-			}
-		
-		}
 
 	}
 

@@ -9,15 +9,14 @@ public class E2_TwoDimenArray {
 			for (int j = 0; j < 4; j++) {
 				arr[i][j] = num;
 				num++;
-
 			}
 		}
 		// 배열에 저장된 값을 출력
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 4; j++) {
 			System.out.print(arr[i][j] + "\t");
-			}
+			}		System.out.println();
 		}
-		System.out.println();
+
 	}
 }

@@ -15,6 +15,7 @@ public class Quiz13_6 {
 					System.out.println();
 				}
 			}
+			
 		}
 
 	}
