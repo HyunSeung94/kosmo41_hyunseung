@@ -28,9 +28,21 @@ public class Quiz13_5 {
 			arr[i] = Character.toString(word.charAt(i));
 		}
 
-		// 출력 테스트용… 실제 사용시 안써도 됨.
-		String a ; String b ;
-		a = ar
+		int a = arr.length;
+		int b = 1;
+		int c = 0;
+
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i].equals(arr[a - b])) {
+				b++;
+				c= c+1;
+			} else {
+				System.out.println("회문이 아닙니다."); break;
+		} 
+		}
+		if (a == c) {
+			System.out.println("회문입니다.");
+		}
 
 	}
 }
