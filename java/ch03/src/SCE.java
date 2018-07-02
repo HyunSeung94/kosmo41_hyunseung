@@ -1,5 +1,5 @@
-
-public class SCE {   //SCE µ¿ÀÛÀ» È®ÀÎÇÏ´Â ¿¹Á¦
+//SCE ì£¼ì˜ì ! 
+public class SCE { 
 
 	public static void main(String[] args) {
 		int num1 = 0;
@@ -9,7 +9,7 @@ public class SCE {   //SCE µ¿ÀÛÀ» È®ÀÎÇÏ´Â ¿¹Á¦
 		result = ((num1 += 10) < 0) && ((num2 += 10) > 0);
 		System.out.println("result = " + result);
 		System.out.println("num1 = " + num1);
-		System.out.println("num2 = " + num2 + '\n');   //'\n'Àº °³Çà
+		System.out.println("num2 = " + num2 + '\n');   //'\n'ì€ ê°œí–‰
 		
 		result = ((num1 += 10) > 0) || ((num2 += 10) > 0);
 		System.out.println("result = " + result);

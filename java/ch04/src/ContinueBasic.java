@@ -7,12 +7,12 @@ public class ContinueBasic {
 		
 		while(num < 100) {
 			num++;
-			if(((num % 5) != 0) || ((num % 7) != 0))  //  numÀÌ 5ÀÏ¶§%5°¡ 0ÀÌ¼º¸³µÇÁö¸¸ %7Àº ¼º¸³ÀÌ¾ÈµÇ¹Ç·Î
+			if(((num % 5) != 0) || ((num % 7) != 0))  //  5ì™€ 7ì˜ ë°°ìˆ˜ì•„ë‹ˆë¼ë©´ ë‚˜ë¨¸ì§€ ê±´ë„ˆë›°ê³  ìœ„ë¡œì´ë™??
 			{		
 				continue;
 			}
 			count++;
-			System.out.println(num);  // 5¿Í 7ÀÇ ¹è¼öÀÎ °æ¿ì¸¸ ½ÇÇà
+			System.out.println(num);  // 5ì™€ 7ì˜ ë°°ìˆ˜ì¸ ê²½ìš°ë§Œì‹¤í–‰
 		}
 		System.out.println("count: " + count);
 

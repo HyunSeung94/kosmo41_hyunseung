@@ -3,15 +3,15 @@ public class preifxOp {
 
 	public static void main(String[] args) {
 		int num = 7;
-		System.out.println(++num);    // numÀÇ °ª ÇÏ³ª Áõ°¡ÈÄ Ãâ·Â
-		System.out.println(++num);    // numÀÇ °ª ÇÏ³ª Áõ°¡ÈÄ Ãâ·Â
+		System.out.println(++num);    // num ì¶œë ¥ì „ ê°’ì´ ì¦ê°€
+		System.out.println(++num);    // num ì¶œë ¥ì „ ê°’ì´ ì¦ê°€.
 		System.out.println(num);
 		
 		System.out.println("----------------");
 		
 		int num2 = 7;
-		System.out.println(num2++);    // numÀÇ °ª Ãâ·Â ÈÄ Áõ°¡
-		System.out.println(num2++);    // numÀÇ °ª Ãâ·Â ÈÄ Áõ°¡
+		System.out.println(num2++);    // numì¶œë ¥í›„ì— ê°’ì´ ê°ì†Œ
+		System.out.println(num2++);    // numì¶œë ¥í›„ì— ê°’ì´ ê°ì†Œ 
 		System.out.println(num2);
 
 	}

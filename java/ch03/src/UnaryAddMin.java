@@ -3,12 +3,12 @@ public class UnaryAddMin {
 
 	public static void main(String[] args) {
 		short num1 = 5;
-		System.out.println(+num1);   //°á°úÀûÀ¸·Î ºÒÇÊ¿äÇÑ + ¿¬»ê
-		System.out.println(-num1);   //ºÎÈ£¸¦ ¹Ù²ã¼­ ¾òÀº °á°ú¸¦ Ãâ·Â
+		System.out.println(+num1);   //ê²°ê³¼ì ìœ¼ë¡œ ë¶ˆí•„ìš”í•œ +ì—°ì‚°
+		System.out.println(-num1);   //ë¶€í˜¸ë¥¼ ë°”ê¿”ì„œ ì–»ì€ ê²°ê³¼ë¥¼ ì¶œë ¥
 		
 		short num2 = 7;
-		short num3 = (short)(+num2);   // Çü º¯È¯ ÇÏÁö ¾ÊÀ¸¸é ¿À·ù ¹ß»ı
-		short num4 = (short)(-num2);   // Çü º¯È¯ ÇÏÁö ¾ÊÀ¸¸é ¿À·ù ¹ß»ı
+		short num3 = (short)(+num2);   // í˜• ë³€í™˜ í•˜ì§€ ì•Šìœ¼ë©´ ì˜¤ë¥˜ ë°œìƒ
+		short num4 = (short)(-num2);   // í˜• ë³€í™˜ í•˜ì§€ ì•Šìœ¼ë©´ ì˜¤ë¥˜ ë°œìƒ
 		System.out.println(num3);
 		System.out.println(num4);
 

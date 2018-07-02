@@ -5,20 +5,20 @@ public class BreakBasic {
 		int num = 1;
 		boolean search = false;
 		
-		// Ã³À½ ¸¸³ª´Â 5ÀÇ ¹è¼öÀÌÀÚ 7ÀÇ ¹è¼öÀÎ ¼ö¸¦ Ã£´Â ¹İº¹¹®
+		// ì²˜ìŒ ë§Œë‚˜ëŠ” 5ì˜ë°°ìˆ˜ì´ì 7ì˜ ë°°ìˆ˜ì¸ ìˆ˜ë¥¼ ì°¾ëŠ” ë°˜ë³µë¬¸
 		while(num < 100) {
 			if (((num % 5) == 0 ) && ((num % 7) == 0 )) {
 				search = true;
-				break;  // while¹®À» Å»Ãâ								
+				break;  // whileã…ë¬¸ì„ íƒˆì¶œ							
 			}
 			
 			//num++;  
 			num = num +2;
 		}
 		if(search)
-			System.out.println("Ã£´Â Á¤¼ö : " + num);
+			System.out.println("ì°¾ëŠ” ì •ìˆ˜ : " + num);
 		else
-			System.out.println("5ÀÇ ¹è¼öÀÌÀÚ 7ÀÇ ¹è¼öÀÎ ¼ö¸¦ Ã£Áö ¸øÇß½À´Ï´Ù.");
+			System.out.println("5ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 7ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
 	}
 
 }
