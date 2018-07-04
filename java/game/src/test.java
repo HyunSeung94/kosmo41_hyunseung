@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Puzzle {
+public class test {
 
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
@@ -180,10 +180,6 @@ public class Puzzle {
 
 			if (Arrays.deepEquals(arr, arr1)) { // 배열끼리 비교문
 				System.out.println("정답입니다.. 수고하셧습니다! ");
-				break;
-			}
-			if(a.equals("k")) {
-				System.out.println("게임이 종료되었습니다.");
 				break;
 			}
 
