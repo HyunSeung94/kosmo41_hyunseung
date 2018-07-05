@@ -14,7 +14,7 @@ public class test {
 
 		int c = 0;
 		do {
-			int b = rand.nextInt(4) ;
+			int b = rand.nextInt(4);
 			if (b == 0) {
 				for (int i = 0; i < arr.length; i++) {
 					for (int j = 0; j < arr.length; j++) {
@@ -43,7 +43,7 @@ public class test {
 							change = arr[i][j];
 							arr[i][j] = arr[i][j + 1];
 							arr[i][j + 1] = change;
-							
+
 						}
 					}
 				}
@@ -72,7 +72,7 @@ public class test {
 					for (int j = 0; j < arr.length; j++) {
 						if (arr[i][j] == "x") {
 							if (i <= 0) {
-						
+
 								continue;
 							}
 							i--;
@@ -88,19 +88,22 @@ public class test {
 			c++;
 
 		} while (c < 100);
-		
-
-		
 
 		for (;;) {
 
 			for (int i = 0; i < arr.length; i++) {
 				for (int j = 0; j < arr.length; j++) {
-					System.out.print(arr[i][j]+ "\t");
+					System.out.print(arr[i][j]);
+					if(j<2) {
+						System.out.print(" | ");
+					}
 				}
+				if(i<2) {
 				System.out.println();
-
-			}
+				System.out.print("--|---|--");
+				System.out.println();
+				}
+			}System.out.println();
 
 			System.out.println("[ Move ] a:Left s:Right w:Up z:Down");
 			System.out.println("[ Exit ] k:Exit");
@@ -177,6 +180,7 @@ public class test {
 				}
 				System.out.println();
 			}
+			if(arr[0][0] == arr[0][1] == arr[0][2] )
 
 			if (Arrays.deepEquals(arr, arr1)) { // 배열끼리 비교문
 				System.out.println("정답입니다.. 수고하셧습니다! ");

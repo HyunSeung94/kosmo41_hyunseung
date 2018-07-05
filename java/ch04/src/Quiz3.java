@@ -5,16 +5,16 @@ public class Quiz3 {
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 		
-		System.out.println("Ã¹ ¹øÂ° ¼ýÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println("Ã¹ ï¿½ï¿½Â° ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½");
 		
 		int num1 = s.nextInt();
 		
-		System.out.println("µÎ ¹øÂ° ¼ýÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		System.out.println("ï¿½ï¿½ ï¿½ï¿½Â° ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½");
 		
 		int num2 = s.nextInt();
 		
 		System.out.println("num1 / num2 = " + (num1 / num2));
-		System.out.println("num1 & num2 = " + (num1 % num2));
+		System.out.println("num1 % num2 = " + (num1 % num2));
 	}
 
 }
