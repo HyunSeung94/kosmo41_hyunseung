@@ -1,3 +1,4 @@
+//문자 데이터의 간단한 입력 및 출력의 예
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

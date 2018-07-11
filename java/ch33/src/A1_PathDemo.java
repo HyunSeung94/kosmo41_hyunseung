@@ -1,3 +1,5 @@
+//Paths와 path 클래스 
+// 파일 및 디렉토리의 경로 표현을 위해 자바 7에서 추가된 인터페이스
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -16,3 +18,9 @@ public class A1_PathDemo {
 	}
 
 }
+
+/*
+Path getRoot() // 루트 디렉토리 반환
+Path getParent() // 부모 디렉토리 반환
+Path getFileName() // 파일 이름 반환
+*/

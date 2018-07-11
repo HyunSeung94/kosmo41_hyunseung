@@ -1,3 +1,4 @@
+// 파일대상 출력 스트림 생성의 예
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

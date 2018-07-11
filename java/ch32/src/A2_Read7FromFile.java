@@ -1,3 +1,4 @@
+// 파일대상 입력 스트림 생성의 예
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

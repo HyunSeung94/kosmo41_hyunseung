@@ -1,3 +1,4 @@
+//현재 디렉토리 정보의 출력 예
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

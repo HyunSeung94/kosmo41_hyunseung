@@ -1,3 +1,4 @@
+//문자의 스트림의 생성 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
