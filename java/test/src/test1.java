@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-public class MultiServerQuiz {
+public class test1 {
 	ServerSocket serverSocket = null;
 	Socket socket = null;
 	Map<String, PrintWriter> clientMap;
 
 	// 생성자
-	public MultiServerQuiz() {
+	public test1() {
 		// 클라이언트의 출력스트림을 저장할 해쉬맵 생성
 		clientMap = new HashMap<String, PrintWriter>();
 		// 해쉬맵 동기화 설정.
@@ -49,29 +49,20 @@ public class MultiServerQuiz {
 		
 		//출력스트림을 순차적으로 얻어와서 해당 메세지를 출력한다.
 		Iterator<String> it = clientMap.keySet().iterator();
-		String msg = "현재 접속자 [";
+		String list = "현재 접속자 [";
 		while(it.hasNext()){
-			msg = msg + (String)it.next() + ",";
+			list = list + (String)it.next() + ",";
 		}
-		msg = msg.substring(0, msg.length()-1) + "]" ;
-		out.println(msg);
+		list = list.substring(0, list.length()-1) + "]" ;
+		out.println(list);
 	}
 	//귓속말 
-	public void to(PrintWriter out) 
-	{
-		String msg = "";
-		if(msg.indexOf("/to") >= 0) {
-			int nTmp1 = msg.indexOf(" ");
-			String strTmp = msg.substring(nTmp1 +1);
-			nTmp1 = strTmp.indexOf(" ");
-			strTmp = strTmp.substring(nTmp1 + 1);
-		
-		}
+	public void to(PrintWriter toout) {
 		
 		
 	}
 	// 접속된 모든 클라이언트들에게 메세지를 전달
-	public void sendAllMsg(String user, String msg) {
+	public void sendAllMsg(String msg) {
 		
 		//출력스트림을 순차적으로 얻어와서 해당 메세지를 출력한다.
 		Iterator<String> it = clientMap.keySet().iterator();
@@ -79,10 +70,6 @@ public class MultiServerQuiz {
 		while (it.hasNext()){
 			try {
 				PrintWriter it_out = (PrintWriter) clientMap.get(it.next());
-				if(user.equals(" "))
-					it_out.println(msg);
-				else
-					it_out.println("["+user+"]"+msg);
 			} catch(Exception e) {
 			System.out.println("예외:"+e);
 			}
@@ -91,7 +78,7 @@ public class MultiServerQuiz {
 
 	public static void main(String[] args) {
 		// 서버 객체생성
-		MultiServerQuiz ms = new MultiServerQuiz();
+		test1 ms = new test1();
 		ms.init();
 
 	}
@@ -128,7 +115,7 @@ public class MultiServerQuiz {
 
 				
 
-				sendAllMsg("",name + "님이 입장하셨습니다.");
+				sendAllMsg(name + "님이 입장하셨습니다.");
 				// 현재 객체가 가지고있는 소켓을 제외하고 다른 소켓(클라이언트)들에게 접속을 알림.
 				clientMap.put(name, out); // 해쉬맵에서 키를 name으로 출력 스트림 객체를 저장.
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
@@ -141,13 +128,12 @@ public class MultiServerQuiz {
 				while (in != null) {
 					s = in.readLine();
 					System.out.println(s);
-					if(s.indexOf("/to") >= 0) 
-						to(out);
-					if (s.equals("/list"))
+
+					if (s.equals(name +"=>" +"/list"))
 						list(out);
-					if (s.equals("q") || s.equals("Q")) 
+					if (s.equals(name +"=>" +"q") || s.equals(name +"=>" +"Q")) 
 						break;
-					sendAllMsg(name, s);
+					sendAllMsg(s);
 				}
 				
 //				System.out.println("Bye....");
@@ -157,7 +143,7 @@ public class MultiServerQuiz {
 				// 예외가 발생할때 퇴장. 해쉬맵에서 해당 데이터 제거
 				// 보통 종료하거나 나가면 java.net.SocketException: 예외발생
 				clientMap.remove(name);
-				sendAllMsg("","["+ name +"]" + "님이 퇴장하셨습니다.");
+				sendAllMsg(name + "님이 퇴장하셨습니다.");
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
 				try {
 					in.close();

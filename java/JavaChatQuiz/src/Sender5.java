@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.*;
 import java.net.Socket;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 
 //서버로 메세지를 전송하는 클래스
@@ -29,21 +31,21 @@ public class Sender5 extends Thread {
 		try {
 			// 서버에 입력한 사용자 이름을 보내준다.
 			out.println(name);
-
 			while (out != null) {
+
 				try {
 					String s2 = s.nextLine();
 					if (s2.equals("q") || s2.equals("Q")) {
 						out.println(s2);
 						break;
-					} else {
-						out.println(name + "=>" + s2);
+					}else {
+						out.println(s2);
 					}
 				} catch (Exception e) {
 					System.out.println("예외S1:" + e);
 				}
+
 			}
-			
 			out.close();
 			socket.close();
 		} catch (Exception e) {
