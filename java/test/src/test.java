@@ -8,11 +8,12 @@ public class test {
 		
 		if(str1.indexOf("/to") >= 0) {
 			int nTmp1 = str1.indexOf(" ");
-			String strTmp = str1.substring(nTmp1 +1);
+			String strTmp = str1.substring(nTmp1+1);
+			if(strTmp.indexOf("홍길동") ==0) {
 			System.out.println(strTmp);
-			
+			}
 			nTmp1 = strTmp.indexOf(" ");
-			strTmp = strTmp.substring(nTmp1 + 1);
+			strTmp = strTmp.substring(nTmp1 +1);
 			System.out.println(strTmp);
 		}
 

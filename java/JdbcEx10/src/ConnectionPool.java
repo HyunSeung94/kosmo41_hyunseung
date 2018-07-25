@@ -1,149 +1,72 @@
-import java.sql.*; 
-import java.util.*;
-public final class ConnectionPool{ 
+import oracle.jdbc.pool.OracleDataSource;
+import oracle.jdbc.pool.OracleConnectionCacheManager;
+import java.util.Properties;
+import java.sql.*;
 
-	static { 
-		try { 
-			Class.forName("oracle.jdbc.driver.OracleDriver"); 
-		} catch (ClassNotFoundException cnfe) { 
-			cnfe.printStackTrace(); 
-		} 
-	}
-	
-	// 사용하지 않은 커넥션 즉, 초기 커넥션을 저장하는 변수 
-	private ArrayList<Connection> free; 
+public class ConnectionPool {
+    private final  static String CACHE_NAME = "MYCACHE";
+    private  static OracleDataSource ods = null;
 
-	// 사용 중인 커넥션을 저장하는 변수 
-	private ArrayList<Connection> used; 
+    static {
+        try {
+            ods = new OracleDataSource();
+            ods.setURL("jdbc:oracle:thin:@localhost:1521:xe");
+            ods.setUser("scott");
+            ods.setPassword("tiger");
+            // caching parms
+            ods.setConnectionCachingEnabled(true);
+            ods.setConnectionCacheName(CACHE_NAME);
 
-	
-	//커넥션풀
-	private static ConnectionPool cp;
+            Properties cacheProps = new Properties();
+            cacheProps.setProperty("MinLimit", "3");
+            cacheProps.setProperty("MaxLimit", "3");
+            cacheProps.setProperty("InitialLimit", "1");
+            cacheProps.setProperty("ConnectionWaitTimeout", "5");
+            cacheProps.setProperty("ValidateConnection", "true");
 
-	//-------------------------------------------------------------------
-	private String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
-	private String user = "scott"; 
-	private String password = "tiger" ; 
-	// 최대 커넥션수 
-	private int maxCons = 3; 
-	//---------------------------------------------------------------------
-	
-	// 접속
-	public static ConnectionPool getInstance ()
-	{ 
-		try { 
-			if (cp == null) { 
-				synchronized(ConnectionPool.class) { 
-					cp = new ConnectionPool(); 
-				} 
-			} 
-		} 
-		catch (SQLException sqle) { 
-			sqle.printStackTrace(); 
-		} 
-		return cp; 
-	} 
+            ods.setConnectionCacheProperties(cacheProps);
 
-	private ConnectionPool()  throws SQLException
-	{  
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
- 		// 초기 커넥션 개수를 각각의 ArrayList에 저장할 수 
- 		// 있도록 초기 커넥션 수만큼 ArrayList를 생성한다. 
-		free = new ArrayList<Connection>(maxCons); 
-		used = new ArrayList<Connection>(maxCons); 
+    /**
+     * private constructor for static class
+     */
+    private ConnectionPool() { }
 
-		// initialCons 수만큼 Connection을 생성(free)한다. 
-		for (int i =0; i< maxCons; i++) {
-			addConnection(); 
-		} 
-	} 
-	
-	// free에 커넥션 객체를 저장한다. 
-	private void addConnection() throws SQLException 
-	{ 
-		free.add(getNewConnection()); 
-	} 
+    public static Connection getConnection() throws SQLException {
+        return getConnection("env. unspecified");
+    }
 
-	// 새로운 커넥션 객체를 생성한다. 
-	private Connection getNewConnection() throws SQLException
-	{ 
-		Connection con = null; 
-		try { 
-			con = DriverManager.getConnection(url, user, password); 
-		} catch (SQLException e) { 
-			e.printStackTrace(); 
-		} 
-//		System.out.println("connect to " + con); 
-		return con; 
-	} 
 
- 	// free에 있는 커넥션을 used로 옮기는 작업 => free-->used 
-	public synchronized Connection getConnection() throws SQLException
-	{ 
- 		// free에 Connection이 없으면 ?
-		if (free.isEmpty()) {
-			System.out.println("aaaa");
+    public static Connection getConnection(String env)
+       throws SQLException
+    {
+        System.out.println("Request connection for " + env);
+        if (ods == null) {
+            throw new SQLException("OracleDataSource is null.");
+        }
+        return ods.getConnection();
+    }
 
-		} 
-		Connection _con; 
-		_con = free.get(free.size()-1); 
-		free.remove(_con); 
-		used.add(_con); 
-		return _con; 
-	} 
-	
- 	// used에 있는 커넥션을 free로 반납한다. 
-	public synchronized void releaseConnection(Connection _con) 
-					throws SQLException 
-	{ 
-		boolean flag = false; 
-		if (used.contains(_con)){ 
-			used.remove(_con); 
-			flag = true; 
-		} else { 
-			throw new SQLException("ConnectionPool 에 있지않네요!!"); 
-		} 
-		try { 
-			if (flag) { 
-				free.add(_con); 
-			} else { 
-				_con.close(); 
-			} 
-		} catch (SQLException e) {
-			try { 
-				_con.close(); 
-			} catch (SQLException e2) { 
-				e2.printStackTrace(); 
-			} 
-		} 
-	} 
-	
-	// 모든 Connection 자원을 반납한다. 
-	public void closeAll(){ 
-		// used에 있는 커넥션을 모두 삭제한다. 
-		for (int i=0; i<used.size(); i++) { 
-			Connection _con = (Connection)used.get(i); 
-			used.remove(i--); 
-			try { 
-				_con.close(); 
-			} catch(SQLException sqle) { 
-				sqle.printStackTrace(); 
-			} 
-		} 
+    public static void closePooledConnections() throws SQLException{
+        if (ods != null ) {
+            ods.close();
+        }
+    }
 
-		// free에 있는 커넥션을 모두 삭제한다. 
-		for (int i=0; i<free.size(); i++) { 
-			Connection _con = (Connection)free.get(i); 
-			free.remove(i--); 
-			try { 
-				_con.close(); 
-			} catch(SQLException sqle) { 
-				sqle.printStackTrace(); 
-			} 
-		} 
-	} 
-	public int getMaxCons() {
-		return maxCons;
-	}
+    public static void listCacheInfos() throws SQLException{
+        OracleConnectionCacheManager occm =
+            OracleConnectionCacheManager.getConnectionCacheManagerInstance();
+        System.out.println
+            (occm.getNumberOfAvailableConnections(CACHE_NAME)
+                + " connections are available in cache " + CACHE_NAME);
+        System.out.println
+            (occm.getNumberOfActiveConnections(CACHE_NAME)
+                + " connections are active");
 
-}
+      }
+ }
