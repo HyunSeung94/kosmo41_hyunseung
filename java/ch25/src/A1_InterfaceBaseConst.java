@@ -17,7 +17,7 @@ public class A1_InterfaceBaseConst {
 		switch(sc) {
 		case Scale.DO:
 		System.out.println("도~ ");
-		break;
+//		break;
 		case Scale.RE:
 		System.out.println("레~ ");
 		break;

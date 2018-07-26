@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		try {
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "scott", "tiger");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "scott", "tiger");// localhost에 주소를 바꿔주면 그쪽으로 저장이된다.
 			Statement stmt = con.createStatement();
 
 			StringBuffer sb = new StringBuffer();

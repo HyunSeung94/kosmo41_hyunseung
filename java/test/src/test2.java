@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.sql.*;
 
 public class test2 {
 	ServerSocket serverSocket = null;
 	Socket socket = null;
 	Map<String, PrintWriter> clientMap;
-
 
 	// 생성자
 	public test2() {
@@ -23,6 +24,7 @@ public class test2 {
 		clientMap = new HashMap<String, PrintWriter>();
 		// 해쉬맵 동기화 설정.
 		Collections.synchronizedMap(clientMap);
+
 	}
 
 	public void init() {
@@ -57,35 +59,33 @@ public class test2 {
 		while (it.hasNext()) {
 			msg = msg + (String) it.next() + ",";
 		}
-		msg = msg.substring(0, msg.length() - 1) + "]"; //-1은 , 를 없애기위해서 
+		msg = msg.substring(0, msg.length() - 1) + "]"; // -1은 , 를 없애기위해서
 		out.println(msg);
 	}
 
 	// 귓속말
 	public void to(String name, String s) {
 		System.out.println("귓속말 발견!!!");
-		
-		Iterator<String> it = clientMap.keySet().iterator();
-				
-			StringTokenizer t1 = new StringTokenizer(s);
-			int nTmp1 = s.indexOf(" ");
-			String strTmp1 = s.substring(nTmp1 + 1);
-			t1.nextToken();
-			String strTmp2 = t1.nextToken();
-			nTmp1 = strTmp1.indexOf(" ");
-			String strTmp3 = strTmp1.substring(nTmp1 + 1);
-			
-//			System.out.println("strTmp1: " + strTmp1);
-//			System.out.println("strTmp2: " + strTmp2);
-//			System.out.println("strTmp3: " + strTmp3);  출력확인용		
-			try {
-			 PrintWriter pr = (PrintWriter) clientMap.get(strTmp2);
-			 pr.println(name +" (귓속말): "+strTmp3);
-			 }catch(Exception e) {
-			 System.out.println("귓속말을 할수가 없습니다."+e);
-			 }
 
-		
+		Iterator<String> it = clientMap.keySet().iterator();
+
+		StringTokenizer t1 = new StringTokenizer(s);
+		int nTmp1 = s.indexOf(" ");
+		String strTmp1 = s.substring(nTmp1 + 1);
+		t1.nextToken();
+		String strTmp2 = t1.nextToken();
+		nTmp1 = strTmp1.indexOf(" ");
+		String strTmp3 = strTmp1.substring(nTmp1 + 1);
+
+		// System.out.println("strTmp1: " + strTmp1);
+		// System.out.println("strTmp2: " + strTmp2);
+		// System.out.println("strTmp3: " + strTmp3); 출력확인용
+		try {
+			PrintWriter pr = (PrintWriter) clientMap.get(strTmp2); // strTmp2 (귓 받는사람)
+			pr.println(name + " (귓속말): " + strTmp3); // (귓하는사람 + 귓속말 + 내용)
+		} catch (Exception e) {
+			System.out.println("귓속말을 할수가 없습니다." + e);
+		}
 
 	}
 
@@ -107,37 +107,118 @@ public class test2 {
 			}
 		}
 	}
-	
-	public void sendMsg( String name,String s) {
-		System.out.println("귓속말 발견!!!");
 
+	public void sendMsg(String user, String msg, String A) {
+		System.out.println("귓속말 발견!!!");
 		Iterator<String> it = clientMap.keySet().iterator();
 
-		   while(true) {
-			   
-		    
-		    
-			StringTokenizer t1 = new StringTokenizer(s);
-			int nTmp1 = s.indexOf(" ");
-			String strTmp1 = s.substring(nTmp1 + 1);
-			t1.nextToken();
-			String strTmp2 = t1.nextToken();
-			nTmp1 = strTmp1.indexOf(" ");
-//			String strTmp3 = strTmp1.substring(nTmp1 + 1);
-//			
-//			System.out.println("strTmp1: " + strTmp1);
-//			System.out.println("strTmp2: " + strTmp2);
-//			System.out.println("strTmp3: " + strTmp3);  출력확인용		
+		// int nTmp1 = msg.indexOf(" ");
+		// String strTmp1 = msg.substring(nTmp1 + 1);
+		// System.out.println(strTmp1);
+		// System.out.println(user);
 
+		if (!msg.equals("//to")) {
+			try {
+				PrintWriter it_out = (PrintWriter) clientMap.get(A);
+				it_out.println(user + "(고정 귓속말): " + msg);
+			} catch (Exception e) {
+				System.out.println("예외:" + e);
+			}
+		}
+	}
+	
+	public void DbOpen() {
 
 			try {
-			 PrintWriter pr = (PrintWriter) clientMap.get(strTmp2);
-			 pr.println(name +" (귓속말): "+s);
-			 }catch(Exception e) {
-			 System.out.println("귓속말을 할수가 없습니다."+e);
-			 }
-		   }
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+			} catch (ClassNotFoundException cnfe) {
+				cnfe.printStackTrace();
+			}
 	}
+
+		public static void Dblogin (String w) {
+			
+			String a = w;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
+						"scott",
+						"tiger");
+//				String sql = "create table test2(id varchar(10), " +
+//				" 					password varchar(10))";
+//				pstmt = con.prepareStatement(sql);
+//				int updateCount = pstmt.executeUpdate();
+//				System.out.println("createCount : " + updateCount);
+				 //------------------------------------------------------
+
+				String sql = "insert into test2 values(?,?)";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, a);
+				pstmt.setString(2, "1111");
+				int updateCount = pstmt.executeUpdate();
+				System.out.println("inser tCount: " + updateCount);
+
+				// --------------------------------------------------------
+				sql = "select * from test2";
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+//				while (rs.next()) {
+//					System.out.print("id: " + rs.getString(1));
+//				}
+
+				// //---------------------------------------------------
+				//
+				// sql = "drop table test2";
+				// pstmt = con.prepareStatement(sql);
+				// updateCount = pstmt.executeUpdate();
+				// System.out.println("dropCount : " + updateCount);
+
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			} finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (con != null)
+						con.close();
+				} catch (SQLException sqle) {
+				}
+			}
+		}
+	
+	public void Dblogout(String q) {
+//		String a = q;
+		Statement stmt = null;
+		
+	
+
+		try {
+			
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
+					"scott",
+					"tiger");
+			stmt = con.createStatement();
+			System.out.println("AAAA");
+			StringBuffer sb = new StringBuffer();
+			System.out.println("BBBB");
+			 sb.append("delete from TEST2 where id = '"+ q + "'");
+			 System.out.println("CCCC");
+			 int updateCount = stmt.executeUpdate(sb.toString());
+			 System.out.println("ㅋㅋㅋ");
+			 stmt.close();
+			 con.close();
+			 
+		} catch (SQLException sqle) {
+			System.out.println("Connection Error");
+			sqle.printStackTrace();
+		}
+	}
+	
 
 	public static void main(String[] args) {
 		// 서버 객체생성
@@ -169,10 +250,13 @@ public class test2 {
 
 		@Override
 		public void run() {
+
 			String name = ""; // 클라이언트로부터 받은 이름을 저장할 변수
 			try {
+
 				name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
-										// 클라이언트가 사용할 이름이다.
+				// 클라이언트가 사용할 이름이다.
+				Dblogin(name);
 
 				sendAllMsg("", name + "님이 입장하셨습니다.");
 				// 현재 객체가 가지고있는 소켓을 제외하고 다른 소켓(클라이언트)들에게 접속을 알림.
@@ -186,16 +270,16 @@ public class test2 {
 					s = in.readLine();
 
 					if (s.indexOf("/r") >= 0) {
-						to(name,s);
-					}
-					else if(s.indexOf("/to")>= 0){
-							s = in.readLine();					
-							sendMsg(name,s);
-							if(s.equals("//to")) {
-								break;
-							}
-						
-						
+						to(name, s);
+					} else if (s.indexOf("/to") >= 0) {
+						int nTmp1 = s.indexOf(" ");
+						String strTmp1 = s.substring(nTmp1 + 1);
+						String A = strTmp1;
+						while (!s.equals("//to")) {
+
+							s = in.readLine();
+							sendMsg(name, s, A);
+						}
 					} else if (s.equals("/list")) {
 						list(out);
 					} else if (s.equals("q") || s.equals("Q")) {
@@ -211,11 +295,17 @@ public class test2 {
 			} catch (Exception e) {
 				System.out.println("예외:" + e);
 			} finally {
-				// 예외가 발생할때 퇴장. 해쉬맵에서 해당 데이터 제거
+				// 예외가 발생할때 퇴장. 해쉬맵에서 해당 데이터 제거(remove)
 				// 보통 종료하거나 나가면 java.net.SocketException: 예외발생
 				clientMap.remove(name);
+				
+				
+				Dblogout(name);
+				
+
 				sendAllMsg("", "[" + name + "]" + "님이 퇴장하셨습니다.");
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
+				Dblogout(name);
 				try {
 					in.close();
 					out.close();
