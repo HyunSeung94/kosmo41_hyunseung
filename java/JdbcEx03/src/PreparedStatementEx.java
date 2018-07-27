@@ -21,7 +21,7 @@ public class PreparedStatementEx {
 		
 		try {
 			con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521:xe",
+					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe",
 					"scott",
 					"tiger");
 			String sql = "create table test2(id varchar(10), " +
@@ -40,15 +40,15 @@ public class PreparedStatementEx {
 			updateCount = pstmt.executeUpdate();
 			System.out.println("inser tCount: " + updateCount);
 			
-			
-			//--------------------------------------------------------
-			sql = "select * from test2";
-			pstmt = con.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				System.out.print("id: " + rs.getString(1));
-				System.out.println(", password : " + rs.getString(2));
-			}
+//			
+//			//--------------------------------------------------------
+//			sql = "select * from test2";
+//			pstmt = con.prepareStatement(sql);
+//			rs = pstmt.executeQuery();
+//			while(rs.next()) {
+//				System.out.print("id: " + rs.getString(1));
+//				System.out.println(", password : " + rs.getString(2));
+//			}
 			
 //			//---------------------------------------------------
 //			

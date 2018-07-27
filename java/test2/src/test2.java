@@ -112,6 +112,11 @@ public class test2 {
 		System.out.println("귓속말 발견!!!");
 		Iterator<String> it = clientMap.keySet().iterator();
 
+		// int nTmp1 = msg.indexOf(" ");
+		// String strTmp1 = msg.substring(nTmp1 + 1);
+		// System.out.println(strTmp1);
+		// System.out.println(user);
+
 		if (!msg.equals("//to")) {
 			try {
 				PrintWriter it_out = (PrintWriter) clientMap.get(A);
@@ -121,144 +126,99 @@ public class test2 {
 			}
 		}
 	}
-
-	public void END(String A) {
-
-	}
-	public void Block(String name) {
-		String B = name;
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null; 
-		
-		
-		 
-		 try {con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe",
-					"scott",
-					"tiger");		 
-		 //----------------------------------------------------
-		 String sql = "select * from block";
-		 pstmt = con.prepareStatement(sql);
-		 rs= pstmt.executeQuery();
-
-		while(rs.next()) {
-		 if(rs.getString(1).equals(B)) {
-			 System.out.println("블랙리스트 id 입니다.");
-			  break;
-		 }
-		}
-			 
-		
-		 }catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally { 
-				try {
-					if (rs != null) rs.close();
-					if (pstmt != null) pstmt.close();
-					if (con != null) con.close();
-				} catch (SQLException sqle) {}
-			}
-		 
-	}
-
+	
 	public void DbOpen() {
 
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
-		}
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+			} catch (ClassNotFoundException cnfe) {
+				cnfe.printStackTrace();
+			}
 	}
 
-	public static void Dblogin(String w) {
+		public static void Dblogin (String w) {
+			
+			String a = w;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
 
-		String a = w;
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		try {
-			con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
-					"tiger");
-			// String sql = "create table test2(id varchar(10), " +
-			// " password varchar(10))";
-			// pstmt = con.prepareStatement(sql);
-			// int updateCount = pstmt.executeUpdate();
-			// System.out.println("createCount : " + updateCount);
-			// ------------------------------------------------------
-
-			String sql = "insert into test2 values(?,?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, a);
-			pstmt.setString(2, "1111");
-			int updateCount = pstmt.executeUpdate();
-			System.out.println("inser tCount: " + updateCount);
-
-			// --------------------------------------------------------
-			sql = "select * from test2";
-			pstmt = con.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			// while (rs.next()) {
-			// System.out.print("id: " + rs.getString(1));
-			// }
-
-			// //---------------------------------------------------
-			//
-			// sql = "drop table test2";
-			// pstmt = con.prepareStatement(sql);
-			// updateCount = pstmt.executeUpdate();
-			// System.out.println("dropCount : " + updateCount);
-
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-		} finally {
 			try {
-				if (rs != null)
-					rs.close();
-				if (pstmt != null)
-					pstmt.close();
-				if (con != null)
-					con.close();
+				con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
+						"scott",
+						"tiger");
+//				String sql = "create table test2(id varchar(10), " +
+//				" 					password varchar(10))";
+//				pstmt = con.prepareStatement(sql);
+//				int updateCount = pstmt.executeUpdate();
+//				System.out.println("createCount : " + updateCount);
+				 //------------------------------------------------------
+
+				String sql = "insert into test2 values(?,?)";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, a);
+				pstmt.setString(2, "1111");
+				int updateCount = pstmt.executeUpdate();
+				System.out.println("inser tCount: " + updateCount);
+
+				// --------------------------------------------------------
+				sql = "select * from test2";
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+//				while (rs.next()) {
+//					System.out.print("id: " + rs.getString(1));
+//				}
+
+				// //---------------------------------------------------
+				//
+				// sql = "drop table test2";
+				// pstmt = con.prepareStatement(sql);
+				// updateCount = pstmt.executeUpdate();
+				// System.out.println("dropCount : " + updateCount);
+
 			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			} finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (con != null)
+						con.close();
+				} catch (SQLException sqle) {
+				}
 			}
 		}
-	}
-
-	public static void Dblogout(String q) {
-		// String a = q;
-		PreparedStatement stmt = null;
-		Connection con = null;
+	
+	public void Dblogout(String q) {
+//		String a = q;
+		Statement stmt = null;
+		
+	
 
 		try {
-			// System.out.println("AAAA");
-			con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
+			
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
+					"scott",
 					"tiger");
-			String sql = "delete from TEST2 where id = ? and password = ? ";
-			// System.out.println("BBBB");
-			stmt = con.prepareStatement(sql);
-			// System.out.println("CCCC");
-			stmt.setString(1, q);
-			// System.out.println("DDDD");
-			stmt.setString(2, "1111");
-			int updateCount = stmt.executeUpdate();
-			// System.out.println("ㅋㅋㅋ"); 출력확인용
-			// sql = "commit";
-
+			stmt = con.createStatement();
+			System.out.println("AAAA");
+			StringBuffer sb = new StringBuffer();
+			System.out.println("BBBB");
+			 sb.append("delete from TEST2 where id = '"+ q + "'");
+			 System.out.println("CCCC");
+			 int updateCount = stmt.executeUpdate(sb.toString());
+			 System.out.println("ㅋㅋㅋ");
+			 stmt.close();
+			 con.close();
+			 
 		} catch (SQLException sqle) {
+			System.out.println("Connection Error");
 			sqle.printStackTrace();
-		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException sqle) {
-			}
 		}
 	}
+	
 
 	public static void main(String[] args) {
 		// 서버 객체생성
@@ -293,14 +253,11 @@ public class test2 {
 
 			String name = ""; // 클라이언트로부터 받은 이름을 저장할 변수
 			try {
-				
 
 				name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
-				Block(name);
-
 				// 클라이언트가 사용할 이름이다.
 				Dblogin(name);
-				
+
 				sendAllMsg("", name + "님이 입장하셨습니다.");
 				// 현재 객체가 가지고있는 소켓을 제외하고 다른 소켓(클라이언트)들에게 접속을 알림.
 				clientMap.put(name, out); // 해쉬맵에서 키를 name으로 출력 스트림 객체를 저장.
@@ -323,8 +280,6 @@ public class test2 {
 							s = in.readLine();
 							sendMsg(name, s, A);
 						}
-//					} else if (s.indexOf("/block") >= 0) {
-//						Block(s);
 					} else if (s.equals("/list")) {
 						list(out);
 					} else if (s.equals("q") || s.equals("Q")) {
@@ -343,8 +298,10 @@ public class test2 {
 				// 예외가 발생할때 퇴장. 해쉬맵에서 해당 데이터 제거(remove)
 				// 보통 종료하거나 나가면 java.net.SocketException: 예외발생
 				clientMap.remove(name);
-
+				
+				
 				Dblogout(name);
+				
 
 				sendAllMsg("", "[" + name + "]" + "님이 퇴장하셨습니다.");
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
