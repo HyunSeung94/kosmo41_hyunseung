@@ -20,7 +20,7 @@ public class E1_HashMapCollection {
 		map.remove(37);
 
 		// 데이터삭제 확인
-		System.out.println("37qjs: " + map.get(37));
+		System.out.println("37번: " + map.get(37));
 
 	}
 

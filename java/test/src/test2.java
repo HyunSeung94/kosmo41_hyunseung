@@ -17,13 +17,18 @@ public class test2 {
 	ServerSocket serverSocket = null;
 	Socket socket = null;
 	Map<String, PrintWriter> clientMap;
+	Map<String, PrintWriter> clientMap2;
 
 	// 생성자
 	public test2() {
 		// 클라이언트의 출력스트림을 저장할 해쉬맵 생성
 		clientMap = new HashMap<String, PrintWriter>();
+		clientMap2 = new HashMap<String, PrintWriter>();
+		
 		// 해쉬맵 동기화 설정.
 		Collections.synchronizedMap(clientMap);
+		Collections.synchronizedMap(clientMap2);
+		
 
 	}
 
@@ -98,24 +103,43 @@ public class test2 {
 		while (it.hasNext()) {
 			try {
 				PrintWriter it_out = (PrintWriter) clientMap.get(it.next());
-				if (user.equals(" "))
+				if (user.equals(" ")) {
 					it_out.println(msg);
-				else
+				} else {
 					it_out.println("[" + user + "]" + msg);
+				}
 			} catch (Exception e) {
 				System.out.println("예외:" + e);
 			}
 		}
 	}
 
-	public void sendMsg(String user, String msg, String A) {
+	public void sendMsg(String user, String msg, String toname) {
 		System.out.println("귓속말 발견!!!");
 		Iterator<String> it = clientMap.keySet().iterator();
 
 		if (!msg.equals("//to")) {
 			try {
-				PrintWriter it_out = (PrintWriter) clientMap.get(A);
+				PrintWriter it_out = (PrintWriter) clientMap.get(toname);
 				it_out.println(user + "(고정 귓속말): " + msg);
+			} catch (Exception e) {
+				System.out.println("예외:" + e);
+			}
+		}
+	}
+
+	public void room(String user, String msg) {
+		// 출력스트림을 순차적으로 얻어와서 해당 메세지를 출력한다.
+		Iterator<String> it = clientMap.keySet().iterator();
+
+		while (it.hasNext()) {
+			try {
+				PrintWriter it_out = (PrintWriter) clientMap.get(it.next());
+				if (user.equals(" ")) {
+					it_out.println(msg);
+				} else {
+					it_out.println("[" + user + "]" + msg);
+				}
 			} catch (Exception e) {
 				System.out.println("예외:" + e);
 			}
@@ -125,41 +149,43 @@ public class test2 {
 	public void END(String A) {
 
 	}
+
 	public void Block(String name) {
 		String B = name;
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null; 
-		
-		
-		 
-		 try {con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe",
-					"scott",
-					"tiger");		 
-		 //----------------------------------------------------
-		 String sql = "select * from block";
-		 pstmt = con.prepareStatement(sql);
-		 rs= pstmt.executeQuery();
+		ResultSet rs = null;
 
-		while(rs.next()) {
-		 if(rs.getString(1).equals(B)) {
-			 System.out.println("블랙리스트 id 입니다.");
-			  break;
-		 }
-		}
-			 
-		
-		 }catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally { 
-				try {
-					if (rs != null) rs.close();
-					if (pstmt != null) pstmt.close();
-					if (con != null) con.close();
-				} catch (SQLException sqle) {}
+		try {
+			con = DriverManager.getConnection(
+					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
+					"tiger");
+			// ----------------------------------------------------
+			String sql = "select * from block";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				if (rs.getString(1).equals(B)) {
+					System.out.println("블랙리스트 id 입니다.");
+					break;
+				}
 			}
-		 
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+
 	}
 
 	public void DbOpen() {
@@ -227,6 +253,7 @@ public class test2 {
 	}
 
 	public static void Dblogout(String q) {
+
 		// String a = q;
 		PreparedStatement stmt = null;
 		Connection con = null;
@@ -258,6 +285,17 @@ public class test2 {
 			} catch (SQLException sqle) {
 			}
 		}
+	}
+
+	public static int msgCheck(String a, String name) {
+
+		if (a.contains("시발") || a.contains("병신") || a.contains("멍청이") || a.contains("조성준천재")) {
+			System.out.println("금칙어를 사용하신분이있습니다.");
+			return 1;
+		} else {
+			return 2;
+		}
+
 	}
 
 	public static void main(String[] args) {
@@ -293,14 +331,13 @@ public class test2 {
 
 			String name = ""; // 클라이언트로부터 받은 이름을 저장할 변수
 			try {
-				
 
 				name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
 				Block(name);
 
 				// 클라이언트가 사용할 이름이다.
 				Dblogin(name);
-				
+
 				sendAllMsg("", name + "님이 입장하셨습니다.");
 				// 현재 객체가 가지고있는 소켓을 제외하고 다른 소켓(클라이언트)들에게 접속을 알림.
 				clientMap.put(name, out); // 해쉬맵에서 키를 name으로 출력 스트림 객체를 저장.
@@ -323,15 +360,23 @@ public class test2 {
 							s = in.readLine();
 							sendMsg(name, s, A);
 						}
-//					} else if (s.indexOf("/block") >= 0) {
-//						Block(s);
+						// } else if (s.indexOf("/block") >= 0) {
+						// Block(s);
 					} else if (s.equals("/list")) {
 						list(out);
 					} else if (s.equals("q") || s.equals("Q")) {
 						break;
-					} else {
-						System.out.println("[" + name + "]" + s);
-						sendAllMsg(name, s);
+					} else if(s.indexOf("/room")>= 0){
+						room(name,s);
+					}
+					else {
+						if (msgCheck(s, name) == 1) {
+							s = name + "님이 금칙어를사용했습니다.";
+							sendAllMsg(name, s);
+						} else {
+							System.out.println("[" + name + "]" + s);
+							sendAllMsg(name, s);
+						}
 					}
 
 				}
@@ -344,7 +389,7 @@ public class test2 {
 				// 보통 종료하거나 나가면 java.net.SocketException: 예외발생
 				clientMap.remove(name);
 
-				Dblogout(name);
+				// Dblogout(name);
 
 				sendAllMsg("", "[" + name + "]" + "님이 퇴장하셨습니다.");
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
