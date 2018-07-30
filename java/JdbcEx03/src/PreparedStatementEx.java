@@ -18,27 +18,27 @@ public class PreparedStatementEx {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+		String a = "room1";
 		try {
 			con = DriverManager.getConnection(
 					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe",
 					"scott",
 					"tiger");
-			String sql = "create table test2(id varchar(10), " +
+			String sql = "create table "+a+" (id varchar(10), " +
 					     " 					password varchar(10))";
 			pstmt = con.prepareStatement(sql);
 			int updateCount = pstmt.executeUpdate();
-			System.out.println("createCount : " + updateCount);
-			
+//			System.out.println("createCount : " + updateCount);
+//			
 			
 			//------------------------------------------------------
 			
-			sql = "insert into test2 values(?,?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, "홍길동");
-			pstmt.setString(2, "1111");
-			updateCount = pstmt.executeUpdate();
-			System.out.println("inser tCount: " + updateCount);
+//			sql = "insert into test2 values(?,?)";
+//			pstmt = con.prepareStatement(sql);
+//			pstmt.setString(1, "홍길동");
+//			pstmt.setString(2, "1111");
+//			updateCount = pstmt.executeUpdate();
+//			System.out.println("inser tCount: " + updateCount);
 			
 //			
 //			//--------------------------------------------------------

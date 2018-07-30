@@ -5,11 +5,13 @@ public class zzzzzz {
 		String s= "/to 현승 ddd";
 		StringTokenizer t1 = new StringTokenizer(s);
 		int nTmp1 = s.indexOf(" ");
-		String strTmp1 = s.substring(nTmp1 + 1);
+		String strTmp1 = s.substring(0,2);
 		
+//		t1.nextToken();
 		t1.nextToken();
+		
 		String strTmp2 = t1.nextToken();
-		System.out.println(strTmp1);
+//		System.out.println(strTmp1);
 		System.out.println(strTmp2);
 	}
 
