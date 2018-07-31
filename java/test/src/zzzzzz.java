@@ -2,10 +2,10 @@ import java.util.StringTokenizer;
 
 public class zzzzzz {
 	public static void main(String[] args) {
-		String s= "/to 현승 ddd";
+		String s= "/out 방1";
 		StringTokenizer t1 = new StringTokenizer(s);
-		int nTmp1 = s.indexOf(" ");
-		String strTmp1 = s.substring(0,2);
+//		int nTmp1 = s.indexOf(" ");
+//		String strTmp1 = s.substring(0,2);
 		
 //		t1.nextToken();
 		t1.nextToken();

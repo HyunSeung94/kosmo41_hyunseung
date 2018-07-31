@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class PreparedStatementEx {
 	static {
@@ -13,58 +14,88 @@ public class PreparedStatementEx {
 			cnfe.printStackTrace();
 		}
 	}
+
 	public static void main(String[] args) {
-		
+
+		Scanner s = new Scanner(System.in);
+		String a = "";
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String a = "room1";
 		try {
 			con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe",
-					"scott",
+					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
 					"tiger");
-			String sql = "create table "+a+" (id varchar(10), " +
-					     " 					password varchar(10))";
+			// String sql = "create table "+a+" (id varchar(10), " +
+			// " password varchar(10))";
+			// pstmt = con.prepareStatement(sql);
+			// int updateCount = pstmt.executeUpdate();
+			//// System.out.println("createCount : " + updateCount);
+			//
+
+			// ------------------------------------------------------
+
+			// sql = "insert into test2 values(?,?)";
+			// pstmt = con.prepareStatement(sql);
+			// pstmt.setString(1, "홍길동");
+			// pstmt.setString(2, "1111");
+			// updateCount = pstmt.executeUpdate();
+			// System.out.println("inser tCount: " + updateCount);
+			// //--------------------------------------------------------
+			String sql = "select id from waitingroom";
 			pstmt = con.prepareStatement(sql);
-			int updateCount = pstmt.executeUpdate();
-//			System.out.println("createCount : " + updateCount);
-//			
+			rs = pstmt.executeQuery();
+			int count = 0;
 			
-			//------------------------------------------------------
+
+			a = s.nextLine();
+
 			
-//			sql = "insert into test2 values(?,?)";
-//			pstmt = con.prepareStatement(sql);
-//			pstmt.setString(1, "홍길동");
-//			pstmt.setString(2, "1111");
-//			updateCount = pstmt.executeUpdate();
-//			System.out.println("inser tCount: " + updateCount);
-			
-//			
-//			//--------------------------------------------------------
-//			sql = "select * from test2";
-//			pstmt = con.prepareStatement(sql);
-//			rs = pstmt.executeQuery();
-//			while(rs.next()) {
-//				System.out.print("id: " + rs.getString(1));
-//				System.out.println(", password : " + rs.getString(2));
-//			}
-			
-//			//---------------------------------------------------
-//			
-//			sql = "drop table test2";
-//			pstmt = con.prepareStatement(sql);
-//			updateCount = pstmt.executeUpdate();
-//			System.out.println("dropCount : " + updateCount);
-			
-		}catch (SQLException sqle) {
+			while(true) {
+				while (rs.next()) {
+					System.out.println("2222222");
+					if (a.equals(rs.getString("id"))) {
+						System.out.println("333333333");
+						count = 1;
+						do {
+							System.out.println("이름을 다시입력하세요");
+							System.out.println(rs.getString("id"));
+							a = s.nextLine();
+						} while (a.equals(rs.getString("id")));
+					}else {
+						count = 2;
+					}
+				}
+				if(count == 2) {
+					break;
+				}
+				System.out.println(count);
+				rs = pstmt.executeQuery();
+				System.out.println("1111111");
+			}
+
+			// System.out.println("1111111111"+rs.getString(1));
+
+			// //---------------------------------------------------
+			//
+			// sql = "drop table test2";
+			// pstmt = con.prepareStatement(sql);
+			// updateCount = pstmt.executeUpdate();
+			// System.out.println("dropCount : " + updateCount);
+
+		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		} finally {
 			try {
-				if (rs != null) rs.close();
-				if (pstmt != null) pstmt.close();
-				if (con != null) con.close();
-			} catch (SQLException sqle) {}
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
 		}
 
 	}

@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.sql.*;
 
-//test의 test2 
+// test3 의 test2 
 public class test2 {
 	ServerSocket serverSocket = null;
 	Socket socket = null;
@@ -147,12 +147,12 @@ public class test2 {
 
 			// ----------------------------------------------------
 
-			String sql = "select id from " + roomname;
+			String sql = "select id from "+ roomname;
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 
 			System.out.println(roomname + "의방에서 대화를 하고있습니다.");
-
+		
 			while (rs.next()) {
 				try {
 					PrintWriter it_out = (PrintWriter) clientMap.get(rs.getString("id"));
@@ -235,8 +235,7 @@ public class test2 {
 			}
 		}
 	}
-
-	public void room(String user, String msg) {
+	public void room(String msg) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -246,7 +245,6 @@ public class test2 {
 		String roomname = t1.nextToken();
 
 		System.out.println(roomname + "방 생성되었습니다.");
-		System.out.println(user + "님이 방을생성하고 " + roomname + "방에 입장하였습니다.");
 
 		try {
 			con = DriverManager.getConnection(
@@ -255,19 +253,8 @@ public class test2 {
 			String sql = "create table " + roomname + " (id varchar(10), " + "password varchar(10))";
 			pstmt = con.prepareStatement(sql);
 
-			// int updateCount =
-			pstmt.executeUpdate();
-			// ----------------------------------------------------------------
-			sql = "delete from waitingroom where id = ? ";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, user);
-			pstmt.executeUpdate();
-			// ----------------------------------------------------------------
-			sql = "insert into " + roomname + " values(?,?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, user);
-			pstmt.setString(2, "2222");
-			pstmt.executeUpdate();
+			int updateCount = pstmt.executeUpdate();
+			// System.out.println("createCount : " + updateCount);
 
 		} catch (SQLException sqle) {
 			System.out.println("3");
@@ -285,7 +272,7 @@ public class test2 {
 		}
 	}
 
-	public void roomdelete(String user, String msg) {
+	public void roomdelete(String msg) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -300,10 +287,8 @@ public class test2 {
 			con = DriverManager.getConnection(
 					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
 					"tiger");
-
-			String sql = "drop table " + roomname + " where password = ?";
+			String sql = "drop table " + roomname;
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, "2222");
 			pstmt.executeUpdate();
 
 		} catch (SQLException sqle) {
@@ -412,33 +397,29 @@ public class test2 {
 	}
 
 	public void Block(String name) {
+		String B = name;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Scanner S = new Scanner(System.in);
-		String roop = "";
 
 		try {
 			con = DriverManager.getConnection(
 					"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
 					"tiger");
 			// ----------------------------------------------------
-			String sql = "select * from BLOCK";
+			String sql = "select * from block";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				if (name.equals(rs.getString("id"))) {
-					while (true) {
-
-						System.out.println("차단된 사용자가 접속을 하려고 합니다.");
-						roop = S.nextLine();
-					}
+				if (rs.getString(1).equals(B)) {
+					System.out.println("블랙리스트 id 입니다.");
+					break;
 				}
 			}
-			System.out.println("정상적인 사용자가 로그인하였습니다.");
 
 		} catch (SQLException sqle) {
+			System.out.println("7");
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -597,66 +578,17 @@ public class test2 {
 
 		@Override
 		public void run() {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
+
 			String name = ""; // 클라이언트로부터 받은 이름을 저장할 변수
 			try {
-				try {
-					con = DriverManager.getConnection(
-							"jdbc:oracle:thin:@ec2-52-79-250-121.ap-northeast-2.compute.amazonaws.com:1521:xe", "scott",
-							"tiger");
-				
-					name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
-					Block(name);
-					
-					String sql = "select id from waitinroom";
-					pstmt = con.prepareStatement(sql);
-					rs = pstmt.executeQuery();
-					int count = 0;	
-					
-					while(true) {
-						while (rs.next()) {
-							if (name.equals(rs.getString("id"))) {
-								count = 1;
-								do {
-									System.out.println("이름을 다시입력하세요");
-									name = in.readLine();
-								} while (name.equals(rs.getString("id")));
-							}else {
-								count = 2;
-							}
-						}
-						if(count == 2) {
-							break;
-						}
-						System.out.println(count);
-						rs = pstmt.executeQuery();
-						System.out.println("111111");
-					}
-					
-				} catch (SQLException sqle) {
-					sqle.printStackTrace();
-				} finally {
-					try {
-						if (rs != null)
-							rs.close();
-						if (pstmt != null)
-							pstmt.close();
-						if (con != null)
-							con.close();
-					} catch (SQLException sqle) {
-					}
-				}
 
-			
-
+				name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
+				Block(name);
 
 				// 클라이언트가 사용할 이름이다.
 				Dblogin(name);
 
 				sendAllMsg("", name + "님이 입장하셨습니다.");
-
 				// 현재 객체가 가지고있는 소켓을 제외하고 다른 소켓(클라이언트)들에게 접속을 알림.
 				clientMap.put(name, out); // 해쉬맵에서 키를 name으로 출력 스트림 객체를 저장.
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
@@ -667,7 +599,8 @@ public class test2 {
 				// String roomdate[] = new String[10];
 				while (in != null) {
 					s = in.readLine();
-
+					
+				
 					if (s.indexOf("/w") >= 0) { // 귓속말
 						System.out.println("111");
 						to(name, s);
@@ -675,55 +608,49 @@ public class test2 {
 						int nTmp1 = s.indexOf(" ");
 						String strTmp1 = s.substring(nTmp1 + 1);
 						String A = strTmp1;
-						while (!s.equals("//to")) { //고정 취소
+						while (!s.equals("//to")) {
+
 							s = in.readLine();
 							sendMsg(name, s, A);
+							
 						}
-					} else if (s.indexOf("/block") >= 0) {
-						Block(s);
+						// } else if (s.indexOf("/block") >= 0) {
+						// Block(s);
 					} else if (s.equals("/list")) {// 리스트 뽑기
 						list(out);
 					} else if (s.equals("q") || s.equals("Q")) { // 채팅방나가기
 						break;
 					} else if (s.indexOf("/room") >= 0) { // 방만들기
-						room(name, s);
-						StringTokenizer t1 = new StringTokenizer(s);
-						t1.nextToken();
-						String roomname = t1.nextToken();
-						while (!(s.indexOf("/out") >= 0)) {
-							s = in.readLine();
-							sendroomMsg(name, s, roomname);
-						}
-						roomout(name, s);
-
+						room(s);
 					} else if (s.indexOf("/deleteroom") >= 0) { // 방지우기
-						roomdelete(name, s);
+						roomdelete(s);
 					} else if (s.indexOf("/in") >= 0) { // 방입장
 						roomin(name, s);
 						StringTokenizer t1 = new StringTokenizer(s);
 						t1.nextToken();
 						String roomname = t1.nextToken();
-						while (!(s.indexOf("/out") >= 0)) {
-							s = in.readLine();
-							sendroomMsg(name, s, roomname);
+						while(!(s.indexOf("/out") >= 0)) {
+						s = in.readLine();
+						sendroomMsg(name, s,roomname);
 						}
-						roomout(name, s);
+						roomout(name,s); //방아웃 
 						// System.out.println(roomname+"의 방에 "+name+"님이 입장하셨습니다.");
-					}
-					// else if (s.indexOf("/out") >= 0) { // 방아웃
-					// roomout(name, s);
-					// StringTokenizer t1 = new StringTokenizer(s);
-					// t1.nextToken();
-					// String roomname = t1.nextToken();
-					// // System.out.println(roomname+"의 방에 "+name+"님이 나가셨습니다.");
-					// }
+
+					} 
+//					else if (s.indexOf("/out") >= 0) { // 방아웃
+//						roomout(name, s);
+//						StringTokenizer t1 = new StringTokenizer(s);
+//						t1.nextToken();
+//						String roomname = t1.nextToken();
+//						// System.out.println(roomname+"의 방에 "+name+"님이 나가셨습니다.");
+//					}
 					else {
 						if (msgCheck(s, name) == 1) { // 금칙어사용
 							s = name + "님이 금칙어를사용했습니다.";
 							sendAllMsg(name, s);
 						} else {
 							System.out.println("[" + name + "]" + s); // 기본
-							sendwaitingMsg(name, s);
+							sendwaitingMsg(name,s);
 							// StringTokenizer t1 = new StringTokenizer(s2);
 							// t1.nextToken();
 							// String roomname = t1.nextToken();
