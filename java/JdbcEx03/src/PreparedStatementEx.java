@@ -36,17 +36,17 @@ public class PreparedStatementEx {
 
 			// ------------------------------------------------------
 
-			// sql = "insert into test2 values(?,?)";
-			// pstmt = con.prepareStatement(sql);
-			// pstmt.setString(1, "홍길동");
-			// pstmt.setString(2, "1111");
-			// updateCount = pstmt.executeUpdate();
-			// System.out.println("inser tCount: " + updateCount);
-			// //--------------------------------------------------------
-			String sql = "select id from waitingroom";
+//			 String sql = "insert into roomlist values(?,?)";
+//			 pstmt = con.prepareStatement(sql);
+//			 pstmt.setString(1, "홍길동");
+//			 pstmt.setString(2, "1111");
+//			 updateCount = pstmt.executeUpdate();
+//			 System.out.println("inser tCount: " + updateCount);
+			 //--------------------------------------------------------
+			String sql = "select id from waitingroom ";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			int count = 0;
+			int count = 2;
 			
 
 			a = s.nextLine();

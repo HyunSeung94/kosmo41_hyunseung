@@ -13,17 +13,22 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.sql.*;
 
+//test의 test2 
 public class test2 {
 	ServerSocket serverSocket = null;
 	Socket socket = null;
 	Map<String, PrintWriter> clientMap;
+	Map<String, PrintWriter> clientMap2;
 
 	// 생성자
 	public test2() {
 		// 클라이언트의 출력스트림을 저장할 해쉬맵 생성
 		clientMap = new HashMap<String, PrintWriter>();
+		clientMap2 = new HashMap<String, PrintWriter>();
+
 		// 해쉬맵 동기화 설정.
 		Collections.synchronizedMap(clientMap);
+		Collections.synchronizedMap(clientMap2);
 
 	}
 
@@ -40,11 +45,13 @@ public class test2 {
 				msr.start(); // 쓰레드 시동.
 			}
 		} catch (Exception e) {
+			System.out.println("1");
 			e.printStackTrace();
 		} finally {
 			try {
 				serverSocket.close();
 			} catch (Exception e) {
+				System.out.println("2");
 				e.printStackTrace();
 			}
 		}
@@ -98,127 +105,451 @@ public class test2 {
 		while (it.hasNext()) {
 			try {
 				PrintWriter it_out = (PrintWriter) clientMap.get(it.next());
-				if (user.equals(" "))
+				if (user.equals(" ")) {
 					it_out.println(msg);
-				else
+				} else {
 					it_out.println("[" + user + "]" + msg);
+				}
 			} catch (Exception e) {
 				System.out.println("예외:" + e);
 			}
 		}
 	}
 
-	public void sendMsg(String user, String msg, String A) {
+	public void sendMsg(String user, String msg, String toname) {
 		System.out.println("귓속말 발견!!!");
 		Iterator<String> it = clientMap.keySet().iterator();
 
-		// int nTmp1 = msg.indexOf(" ");
-		// String strTmp1 = msg.substring(nTmp1 + 1);
-		// System.out.println(strTmp1);
-		// System.out.println(user);
-
 		if (!msg.equals("//to")) {
 			try {
-				PrintWriter it_out = (PrintWriter) clientMap.get(A);
+				PrintWriter it_out = (PrintWriter) clientMap.get(toname);
 				it_out.println(user + "(고정 귓속말): " + msg);
 			} catch (Exception e) {
 				System.out.println("예외:" + e);
 			}
 		}
 	}
-	
-	public void DbOpen() {
 
-			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-			} catch (ClassNotFoundException cnfe) {
-				cnfe.printStackTrace();
-			}
-	}
+	public void sendroomMsg(String user, String msg, String roomname) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
-		public static void Dblogin (String w) {
-			
-			String a = w;
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
+		// 출력스트림을 순차적으로 얻어와서 해당 메세지를 출력한다.
+		Iterator<String> it = clientMap.keySet().iterator();
+		// StringTokenizer t1 = new StringTokenizer(msg);
+		// String roomname = t1.nextToken();
+		//
+		try {
+			con = ConnectionPool.getConnection();
 
-			try {
-				con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
-						"scott",
-						"tiger");
-//				String sql = "create table test2(id varchar(10), " +
-//				" 					password varchar(10))";
-//				pstmt = con.prepareStatement(sql);
-//				int updateCount = pstmt.executeUpdate();
-//				System.out.println("createCount : " + updateCount);
-				 //------------------------------------------------------
+			// ----------------------------------------------------
 
-				String sql = "insert into test2 values(?,?)";
-				pstmt = con.prepareStatement(sql);
-				pstmt.setString(1, a);
-				pstmt.setString(2, "1111");
-				int updateCount = pstmt.executeUpdate();
-				System.out.println("inser tCount: " + updateCount);
+			String sql = "select id from " + roomname;
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
 
-				// --------------------------------------------------------
-				sql = "select * from test2";
-				pstmt = con.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-//				while (rs.next()) {
-//					System.out.print("id: " + rs.getString(1));
-//				}
+			System.out.println(roomname + "의방에서 대화를 하고있습니다.");
 
-				// //---------------------------------------------------
-				//
-				// sql = "drop table test2";
-				// pstmt = con.prepareStatement(sql);
-				// updateCount = pstmt.executeUpdate();
-				// System.out.println("dropCount : " + updateCount);
-
-			} catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally {
+			while (rs.next()) {
 				try {
-					if (rs != null)
-						rs.close();
-					if (pstmt != null)
-						pstmt.close();
-					if (con != null)
-						con.close();
-				} catch (SQLException sqle) {
+					PrintWriter it_out = (PrintWriter) clientMap.get(rs.getString("id"));
+
+					if (user.equals(" ")) {
+						it_out.println(msg);
+					} else {
+						it_out.println("[" + user + "]" + msg);
+					}
+
+				} catch (Exception e) {
+					System.out.println("예외:" + e);
 				}
+
+			}
+
+		} catch (SQLException sqle) {
+			System.out.println("17");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
 			}
 		}
-	
-	public void Dblogout(String q) {
-//		String a = q;
-		Statement stmt = null;
-		
-	
+
+	}
+
+	public void sendwaitingMsg(String user, String msg) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
 		try {
-			
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
-					"scott",
-					"tiger");
-			stmt = con.createStatement();
-			System.out.println("AAAA");
-			StringBuffer sb = new StringBuffer();
-			System.out.println("BBBB");
-			 sb.append("delete from TEST2 where id = '"+ q + "'");
-			 System.out.println("CCCC");
-			 int updateCount = stmt.executeUpdate(sb.toString());
-			 System.out.println("ㅋㅋㅋ");
-			 stmt.close();
-			 con.close();
-			 
+			con = ConnectionPool.getConnection();
+
+			// ----------------------------------------------------
+
+			String sql = "select id from WAITINGROOM ";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			System.out.println("대기실 채팅");
+
+			while (rs.next()) {
+				try {
+					PrintWriter it_out = (PrintWriter) clientMap.get(rs.getString("id"));
+
+					if (user.equals(" ")) {
+						it_out.println(msg);
+					} else {
+						it_out.println("[" + user + "]" + msg);
+					}
+
+				} catch (Exception e) {
+					System.out.println("예외:" + e);
+				}
+
+			}
+
 		} catch (SQLException sqle) {
-			System.out.println("Connection Error");
+			System.out.println("17");
 			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
 		}
 	}
-	
+
+	public void room(String user, String msg) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringTokenizer t1 = new StringTokenizer(msg);
+		t1.nextToken();
+		String roomname = t1.nextToken();
+
+		System.out.println(roomname + "방 생성되었습니다.");
+		System.out.println(user + "님이 방을생성하고 " + roomname + "방에 입장하였습니다.");
+
+		try {
+			con = ConnectionPool.getConnection();
+			String sql = "create table " + roomname + " (id varchar(10), " + "password varchar(10))";
+			pstmt = con.prepareStatement(sql);
+
+			// int updateCount =
+			pstmt.executeUpdate();
+			// ----------------------------------------------------------------
+			sql = "delete from waitingroom where id = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.executeUpdate();
+			// ----------------------------------------------------------------
+			sql = "insert into " + roomname + " values(?,?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.setString(2, "2222");
+			pstmt.executeUpdate();
+
+		} catch (SQLException sqle) {
+			System.out.println("3");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+	}
+
+	public void roomdelete(String user, String msg) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringTokenizer t1 = new StringTokenizer(msg);
+		t1.nextToken();
+		String roomname = t1.nextToken();
+		System.out.println(roomname + "방제거");
+		// System.out.println(roomname);
+
+		try {
+			con = ConnectionPool.getConnection();
+
+			String sql = "drop table " + roomname + " where password = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "2222");
+			pstmt.executeUpdate();
+
+		} catch (SQLException sqle) {
+			System.out.println("4");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+
+	}
+
+	public void roomin(String user, String msg) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringTokenizer t1 = new StringTokenizer(msg);
+		t1.nextToken();
+		String roomname = t1.nextToken();
+
+		System.out.println(roomname + "의 방에 " + user + "님이 입장하셨습니다.");
+
+		try {
+			con = ConnectionPool.getConnection();
+			String sql = "delete from waitingroom where id = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.executeUpdate();
+			// ----------------------------------------------------------------
+			sql = "insert into " + roomname + " values(?,?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.setString(2, "1111");
+			pstmt.executeUpdate();
+
+		} catch (SQLException sqle) {
+			System.out.println("5");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+	}
+
+	public void roomout(String user, String msg) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringTokenizer t1 = new StringTokenizer(msg);
+		t1.nextToken();
+		String roomname = t1.nextToken();
+
+		System.out.println(roomname + "의 방에 " + user + "님이 나가셨습니다.");
+
+		try {
+			con = ConnectionPool.getConnection();
+			String sql = "delete from " + roomname + " where id = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.executeUpdate();
+			// ----------------------------------------------------------------
+			sql = "insert into waitingroom values(?,?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.setString(2, "1111");
+			pstmt.executeUpdate();
+
+		} catch (SQLException sqle) {
+			System.out.println("6");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+	}
+
+	public void END(String A) {
+
+	}
+
+	public void Block(String name, PrintWriter out) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Scanner S = new Scanner(System.in);
+		String roop = "";
+
+		try {
+			con = ConnectionPool.getConnection();
+			// ----------------------------------------------------
+			String sql = "select * from BLOCK";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				if (name.equals(rs.getString("id"))) {
+					while (true) {
+
+						System.out.println("차단된 사용자가 접속을 하려고 합니다.");
+						out.println("차단된 사용자입니다. 다시 로그인하세요.");
+						roop = S.nextLine();
+						
+					}
+				}
+			}
+			System.out.println("정상적인 사용자가 로그인하였습니다.");
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+
+	}
+
+	public void DbOpen() {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("8");
+			cnfe.printStackTrace();
+		}
+	}
+
+	public static void Dblogin(String w) {
+
+		String a = w;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = ConnectionPool.getConnection();
+			// String sql = "create table test2(id varchar(10), " +
+			// " password varchar(10))";
+			// pstmt = con.prepareStatement(sql);
+			// int updateCount = pstmt.executeUpdate();
+			// System.out.println("createCount : " + updateCount);
+			// ------------------------------------------------------
+
+			String sql = "insert into waitingroom values(?,?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, a);
+			pstmt.setString(2, "1111");
+			int updateCount = pstmt.executeUpdate();
+			System.out.println("inser tCount: " + updateCount);
+
+			// --------------------------------------------------------
+			sql = "select * from waitingroom";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			// while (rs.next()) {
+			// System.out.print("id: " + rs.getString(1));
+			// }
+
+			// //---------------------------------------------------
+			//
+			// sql = "drop table test2";
+			// pstmt = con.prepareStatement(sql);
+			// updateCount = pstmt.executeUpdate();
+			// System.out.println("dropCount : " + updateCount);
+
+		} catch (SQLException sqle) {
+			System.out.println("9");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+	}
+
+	public static void Dblogout(String q) {
+
+		// String a = q;
+		PreparedStatement stmt = null;
+		Connection con = null;
+
+		try {
+			// System.out.println("AAAA");
+			con = ConnectionPool.getConnection();
+			String sql = "delete from waitingroom where id = ? and password = ? ";
+			// System.out.println("BBBB");
+			stmt = con.prepareStatement(sql);
+			// System.out.println("CCCC");
+			stmt.setString(1, q);
+			// System.out.println("DDDD");
+			stmt.setString(2, "1111");
+			int updateCount = stmt.executeUpdate();
+			// System.out.println("ㅋㅋㅋ"); 출력확인용
+			// sql = "commit";
+
+		} catch (SQLException sqle) {
+			System.out.println("10");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException sqle) {
+			}
+		}
+	}
+
+	public static int msgCheck(String a, String name) {
+
+		if (a.contains("시발") || a.contains("병신") || a.contains("멍청이") || a.contains("조성준천재")) {
+			System.out.println("금칙어를 사용하신분이있습니다.");
+			return 1;
+		} else {
+			return 2;
+		}
+
+	}
 
 	public static void main(String[] args) {
 		// 서버 객체생성
@@ -250,15 +581,70 @@ public class test2 {
 
 		@Override
 		public void run() {
-
+			
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
 			String name = ""; // 클라이언트로부터 받은 이름을 저장할 변수
 			try {
+				try {
+					con = ConnectionPool.getConnection();
+				
+					name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
+					Block(name,out);
+					String sql = "select id from waitingroom";
+					pstmt = con.prepareStatement(sql);
+					rs = pstmt.executeQuery();
+					int count = 2;	
+					
+					
+					
+					while(true) {
+						while (rs.next()) {
+//							System.out.println("2222222");
+							if (name.equals(rs.getString("id"))) {
+//								System.out.println("333333333");
+								count = 1;
+								do {
+									System.out.println("중복된 아이디가 접속을 시도하고 있습니다.");
+									out.println("이름을 다시입력하세요");
+									System.out.println(rs.getString("id"));
+									name = in.readLine();
+								} while (name.equals(rs.getString("id")));
+							}else {
+								count = 2;
+							}
+						}
+						if(count == 2) {
+							break;
+						}
+						System.out.println(count);
+						rs = pstmt.executeQuery();
+						System.out.println("1111111");
+					}
+					
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
+				} finally {
+					try {
+						if (rs != null)
+							rs.close();
+						if (pstmt != null)
+							pstmt.close();
+						if (con != null)
+							con.close();
+					} catch (SQLException sqle) {
+					}
+				}
 
-				name = in.readLine(); // 클라이언트에서 처음으로 보내는 메세지는
+			
+
+
 				// 클라이언트가 사용할 이름이다.
 				Dblogin(name);
 
-				sendAllMsg("", name + "님이 입장하셨습니다.");
+				sendAllMsg(name, "님이 입장하셨습니다.");
+
 				// 현재 객체가 가지고있는 소켓을 제외하고 다른 소켓(클라이언트)들에게 접속을 알림.
 				clientMap.put(name, out); // 해쉬맵에서 키를 name으로 출력 스트림 객체를 저장.
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
@@ -266,44 +652,96 @@ public class test2 {
 				// 입력스트림이 null이 아니면 반복
 
 				String s = "";
+				// String roomdate[] = new String[10];
 				while (in != null) {
 					s = in.readLine();
 
-					if (s.indexOf("/r") >= 0) {
+					if (s.indexOf("/w") >= 0) { // 귓속말
+						System.out.println("111");
 						to(name, s);
-					} else if (s.indexOf("/to") >= 0) {
+					} else if (s.indexOf("/to") >= 0) {// 고정귓속말
 						int nTmp1 = s.indexOf(" ");
 						String strTmp1 = s.substring(nTmp1 + 1);
 						String A = strTmp1;
-						while (!s.equals("//to")) {
-
+						while (!s.equals("//to")) { //고정 취소
 							s = in.readLine();
 							sendMsg(name, s, A);
 						}
-					} else if (s.equals("/list")) {
+					}
+//					else if (s.indexOf("/block") >= 0) {
+//						Block(s);
+//					}
+					else if (s.equals("/list")) {// 리스트 뽑기
 						list(out);
-					} else if (s.equals("q") || s.equals("Q")) {
+					}else if(s.equals("/notice")){
+						s = in.readLine();
+						sendAllMsg(name,s);
+					}
+					else if (s.equals("q") || s.equals("Q")) { // 채팅방나가기
 						break;
-					} else {
-						System.out.println("[" + name + "]" + s);
-						sendAllMsg(name, s);
+					} else if (s.indexOf("/room") >= 0) { // 방만들기
+						room(name, s);
+						
+						StringTokenizer t1 = new StringTokenizer(s);
+						t1.nextToken();
+						String roomname = t1.nextToken();
+						sendwaitingMsg(name," 님이 대기실에 퇴장하셨습니다.");
+						while (!(s.indexOf("/out") >= 0)) {
+							s = in.readLine();
+							sendroomMsg(name, s, roomname);
+						}
+						roomout(name, s);
+						sendwaitingMsg(name," 님이 대기실에 입장하셨습니다.");
+
+					} else if (s.indexOf("/deleteroom") >= 0) { // 방지우기
+						roomdelete(name, s);
+					} else if (s.indexOf("/in") >= 0) { // 방입장
+						roomin(name, s);
+						StringTokenizer t1 = new StringTokenizer(s);
+						t1.nextToken();
+						String roomname = t1.nextToken();
+						while (!(s.indexOf("/out") >= 0)) {
+							s = in.readLine();
+							sendroomMsg(name, s, roomname);
+						}
+						roomout(name, s);
+						// System.out.println(roomname+"의 방에 "+name+"님이 입장하셨습니다.");
+					}
+					// else if (s.indexOf("/out") >= 0) { // 방아웃
+					// roomout(name, s);
+					// StringTokenizer t1 = new StringTokenizer(s);
+					// t1.nextToken();
+					// String roomname = t1.nextToken();
+					// // System.out.println(roomname+"의 방에 "+name+"님이 나가셨습니다.");
+					// }
+					else {
+						if (msgCheck(s, name) == 1) { // 금칙어사용
+							s = name + "님이 금칙어를사용했습니다.";
+							sendwaitingMsg(name, s);
+						} else {
+							System.out.println("[" + name + "]" + s); // 기본
+							sendwaitingMsg(name, s);
+							// StringTokenizer t1 = new StringTokenizer(s2);
+							// t1.nextToken();
+							// String roomname = t1.nextToken();
+							// sendroomMsg(name,s);
+						}
 					}
 
 				}
 
 				// System.out.println("Bye....");
 			} catch (Exception e) {
+				System.out.println("예외처리!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				System.out.println("예외:" + e);
 			} finally {
 				// 예외가 발생할때 퇴장. 해쉬맵에서 해당 데이터 제거(remove)
 				// 보통 종료하거나 나가면 java.net.SocketException: 예외발생
 				clientMap.remove(name);
-				
-				
-				Dblogout(name);
-				
 
-				sendAllMsg("", "[" + name + "]" + "님이 퇴장하셨습니다.");
+				// Dblogout(name);
+
+				sendAllMsg(name, "님이 퇴장하셨습니다.");
 				System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
 				Dblogout(name);
 				try {
@@ -311,6 +749,7 @@ public class test2 {
 					out.close();
 					socket.close();
 				} catch (Exception e) {
+					System.out.println("11");
 					e.printStackTrace();
 				}
 			}
