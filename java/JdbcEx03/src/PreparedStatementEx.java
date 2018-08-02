@@ -43,37 +43,44 @@ public class PreparedStatementEx {
 //			 updateCount = pstmt.executeUpdate();
 //			 System.out.println("inser tCount: " + updateCount);
 			 //--------------------------------------------------------
-			String sql = "select id from waitingroom ";
+			a = "현승1";
+			String sql = "select id from 방1 where password = 2222 ";
 			pstmt = con.prepareStatement(sql);
+			
 			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				System.out.println("1111");
+				System.out.println(rs.getString(1));
+			}
 			int count = 2;
 			
 
-			a = s.nextLine();
-
-			
-			while(true) {
-				while (rs.next()) {
-					System.out.println("2222222");
-					if (a.equals(rs.getString("id"))) {
-						System.out.println("333333333");
-						count = 1;
-						do {
-							System.out.println("이름을 다시입력하세요");
-							System.out.println(rs.getString("id"));
-							a = s.nextLine();
-						} while (a.equals(rs.getString("id")));
-					}else {
-						count = 2;
-					}
-				}
-				if(count == 2) {
-					break;
-				}
-				System.out.println(count);
-				rs = pstmt.executeQuery();
-				System.out.println("1111111");
-			}
+//			a = s.nextLine();
+//
+//			
+////			while(true) {
+//				while (rs.next()) {
+//					System.out.println("2222222");
+//					if (a.equals(rs.getString("id"))) {
+//						System.out.println("333333333");
+//						count = 1;
+//						do {
+//							System.out.println("이름을 다시입력하세요");
+//							System.out.println(rs.getString("id"));
+//							a = s.nextLine();
+//						} while (a.equals(rs.getString("id")));
+//					}else {
+//						count = 2;
+//					}
+//				}
+//				if(count == 2) {
+//					break;
+//				}
+//				System.out.println(count);
+//				rs = pstmt.executeQuery();
+//				System.out.println("1111111");
+//			}
 
 			// System.out.println("1111111111"+rs.getString(1));
 
