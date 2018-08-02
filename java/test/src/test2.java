@@ -364,6 +364,35 @@ public class test2 {
 		}
 	}
 
+	public void myroomlist(String user, String roomname, PrintWriter out) {
+		String myroomlist = roomname + "은 님이 방장인 방에 접속한 사용자:[ ";
+
+		try {
+
+			String sql = "select id from " + roomname + " where password = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "2222");
+			rs = pstmt.executeQuery();
+
+			if (rs.getString(1).equals(user)) {
+				sql = "select id from " + roomname;
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					myroomlist = myroomlist + (String) rs.getString(1) + ",";
+				}
+			} else {
+				out.println("당신은 방은 없습니다.");
+			}		
+			if (rs.next() == true) {
+				myroomlist = myroomlist.substring(0, myroomlist.length() - 1) + "]"; // -1은 , 를 없애기위해서
+				out.println(myroomlist);
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+	}
+
 	public void roomsuper(String user, String roomname, String s, PrintWriter out) {
 
 		try {
@@ -517,41 +546,39 @@ public class test2 {
 	public void forcedexit(String user, String roomname, String toname, String s, PrintWriter out) {
 
 		try {
-			String sql = "select id from " + roomname+" where password = 2222";
+			String sql = "select id from " + roomname + " where password = 2222";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			System.out.println("11111");
 
-			if(rs.next()) {
+			if (rs.next()) {
 				if (rs.getString(1).equals(user)) {
 
-						sql = "delete from " + roomname + " where id = ? ";
-						pstmt = con.prepareStatement(sql);
-						pstmt.setString(1, toname);
-						pstmt.executeUpdate();
-						// ----------------------------------------------------------------
-						sql = "insert into waitingroom " + " values(?,?)";
-						pstmt = con.prepareStatement(sql);
-						pstmt.setString(1, toname);
-						pstmt.setString(2, "1111");
-						pstmt.executeUpdate();
-					}else {
-						System.out.println("222222222");
-						out.println("당신은 방장이 아닙니다.");
-					}
-				}else {
+					sql = "delete from " + roomname + " where id = ? ";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, toname);
+					pstmt.executeUpdate();
+					// ----------------------------------------------------------------
+					sql = "insert into waitingroom " + " values(?,?)";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, toname);
+					pstmt.setString(2, "1111");
+					pstmt.executeUpdate();
+				} else {
+					System.out.println("222222222");
 					out.println("당신은 방장이 아닙니다.");
 				}
-					
+			} else {
+				out.println("당신은 방장이 아닙니다.");
+			}
+
 			System.out.println("33333333333");
-			
 
-		}catch(
+		} catch (
 
-	SQLException sqle)
-	{
-		sqle.printStackTrace();
-	}
+		SQLException sqle) {
+			sqle.printStackTrace();
+		}
 
 	}
 
@@ -816,10 +843,6 @@ public class test2 {
 						sendwaitingMsg(name, " 님이 대기실에 퇴장하셨습니다.");
 						while (!(s.indexOf("/out") >= 0)) {
 							s = in.readLine();
-							forcedexit2(name, s, out, s2);
-							if (count == 2) {
-								s = "/out";
-							}
 
 							if (s.equals("/inlist")) {
 								roominlist(roomname, out);
@@ -830,10 +853,18 @@ public class test2 {
 								t2.nextToken();
 								String toname = t2.nextToken();
 								forcedexit(name, roomname, toname, s, out);
+							} else if (s.equals("/myroomlist")) {
+								myroomlist(name, roomname, out);
+							} else if (s.equals("/alllist")) {// 리스트 뽑기
+								list(out);
 							} else if (s.indexOf("/super ") >= 0) {
 								roomsuper(name, roomname, s, out);
 							} else {
 								sendroomMsg(name, s, roomname);
+							}
+							forcedexit2(name, s, out, s2);
+							if (count == 2) {
+								s = "/out";
 							}
 							// else if (s.indexOf("/초대 ") >= 0) {// /초대 방이름 초대받는사람이름
 							// StringTokenizer t2 = new StringTokenizer(s);
@@ -850,8 +881,6 @@ public class test2 {
 							// }
 							// }
 						}
-
-						roomout(name, s);
 						sendwaitingMsg(name, " 님이 대기실에 입장하셨습니다.");
 						if (count != 2) {
 							roomout(name, s);
@@ -869,11 +898,15 @@ public class test2 {
 						out.println(name + "님이 방에 입장하였습니다.");
 						while (!(s.indexOf("/out") >= 0)) {
 							s = in.readLine();
-							
+
 							System.out.println(s);
 
 							if (s.equals("/inlist")) {
 								roominlist(roomname, out);
+							} else if (s.equals("/alllist")) {// 리스트 뽑기
+								list(out);
+							} else if (s.equals("/myroomlist")) {
+								myroomlist(name, roomname, out);
 							} else if (s.indexOf("/w ") >= 0) { // 귓속말
 								to(name, s);
 							} else if (s.indexOf("/추방 ") >= 0) {
@@ -881,13 +914,12 @@ public class test2 {
 								t2.nextToken();
 								String toname = t2.nextToken();
 								forcedexit(name, roomname, toname, s, out);
+							} else {
+								sendroomMsg(name, s, roomname);
 							}
 							forcedexit2(name, s, out, s2);
 							if (count == 2) {
 								s = "/out";
-							}
-							else {
-								sendroomMsg(name, s, roomname);
 							}
 						}
 						out.println(name + "님이 방을 퇴장하였습니다.");
