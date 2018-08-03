@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 import java.sql.*;
 
 //test의 test2 
-public class test2 {
+public class MultiServer6 {
 	ServerSocket serverSocket = null;
 	Socket socket = null;
 	Map<String, PrintWriter> clientMap;
@@ -25,7 +25,7 @@ public class test2 {
 	int count = 0;
 
 	// 생성자
-	public test2() {
+	public MultiServer6() {
 		// 클라이언트의 출력스트림을 저장할 해쉬맵 생성
 		clientMap = new HashMap<String, PrintWriter>();
 		clientMap2 = new HashMap<String, PrintWriter>();
@@ -258,7 +258,7 @@ public class test2 {
 			pstmt.setString(1, "2222");
 			pstmt.executeUpdate();
 			// --------------------------------------------------------------------------
-			sql = "delete from roomlist " + " where roomlist = ? ";
+			sql = "delete from roomlist  where roomlist = ? ";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, roomname);
 			pstmt.executeUpdate();
@@ -374,19 +374,20 @@ public class test2 {
 			pstmt.setString(1, "2222");
 			rs = pstmt.executeQuery();
 
-			if (rs.getString(1).equals(user)) {
-				sql = "select id from " + roomname;
-				pstmt = con.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					myroomlist = myroomlist + (String) rs.getString(1) + ",";
+			while (rs.next()) {
+				if (rs.getString(1).equals(user)) {
+					sql = "select id from " + roomname;
+					pstmt = con.prepareStatement(sql);
+					rs = pstmt.executeQuery();
+					while (rs.next()) {
+						myroomlist = myroomlist + (String) rs.getString(1) + ",";
+
+						myroomlist = myroomlist.substring(0, myroomlist.length() - 1) + "]"; // -1은 , 를 없애기위해서
+						out.println(myroomlist);
+					}
+				} else {
+					out.println("당신은 방은 없습니다.");
 				}
-			} else {
-				out.println("당신은 방은 없습니다.");
-			}		
-			if (rs.next() == true) {
-				myroomlist = myroomlist.substring(0, myroomlist.length() - 1) + "]"; // -1은 , 를 없애기위해서
-				out.println(myroomlist);
 			}
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -479,8 +480,6 @@ public class test2 {
 
 		invitationname = "";
 
-		// System.out.println(roomname + "의 방에 " + user + "님이 입장하셨습니다.");
-
 		try {
 			String sql = "delete from waitingroom where id = ? ";
 			pstmt = con.prepareStatement(sql);
@@ -549,7 +548,6 @@ public class test2 {
 			String sql = "select id from " + roomname + " where password = 2222";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			System.out.println("11111");
 
 			if (rs.next()) {
 				if (rs.getString(1).equals(user)) {
@@ -593,7 +591,7 @@ public class test2 {
 			System.out.println(user);
 			while (rs.next()) {
 				if (rs.getString(1).equals(user)) {
-					System.out.println("야야야야야" + user);
+//					System.out.println("야야야야야" + user);
 					count = 2;
 				}
 			}
@@ -723,7 +721,7 @@ public class test2 {
 
 	public static void main(String[] args) {
 		// 서버 객체생성
-		test2 ms = new test2();
+		MultiServer6 ms = new MultiServer6();
 		ms.init();
 
 	}
