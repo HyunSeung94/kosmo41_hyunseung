@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	div {
+		width:50px; height:50px;
+		background-color:Orange;
+		position:relative;
+	}
+</style>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script>
+	$(document).ready(function() {
+		$('div').click(function () {
+			if($(this).position().left < 10){
+			$(this).animate({
+				left: 500
+			}, 'slow');
+		}else{
+			$(this).animate({
+				left: 0 
+			}, 'slow');
+		}
+		});
+		/*	1.7에서만 동작하는것 
+		$('div').toggle(function() {
+			$(this).animate({
+				left:500
+			}, 'slow');
+			}, function () {
+				$(this).animate({
+					left: 0
+				}, 'slow');
+			});
+		*/
+	});
+			
+</script>
+</head>
+<body>
+	<div>1</div>
+	<div>2</div>
+	<div>3</div>
+</body>
+</html>
