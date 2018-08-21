@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>xml 데이터를 가져올때 이형태를사용하면됨</title>
+<script src="http://code.jquery.com/jquery.js"></script>
+	<script>
+		$(document).ready(function() {
+			$.ajax({
+				url: '/jquery/data.xml',
+				success: function (data) {
+					alert(data)
+					$(data).find('product').each(function () {
+						// 변수를 선언합니다.
+						var name = $(this).find('name').text();
+						var price = $(this).find('price').text();
+						
+						//출력합니다.
+						$('<h1></h1>').text(name + ':' + price).appendTo('body')
+					});
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>

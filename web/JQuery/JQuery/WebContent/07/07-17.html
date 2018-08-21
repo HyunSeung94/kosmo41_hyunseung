@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- 디버그용!  -->
+<title>$.param ( ) 메서드는 객체를 쿼리 문자열로 바꿈</title>
+<script src="http://code.jquery.com/jquery.js"></script>
+	<script>
+		$(document).ready(function() {
+			//변수를 선언합니다.
+			var data = {
+					name: 'RintIanTta',
+					region: 'Seoul',
+			};
+			
+			//출력합니다.
+			$('<h1></h1>').text($.param(data)).appendTo('body');
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>
