@@ -15,6 +15,7 @@
 	아이디 : <jsp:getProperty name="member" property="id" /><br>
 	비밀번호 : <jsp:getProperty name="member" property="pw"/><br>
 	
+		<!-- 실무에 많이쓰임! -->
 	<hr>
 	이름 : ${member.name }<br>
 	이름 : ${member.id }<br>

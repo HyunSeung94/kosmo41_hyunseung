@@ -4,17 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>JSP/Servlet 23-1</title>
+<title>JSP/Servlet 26-2</title>
 </head>
 <body>
-
-	<!-- 실무에 많이쓰임! -->
-	
-	<!-- ${ value } -->
-	${10}<br>
-	${99.99}<br>
-	${"ABC"}<br>
-	${true}<br>
-	
+		
+		<%
+			request.setAttribute("id", "abcde");
+			request.setAttribute("pw", "12345");
+		
+			response.sendRedirect("RequestObj");
+		%>
 </body>
 </html>

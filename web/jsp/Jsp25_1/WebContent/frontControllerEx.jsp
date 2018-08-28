@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>JSP/Servlet 23-1</title>
+<title>JSP/Servlet 25-2</title>
 </head>
 <body>
-
-	<!-- 실무에 많이쓰임! -->
 	
-	<!-- ${ value } -->
-	${10}<br>
-	${99.99}<br>
-	${"ABC"}<br>
-	${true}<br>
+	<a href="insert.do">insert</a>
+	<hr />
+	<a href="http://localhost:8081<%=request.getContextPath()%>/update.do">update</a>
+	<hr />
+	<a href="http://localhost:8081/Jsp25_1/select.do">select</a>
+	<hr />
+	<a href="<%=request.getContextPath()%>/delete.do">delete</a>
 	
 </body>
 </html>
