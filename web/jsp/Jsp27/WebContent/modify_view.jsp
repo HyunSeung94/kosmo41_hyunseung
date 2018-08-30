@@ -45,7 +45,7 @@
 				
 				<a href="JavaScript:form_check();">수정완료 </a>&nbsp;&nbsp;
 				<a href="content_view.do?bId=${content_view.bId}">취소</a> &nbsp;&nbsp;
-				<a href="list.do">목록보기</a>&nbsp;&nbsp;				
+				<a href="list.do?page=<%= session.getAttribute("cpage")%>">목록보기</a>&nbsp;&nbsp;						
 		</form>
 	</table>
 </body>
