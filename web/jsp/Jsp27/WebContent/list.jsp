@@ -82,7 +82,7 @@
 				[끝]
 			</c:when>
 			<c:otherwise>
-				<a href="list.do?page=${page.endPage}">[끝]</a>
+				<a href="list.do?page=${page.totalPage}">[끝]</a>
 			</c:otherwise>
 			</c:choose> 			
 			</td>

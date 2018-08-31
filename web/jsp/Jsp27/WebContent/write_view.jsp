@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript"
+	src="./naver_editor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 </head>
 <body>
 
-	<table width="500" cellpadding = "0" cellspacing="0" border="1">
+	<table width="800" cellpadding ="0" cellspacing="0" border="1">
 		<form action="write.do" method="post">
 			<tr>
 				<td> 이름 </td>
@@ -20,7 +22,17 @@
 			</tr>
 			<tr>
 				<td> 내용 </td>
-				<td> <textarea name="bContent" rows = "10"></textarea></td>
+				<td> 
+				 <textarea name="bContent" id="ir1" rows="10" cols="100">${content_view.bContent}</textarea>
+					<script type="text/javascript">
+						var oEditors = [];
+						nhn.husky.EZCreator.createInIFrame({
+							oAppRef : oEditors,
+							elPlaceHolder : "ir1",
+							sSkinURI : "./naver_editor/SmartEditor2Skin.html",
+							fCreator : "createSEditor2"
+						});
+					</script>
 			</tr>
 			<tr>
 				<td colspan="2">

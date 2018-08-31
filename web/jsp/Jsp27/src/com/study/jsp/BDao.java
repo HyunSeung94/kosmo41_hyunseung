@@ -210,7 +210,7 @@ public class BDao {
 		pinfo.setTotalCount(totalCount);
 		pinfo.setListCount(listCount);
 		pinfo.setTotalPage(totalPage);
-		pinfo.setCurPage(curPage);
+		pinfo.setCurPage(mycurPage);
 		pinfo.setPageCount(pageCount);
 		pinfo.setStartPage(startPage);
 		pinfo.setEndPage(endPage);
