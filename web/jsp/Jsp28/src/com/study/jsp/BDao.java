@@ -62,24 +62,7 @@ public class BDao {
 		}
 	}
 
-//	private Connection getConnection() {
-//
-//		Context context = null;
-//		DataSource dataSource = null;
-//		Connection con = null;
-//
-//		try {
-//			// lookup 함수의 파라메터는 context.xml에 설정된
-//			// name(jdbc/Oracle11g)과 동일해야 한다.
-//			context = new InitialContext();
-//			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/Oracle11g");
-//			con = dataSource.getConnection();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		return con;
-//	}
+
 
 	public ArrayList<BDto> list(int curPage) {
 
