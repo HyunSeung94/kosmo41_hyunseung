@@ -39,20 +39,26 @@ public class joinOk implements Service {
 
 		dto.setrDate(new Timestamp(System.currentTimeMillis()));
 		if (dao.confirmId(dto.getId()) == MemberDao.MEMBER_EXISTENT) {
-			writer.println("아이디가 이미 존재합니다.");
+			writer.println("<script>alert('아이디가  중복입니다..'); ");
+			writer.println("javascript:window.location='join.jsp';</script>");
 			writer.close();
+			
 		} else {
 			int ri = dao.insertMember(dto);
 			session.setAttribute("id", dto.getId());
 			if (ri == MemberDao.MEMBER_JOIN_SUCCESS) {
-				writer.println(" 회원가입을 축하 합니다..");
-				response.sendRedirect("login.jsp");
+				writer.println("<script>alert('회원가입을 축하 합니다..'); ");
+				
+				writer.println("javascript:window.location='login.jsp';</script>");
 				writer.close();
 				
+				
 			} else {
-				writer.println(" 회원가입을 실패했어요 ㅜㅜ..");
+				writer.println("<script>alert('회원가입을 실패했습니다..'); ");
+				writer.println("javascript:window.location='join.jsp';</script>");
+				
 				writer.close();
-				response.sendRedirect("join.jsp");
+				
 			}
 		}
 

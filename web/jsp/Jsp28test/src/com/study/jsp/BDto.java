@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class BDto {
 
+	//게시판 
 	int bId;
 	String bName;
 	String bTitle;
@@ -15,12 +16,20 @@ public class BDto {
 	int bIndent;
 	String search;
 	String condition;
+	String boardname;
 	
+	// 회원가입
+	private String id;
+	private String pw;
+	private String name;
+	private String eMail;
+	private Timestamp rDate;
+	private String address;
 	public BDto() {
 		
 	}
 	public BDto(int bId, String bName, String bTitle, String bContent,
-			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent) 
+			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent,String boardname) 
 	{
 		this.bId = bId;
 		this.bName = bName;
@@ -31,9 +40,51 @@ public class BDto {
 		this.bGroup = bGroup;
 		this.bStep = bStep;
 		this.bIndent = bIndent;	
-		
+		this.boardname = boardname;
 	}
 	
+	public String getBoardname() {
+		return boardname;
+	}
+	public void setBoardname(String boardname) {
+		this.boardname = boardname;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPw() {
+		return pw;
+	}
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String geteMail() {
+		return eMail;
+	}
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
+	}
+	public Timestamp getrDate() {
+		return rDate;
+	}
+	public void setrDate(Timestamp rDate) {
+		this.rDate = rDate;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	public String getSearch() {
 		return search;
 	}

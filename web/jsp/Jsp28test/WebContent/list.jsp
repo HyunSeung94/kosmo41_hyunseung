@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	request.setCharacterEncoding("UTF-8");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,105 +22,130 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 	crossorigin="anonymous"></script>
+<script>
+	function boardlist(index) {
+		if(index == 1) {
+			
+			<% session.setAttribute("board","전우치게시판"); %>
+			javascript:window.location='boardname.do';
+		} else if (index == 2) {
+			<% session.setAttribute("board","홍길동게시판"); %>
+			javascript:window.location='boardname.do';
+		}
+		
+	}
+</script>
 <style>
 </style>
 </head>
 <body>
+	<br>
+	<br>
+	<div></div>
+
+
+	<div align="center">
+		<form name=boardname1 method="post">
+			<a class="btn btn-outline-secondary" href="list.do" role="button">전체게시글</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" class="btn btn-outline-secondary" id=board
+				value="전우치게시판" onclick="boardlist(1)">&nbsp;&nbsp;
+			<a class="btn btn-outline-secondary" href="boardname.do"
+				role="button" value="홍길동게시판">홍길동게시판</a>
+		</form>
+	</div>
+
+
+
+
+
+	<hr>
 	<div class="container">
-	<table class="table">
-		<thead class="thead-dark">
-			<tr align = "center">
-				<th scope="col">번호</th>
-				<th scope="col">이름</th>
-				<th scope="col">제목</th>
-				<th scope="col">날짜</th>
-				<th scope="col">히트</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach items="${list}" var="dto">
-				<tr align = "center">
-					<th scope="row">${dto.bId}</th>
-					<td>${dto.bName}</td>
-					<td><c:forEach begin="1" end="${dto.bIndent}">-</c:forEach> <a
-						href="content_view.do?bId=${dto.bId}&page=$">${dto.bTitle}</a></td>
-					<td>${dto.bDate}</td>
-					<td>${dto.bHit}</td>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr align="center">
+					<th scope="col">번호</th>
+					<th scope="col">이름</th>
+					<th scope="col">제목</th>
+					<th scope="col">날짜</th>
+					<th scope="col">히트</th>
 				</tr>
-			</c:forEach>
-			<tr>
-				<td colspan="5" align= "right"><a href="write_view.do">글작성</a></td>
-			</tr>
-			<tr>
-				<td colspan="5" align = "center">
-					<!-- 처음 --> 
-					<c:choose>
-						<c:when test="${(page.curPage-1)<1}">
+			</thead>
+			<tbody>
+				<c:forEach items="${list}" var="dto">
+					<tr align="center">
+						<th scope="row">${dto.bId}</th>
+						<td>${dto.bName}</td>
+						<td><c:forEach begin="1" end="${dto.bIndent}">-</c:forEach> <a
+							href="content_view.do?bId=${dto.bId}&page=$">${dto.bTitle}</a></td>
+						<td>${dto.bDate}</td>
+						<td>${dto.bHit}</td>
+					</tr>
+				</c:forEach>
+				<tr>
+					<td colspan="5" align="right"><a href="write_view.do">글작성</a></td>
+				</tr>
+				<tr>
+					<td colspan="5" align="center">
+						<!-- 처음 --> <c:choose>
+							<c:when test="${(page.curPage-1)<1}">
 							[처음]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=1">[ 처음 ]</a>
-						</c:otherwise>
-						</c:choose>
-						<!-- 이전 --> 
-						<c:choose>
-						<c:when test="${(page.curPage -1) < 1}">
+							<c:otherwise>
+								<a href="list.do?page=1">[ 처음 ]</a>
+							</c:otherwise>
+						</c:choose> <!-- 이전 --> <c:choose>
+							<c:when test="${(page.curPage -1) < 1}">
 							[ &lt; ]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=${page.curPage -1}">[ &lt;]</a>
-						</c:otherwise>
-						</c:choose> 
-						<!-- 개별 페이지 --> 
-						<c:forEach var="num" begin="${page.startPage}"
-						end="${page.endPage}" step="1">
-						<c:choose>
-						<c:when test="${page.curPage == num}">
+							<c:otherwise>
+								<a href="list.do?page=${page.curPage -1}">[ &lt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 개별 페이지 --> <c:forEach var="num" begin="${page.startPage}"
+							end="${page.endPage}" step="1">
+							<c:choose>
+								<c:when test="${page.curPage == num}">
             				[${num}] &nbsp;
             			</c:when>
 
-						<c:otherwise>
-							<a href="list.do?page=${num}">[${num}]</a> &nbsp;	
+								<c:otherwise>
+									<a href="list.do?page=${num}">[${num}]</a> &nbsp;	
             			</c:otherwise>
-						</c:choose>
-						</c:forEach>
-						<!-- 다음 -->
-						<c:choose>
-						<c:when test="${(page.curPage +1 ) > page.totalPage }">
+							</c:choose>
+						</c:forEach> <!-- 다음 --> <c:choose>
+							<c:when test="${(page.curPage +1 ) > page.totalPage }">
 							[ &gt; ]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=${page.curPage +1 }">[ &gt;]</a>
-						</c:otherwise>
-						</c:choose>
-					 	<!-- 끝 -->
-					 	<c:choose>
-						<c:when test="${page.curPage == page.totalPage}">
+							<c:otherwise>
+								<a href="list.do?page=${page.curPage +1 }">[ &gt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 끝 --> <c:choose>
+							<c:when test="${page.curPage == page.totalPage}">
 							[끝]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=${page.totalPage}">[끝]</a>
-						</c:otherwise>
+							<c:otherwise>
+								<a href="list.do?page=${page.totalPage}">[끝]</a>
+							</c:otherwise>
 						</c:choose>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		
-		<div id="searchForm" align="center">
-			<form action = "search.do">
-				<select name="search">
-					<option value="0">제목</option>
-					<option value="1">내용</option>
-					<option value="2">작성자</option>
-					<option value="3">제목+내용</option>
-					<option value="all">전체</option>
-				</select>
-				<input type="text" size="20" name="condition"/> &nbsp;
-				<input type="submit" value="검색" />
- 			</form>
-		</div>
-		
+	</div>
+
+
+	<div id="searchForm" align="center">
+		<form action="search.do">
+			<select name="search">
+				<option value="0">제목</option>
+				<option value="1">내용</option>
+				<option value="2">작성자</option>
+				<option value="3">제목+내용</option>
+				<option value="all">전체</option>
+			</select> <input type="text" size="20" name="condition" /> &nbsp; <input
+				type="submit" value="검색" />
+		</form>
+	</div>
+
 
 
 

@@ -24,8 +24,12 @@ public class BListCommand implements BCommand {
 		}
 		
 
+		// 게시판 검색 저장 
 		String search = request.getParameter("search");
 		String condition = request.getParameter("condition");
+		// 게시판 구분
+		String 
+		
 		
 		BDao dao = BDao.getInstance();
 		BPageInfo pinfo = dao.articlePage(nPage,search,condition);
@@ -36,6 +40,7 @@ public class BListCommand implements BCommand {
 		
 		HttpSession session = null;
 		session = request.getSession();
+		session.setAttribute("cpage", nPage);
 		session.setAttribute("cpage", nPage);
 		
 		

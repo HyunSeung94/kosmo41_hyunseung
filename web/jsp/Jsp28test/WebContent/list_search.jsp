@@ -21,6 +21,11 @@
 	crossorigin="anonymous"></script>
 <style>
 </style>
+<script>
+function form_submit() {
+	document.location.href="list.do"
+}
+</script>
 </head>
 <body>
 	<div class="container">
@@ -46,7 +51,8 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="5" align= "right"><a href="write_view.do">글작성</a></td>
+				<td colspan="2.5" align= "left"><a href="list.do" >전체 목록</a>
+				<td colspan="3" align= "right"><a href="write_view.do">글작성</a></td>		
 			</tr>
 			<tr>
 				<td colspan="5" align = "center">
@@ -56,7 +62,7 @@
 							[처음]
 						</c:when>
 						<c:otherwise>
-							<a href="search.do?page=1">[ 처음 ]</a>
+							<a href="search.do?search=${search}&condition=${condition}&page=1">[ 처음 ]</a>
 						</c:otherwise>
 						</c:choose>
 						<!-- 이전 --> 
@@ -65,7 +71,7 @@
 							[ &lt; ]
 						</c:when>
 						<c:otherwise>
-							<a href="search.do?page=${page.curPage -1}">[ &lt;]</a>
+							<a href="search.do?search=${search}&condition=${condition}&page=${page.curPage -1}">[ &lt;]</a>
 						</c:otherwise>
 						</c:choose> 
 						<!-- 개별 페이지 --> 
@@ -77,7 +83,7 @@
             			</c:when>
 
 						<c:otherwise>
-							<a href="search.do?page=${num}">[${num}]</a> &nbsp;	
+							<a href="search.do?search=${search}&condition=${condition}&page=${num}">[${num}]</a> &nbsp;	
             			</c:otherwise>
 						</c:choose>
 						</c:forEach>
@@ -87,7 +93,7 @@
 							[ &gt; ]
 						</c:when>
 						<c:otherwise>
-							<a href="search.do?page=${page.curPage +1 }">[ &gt;]</a>
+							<a href="search.do?search=${search}&condition=${condition}&page=${page.curPage +1 }">[ &gt;]</a>
 						</c:otherwise>
 						</c:choose>
 					 	<!-- 끝 -->
@@ -96,7 +102,7 @@
 							[끝]
 						</c:when>
 						<c:otherwise>
-							<a href="search.do?page=${page.totalPage}">[끝]</a>
+							<a href="search.do?search=${search}&condition=${condition}&page=${page.totalPage}">[끝]</a>
 						</c:otherwise>
 						</c:choose>
 					</td>
@@ -104,7 +110,7 @@
 			</tbody>
 		</table>
 		<div id="searchForm" align="center">
-			<form action = "search.do">
+			<form action = "search.do" method="post">
 				<select name="search">
 					<option value="0">제목</option>
 					<option value="1">내용</option>
@@ -114,6 +120,7 @@
 				</select>
 				<input type="text" size="20" name="condition"/> &nbsp;
 				<input type="submit" value="검색" />
+			
  			</form>
 		</div>
 		

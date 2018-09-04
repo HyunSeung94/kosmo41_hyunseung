@@ -37,6 +37,9 @@ public class BSearchCommand implements BCommand {
 		session = request.getSession();
 		session.setAttribute("cpage", nPage);
 		
+		//세션이 저장되서 검색페이징처리가 됨 
+		session.setAttribute("search",search);
+		session.setAttribute("condition",condition);
 		
 		
 		
