@@ -32,6 +32,13 @@
 			<form name="write_form" action="write.do" method="post">
 			<thead>
 				<tr>
+					<th scope="col">게시판종류<th>
+					<select name="board">
+						<option value="전우치게시판">전우치게시판</option>
+						<option value="홍길동게시판">홍길동게시판</option>				
+					</select>
+				</tr>
+				<tr>
 					<th scope="col" >이름</th>
 					<td><input type="text" name="bName" size="50"></td>
 				</tr>
@@ -57,9 +64,10 @@
 					<td colspan="2" align="right"><a href="JavaScript:form_check();">입력</a>&nbsp;&nbsp;
 						<a href="list.do">목록보기</a></td>
 				</tr>
-				</form>
 			</thead>
+			</form>
 		</table>
+		</div>
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 			crossorigin="anonymous"></script>

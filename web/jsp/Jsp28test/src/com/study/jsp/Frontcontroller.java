@@ -17,9 +17,7 @@ import com.study.jsp.command.BListCommand;
 import com.study.jsp.command.BModifyCommand;
 import com.study.jsp.command.BReplyCommand;
 import com.study.jsp.command.BReplyViewCommand;
-import com.study.jsp.command.BSearchCommand;
 import com.study.jsp.command.BWriteCommand;
-import com.study.jsp.command.BboardnameListCommand;
 import com.study.jsp.command.joinOk;
 import com.study.jsp.command.loginOk;
 import com.study.jsp.command.modifyOk;
@@ -116,15 +114,11 @@ public class Frontcontroller extends HttpServlet {
 			command.execute(request, response);
 			viewPage = "list.do?page=" + curPage;
 		} else if (com.equals("/search.do")) {
-			command = new BSearchCommand();
+			command = new BListCommand();
 			command.execute(request, response);
 			viewPage = "list_search.jsp";
-		} else if (com.equals("/boardname.do")) {
-			command = new BboardnameListCommand();
-			command.execute(request, response);
-			viewPage = "list.do";
-		}
-
+		} 
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);
 	}

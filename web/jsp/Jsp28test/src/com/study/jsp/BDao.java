@@ -22,12 +22,12 @@ public class BDao {
 	public static final int MEMBER_LOGIN_PW_NO_GOOD = 0;
 	public static final int MEMBER_LOGIN_SUCCESS = 1;
 	public static final int MEMBER_LOGIN_IS_NOT = -1;
-	
+
 	private static BDao instance = new BDao();
 	DataSource dataSource = null;
 	int listCount = 10; // 한페이지당 보여줄 게시물의 갯수
 	int pageCount = 5; // 하단에 보여줄 페이지 리스트 갯수
-	int searchcount= 0;
+	int searchcount = 0;
 
 	private BDao() {
 		try {
@@ -47,12 +47,11 @@ public class BDao {
 
 	public int insertMember(BDto dto) {
 		int ri = 0;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String query = "insert into members values (?,?,?,?,?,?)";
-		
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(query);
@@ -69,31 +68,32 @@ public class BDao {
 			System.out.println("11111");
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(con != null) con.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
 		}
-		
+
 		return ri;
 	}
-	
-	
+
 	public int confirmId(String id) {
 		int ri = 0;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet set = null;
 		String query = "select id from members where id = ?";
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, id);
 			set = pstmt.executeQuery();
-			if(set.next()) {
+			if (set.next()) {
 				ri = BDao.MEMBER_EXISTENT;
 			} else {
 				ri = BDao.MEMBER_NONEXISTENT;
@@ -102,7 +102,7 @@ public class BDao {
 			e.printStackTrace();
 			System.out.println("22222");
 		} finally {
-			
+
 			try {
 				set.close();
 				pstmt.close();
@@ -111,42 +111,42 @@ public class BDao {
 				e2.printStackTrace();
 			}
 		}
-		
+
 		return ri;
 	}
-	
+
 	public int userCheck(String id, String pw) {
 		int ri = 0;
 		String dbPw;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet set = null;
 		String query = "select pw from members where id = ?";
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, id);
 			set = pstmt.executeQuery();
-			if(set.next()) {
+			if (set.next()) {
 				dbPw = set.getString("pw");
 				if (dbPw.equals(pw)) {
 					System.out.println("login ok");
-					ri = BDao.MEMBER_LOGIN_SUCCESS;  //로그인 OK
+					ri = BDao.MEMBER_LOGIN_SUCCESS; // 로그인 OK
 				} else {
 					System.out.println("lohin fail");
-					ri = BDao.MEMBER_LOGIN_PW_NO_GOOD;  // 비밀번호 X
+					ri = BDao.MEMBER_LOGIN_PW_NO_GOOD; // 비밀번호 X
 				}
 			} else {
 				System.out.println("login fail");
-				ri = BDao.MEMBER_LOGIN_IS_NOT;  //아이디 X
+				ri = BDao.MEMBER_LOGIN_IS_NOT; // 아이디 X
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("33333");
 		} finally {
-			
+
 			try {
 				set.close();
 				pstmt.close();
@@ -155,31 +155,31 @@ public class BDao {
 				e2.printStackTrace();
 			}
 		}
-		
+
 		return ri;
 	}
-	
+
 	public BDto getMember(String id) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet set = null;
 		String query = "select * from members where id = ?";
 		BDto dto = null;
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, id);
 			set = pstmt.executeQuery();
-			
-			if(set.next()) {
+
+			if (set.next()) {
 				dto = new BDto();
 				dto.setId(set.getString("id"));
 				dto.setPw(set.getString("pw"));
 				dto.setName(set.getString("name"));
 				dto.seteMail(set.getString("eMail"));
 				dto.setrDate(set.getTimestamp("rDate"));
-				dto.setAddress(set.getString("address"));	
+				dto.setAddress(set.getString("address"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,24 +193,24 @@ public class BDao {
 				e2.printStackTrace();
 			}
 		}
-		
+
 		return dto;
 	}
-	
-	public int updateMember (BDto dto) {
+
+	public int updateMember(BDto dto) {
 		int ri = 0;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String query = "update members set pw=?, eMail=?, address=? where id=?";
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1,  dto.getPw());
-			pstmt.setString(2,  dto.geteMail());
-			pstmt.setString(3,  dto.getAddress());
-			pstmt.setString(4,  dto.getId());
+			pstmt.setString(1, dto.getPw());
+			pstmt.setString(2, dto.geteMail());
+			pstmt.setString(3, dto.getAddress());
+			pstmt.setString(4, dto.getId());
 			ri = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,33 +224,33 @@ public class BDao {
 		}
 		return ri;
 	}
-	
+
 	private Connection getConnection() {
-		
+
 		Context context = null;
 		DataSource dataSource = null;
 		Connection con = null;
-		
+
 		try {
-			//lookup 함수의 파라메터는 context.xml에 설정된
-			//name(jdbc/Oracle11g)과 동일해야 한다.
+			// lookup 함수의 파라메터는 context.xml에 설정된
+			// name(jdbc/Oracle11g)과 동일해야 한다.
 			context = new InitialContext();
-			dataSource = (DataSource)context.lookup("java:comp/env/jdbc/Oracle11g");
+			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/Oracle11g");
 			con = dataSource.getConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("444444");
 		}
-		
+
 		return con;
 	}
-	
-	public void Write(String bName, String bTitle, String bContent) {
+
+	public void Write(String bName, String bTitle, String bContent,String boardname) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into mvc_board " + "(bId,bName,bTitle,bContent, bGroup, bStep, bIndent)" + " values "
-				+ " ( mvc_board_seq.nextval, ?, ?, ?, mvc_board_seq.currval,0,0)";
+		String query = "insert into mvc_board " + "(bId,bName,bTitle,bContent, bGroup, bStep, bIndent,boardname)" + " values "
+				+ " ( mvc_board_seq.nextval, ?, ?, ?, mvc_board_seq.currval,0,0,?)";
 
 		try {
 			con = dataSource.getConnection();
@@ -258,6 +258,7 @@ public class BDao {
 			pstmt.setString(1, bName);
 			pstmt.setString(2, bTitle);
 			pstmt.setString(3, bContent);
+			pstmt.setString(4, boardname);
 			int rn = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -273,26 +274,7 @@ public class BDao {
 		}
 	}
 
-	// private Connection getConnection() {
-	//
-	// Context context = null;
-	// DataSource dataSource = null;
-	// Connection con = null;
-	//
-	// try {
-	// // lookup 함수의 파라메터는 context.xml에 설정된
-	// // name(jdbc/Oracle11g)과 동일해야 한다.
-	// context = new InitialContext();
-	// dataSource = (DataSource) context.lookup("java:comp/env/jdbc/Oracle11g");
-	// con = dataSource.getConnection();
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// return con;
-	// }
-
-	public ArrayList<BDto> list(int curPage, String search, String condition) {
+	public ArrayList<BDto> list(int curPage, String search, String condition, String boardnamelist) {
 
 		ArrayList<BDto> dtos = new ArrayList<BDto>();
 
@@ -305,10 +287,12 @@ public class BDao {
 		int nEnd = (curPage - 1) * listCount + listCount;
 
 		try {
-
+			
+			// 전체글 쿼리문 !
 			con = dataSource.getConnection();
-			if (search == null) {
-				System.out.println("search : true");
+			if (search == null && boardnamelist == null) {
+				System.out.println("search && boardnamelist(null)");
+				System.out.println(boardnamelist + "전체글 쿼리문!!");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board " + "         order by bgroup desc, bstep asc ) A "
 						+ "    where rownum <= ? ) B" + " where B.num >= ? ";
@@ -316,53 +300,69 @@ public class BDao {
 				pstmt.setInt(1, nEnd);
 				pstmt.setInt(2, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("0")) {
-				System.out.println("search : 0");
+				
+				//게시판글 쿼리문
+			} else if(search == null && boardnamelist != null) {
+				System.out.println("search : true(list)");
+				System.out.println(boardnamelist + "BDao list!!");
+				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
+						+ "          from mvc_board where boardname = '"+boardnamelist+"'"
+						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
+						+ " where B.num >= ? ";
+				pstmt = con.prepareStatement(query);
+				//pstmt.setString(1, boardnamelist);
+				pstmt.setInt(1, nEnd);
+				pstmt.setInt(2, nStart);
+				resultSet = pstmt.executeQuery();
+				
+				//전체글 검색 쿼리문
+			}else if (search.equals("0") && boardnamelist.equals("null") ) {
+				System.out.println("search : 0이다시발");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bTitle like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
 
-			} else if (search.equals("1")) {
+			} else if (search.equals("1") && boardnamelist.equals("null") ) {
 				System.out.println("search : 1");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bContent like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("2")) {
+			} else if (search.equals("2") && boardnamelist.equals("null") ) {
 				System.out.println("search : 2");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bName like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("3")) {
+			} else if (search.equals("3") && boardnamelist.equals("null") ) {
 				System.out.println("search : 3");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bTitle like ? or bContent like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
-				pstmt.setString(2, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
 				pstmt.setInt(3, nEnd);
 				pstmt.setInt(4, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("all")) {
+			} else if (search.equals("all") && boardnamelist.equals("null")) {
 				System.out.println("search : all");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bName like ? or bTitle like ? or bContent like ? "
@@ -370,150 +370,90 @@ public class BDao {
 						+ " where B.num >= ? ";
 
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
-				pstmt.setString(2, "%"+condition+"%");
-				pstmt.setString(3, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
+				pstmt.setString(3, "%" + condition + "%");
 				pstmt.setInt(4, nEnd);
 				pstmt.setInt(5, nStart);
 				resultSet = pstmt.executeQuery();
-			}
-			while (resultSet.next()) {
-				int bId = resultSet.getInt("bId");
-				String bName = resultSet.getString("bName");
-				String bTitle = resultSet.getString("bTitle");
-				String bContent = resultSet.getString("bContent");
-				Timestamp bDate = resultSet.getTimestamp("bDate");
-				int bHit = resultSet.getInt("bHit");
-				int bGroup = resultSet.getInt("bGroup");
-				int bStep = resultSet.getInt("bStep");
-				int bIndent = resultSet.getInt("bIndent");
-				String boardname = resultSet.getString("boardname"); 
 				
-				
-				BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent,boardname);
-				dtos.add(dto);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (resultSet != null)
-					resultSet.close();
-				if (pstmt != null)
-					pstmt.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-		return dtos;
-	}
-
-	public ArrayList<BDto> boardlist(int curPage, String search, String condition, String boardnamelist) {
-
-		ArrayList<BDto> dtos = new ArrayList<BDto>();
-
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
-		String query = null;
-		HttpSession session = null;
-		int nStart = (curPage - 1) * listCount + 1;
-		int nEnd = (curPage - 1) * listCount + listCount;
-
-		try {
-
-			con = dataSource.getConnection();
-			if (search == null) {
-				System.out.println("search : true1");
-				System.out.println(boardnamelist+"BDao boardllist!!");
-				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
-						+ "          from mvc_board where boardname = ? " + "         order by bgroup desc, bstep asc ) A "
-						+ "    where rownum <= ? ) B" + " where B.num >= ? ";
-				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, boardnamelist);
-				pstmt.setInt(2, nEnd);
-				pstmt.setInt(3, nStart);
-				resultSet = pstmt.executeQuery();
-				
-			} else if (search.equals("0")) {
+				//게시판글 검색 쿼리문!
+			}  else if (search.equals("0") && boardnamelist != null ) {
 				System.out.println("search : 0");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
-						+ "          from mvc_board where bTitle like ? "
+						+ "          from mvc_board where boardname = '"+boardnamelist+"' and bTitle like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
 
-			} else if (search.equals("1")) {
+			} else if (search.equals("1") && boardnamelist != null) {
 				System.out.println("search : 1");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
-						+ "          from mvc_board where bContent like ? "
+						+ "          from mvc_board where boardname = '"+boardnamelist+"' and bContent like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("2")) {
+			} else if (search.equals("2") && boardnamelist != null) {
 				System.out.println("search : 2");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
-						+ "          from mvc_board where bName like ? "
+						+ "          from mvc_board where boardname = '"+boardnamelist+"' and bName like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("3")) {
+			} else if (search.equals("3") && boardnamelist != null) {
 				System.out.println("search : 3");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
-						+ "          from mvc_board where bTitle like ? or bContent like ? "
+						+ "          from mvc_board where boardname = '"+boardnamelist+"' and bTitle like ? or bContent like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
-				pstmt.setString(2, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
 				pstmt.setInt(3, nEnd);
 				pstmt.setInt(4, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("all")) {
+			} else if (search.equals("all") && boardnamelist != null) {
 				System.out.println("search : all");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
-						+ "          from mvc_board where bName like ? or bTitle like ? or bContent like ? "
+						+ "          from mvc_board where boardname = '"+boardnamelist+"' and bName like ? or bTitle like ? or bContent like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
 						+ " where B.num >= ? ";
 
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
-				pstmt.setString(2, "%"+condition+"%");
-				pstmt.setString(3, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
+				pstmt.setString(3, "%" + condition + "%");
 				pstmt.setInt(4, nEnd);
 				pstmt.setInt(5, nStart);
 				resultSet = pstmt.executeQuery();
-			}
-			while (resultSet.next()) {
-				int bId = resultSet.getInt("bId");
-				String bName = resultSet.getString("bName");
-				String bTitle = resultSet.getString("bTitle");
-				String bContent = resultSet.getString("bContent");
-				Timestamp bDate = resultSet.getTimestamp("bDate");
-				int bHit = resultSet.getInt("bHit");
-				int bGroup = resultSet.getInt("bGroup");
-				int bStep = resultSet.getInt("bStep");
-				int bIndent = resultSet.getInt("bIndent");
-				String boardname = resultSet.getString("boardname"); 
-
-				BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent, boardname);
-				dtos.add(dto);
 			}
 			
+			while (resultSet.next()) {
+				int bId = resultSet.getInt("bId");
+				String bName = resultSet.getString("bName");
+				String bTitle = resultSet.getString("bTitle");
+				String bContent = resultSet.getString("bContent");
+				Timestamp bDate = resultSet.getTimestamp("bDate");
+				int bHit = resultSet.getInt("bHit");
+				int bGroup = resultSet.getInt("bGroup");
+				int bStep = resultSet.getInt("bStep");
+				int bIndent = resultSet.getInt("bIndent");
+
+				BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+				dtos.add(dto);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -529,10 +469,9 @@ public class BDao {
 			}
 		}
 		return dtos;
-		
 	}
 
-	public BPageInfo articlePage(int curPage, String search, String condition) {
+	public BPageInfo articlePage(int curPage, String search, String condition, String boardnamelist) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -549,49 +488,101 @@ public class BDao {
 		try {
 			con = dataSource.getConnection();
 
-			if(search == null) {
-			query = "select count(*) as total from mvc_board";
-			pstmt = con.prepareStatement(query);
-			resultSet = pstmt.executeQuery();
-			} else if (search.equals("0")) {
+			//전체 게시물 페이징 
+			if (search == null && boardnamelist == null) {
+				query = "select count(*) as total from mvc_board ";
+				pstmt = con.prepareStatement(query);
+				resultSet = pstmt.executeQuery();
+				
+			//게시판별 게시물 페이징
+			} else if (search == null && boardnamelist != null) {
+				query = "select count(*) as total from mvc_board where boardname = '"+boardnamelist+"'";
+				pstmt = con.prepareStatement(query);
+				//pstmt.setString(1, boardnamelist);
+				resultSet = pstmt.executeQuery();
+			//전체 게시글 검색 페이징
+			} else if (search.equals("0") && boardnamelist.equals("null")) {
 				query = "select count(*) as total from mvc_board where bTitle like ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
-				System.out.println("제목 토탈페이지확인");
-
-			} else if (search.equals("1")) {
+				System.out.println("제목 토탈글확인");
+				System.out.println(condition + "검색내용");
+				System.out.println(boardnamelist+"전체검색만되냐고");
+			} else if (search.equals("1") && boardnamelist.equals("null")) {
 				query = "select count(*) as total from mvc_board where bContent like ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
-				System.out.println("내용 토탈페이지확인");
-			} else if (search.equals("2")) {
+				System.out.println("내용 토탈글확인");
+			} else if (search.equals("2") && boardnamelist.equals("null")) {
 				query = "select count(*) as total from mvc_board where bName like ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
-				System.out.println("네임 토탈페이지확인");
-			} else if (search.equals("3")) {
+				System.out.println("네임 토탈글확인");
+			} else if (search.equals("3") && boardnamelist.equals("null")) {
 				query = "select count(*) as total from mvc_board where bTitle like ? or bContent like ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
-				pstmt.setString(2, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
+				System.out.println("제목+ 내용 글확인");
 				resultSet = pstmt.executeQuery();
-
-			} else if (search.equals("all")) {
-				System.out.println("all 페이지 확인");
+			} else if (search.equals("all") && boardnamelist.equals("null")) {
+				System.out.println("all 글 확인");
 				query = "select count(*) as total from mvc_board where bName like ? or bTitle like ? or bContent like ? ";
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, "%"+condition+"%");
-				pstmt.setString(2, "%"+condition+"%");
-				pstmt.setString(3, "%"+condition+"%");
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
+				pstmt.setString(3, "%" + condition + "%");
+				resultSet = pstmt.executeQuery();
+				
+				
+			}	
+				//게시판별 검색 페이징
+				else if (search.equals("0") && boardnamelist != null) {
+				query = "select count(*) as total from mvc_board where boardname = '"+boardnamelist+"' and bTitle like ? ";
+				pstmt = con.prepareStatement(query);
+				pstmt.setString(1, "%" + condition + "%");
+				resultSet = pstmt.executeQuery();
+				System.out.println("제목 토탈글확인");
+				System.out.println(boardnamelist+"111111111");
+				System.out.println(condition + "검색내용");
+
+			} else if (search.equals("1") && boardnamelist != null) {
+				query = "select count(*) as total from mvc_board '"+boardnamelist+"' and bContent like ? ";
+				pstmt = con.prepareStatement(query);
+				pstmt.setString(1, "%" + condition + "%");
+				resultSet = pstmt.executeQuery();
+				System.out.println("내용 토탈글확인");
+			} else if (search.equals("2") && boardnamelist != null) {
+				query = "select count(*) as total from mvc_board '"+boardnamelist+"' and bName like ? ";
+				pstmt = con.prepareStatement(query);
+				pstmt.setString(1, "%" + condition + "%");
+				resultSet = pstmt.executeQuery();
+				System.out.println("네임 토탈글확인");
+			} else if (search.equals("3") && boardnamelist != null) {
+				query = "select count(*) as total from mvc_board '"+boardnamelist+"' and bTitle like ? or bContent like ? ";
+				pstmt = con.prepareStatement(query);
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
+				System.out.println("제목+ 내용 글확인");
+				resultSet = pstmt.executeQuery();
+
+			} else if (search.equals("all") && boardnamelist != null) {
+				System.out.println("all 글 확인");
+				query = "select count(*) as total from mvc_board '"+boardnamelist+"' and bName like ? or bTitle like ? or bContent like ? ";
+				pstmt = con.prepareStatement(query);
+				pstmt.setString(1, "%" + condition + "%");
+				pstmt.setString(2, "%" + condition + "%");
+				pstmt.setString(3, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
 			}
 
 			if (resultSet.next()) {
 				totalCount = resultSet.getInt("total");
 			}
+			System.out.println("total : " + totalCount);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -668,9 +659,9 @@ public class BDao {
 				int bGroup = resultSet.getInt("bGroup");
 				int bStep = resultSet.getInt("bStep");
 				int bIndent = resultSet.getInt("bIndent");
-				String boardname = resultSet.getString("boardname"); 
+				String boardname = resultSet.getString("boardname");
 
-				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent,boardname);
+				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
 
 			}
 		} catch (Exception e) {
@@ -798,9 +789,9 @@ public class BDao {
 				int bGroup = resultSet.getInt("bGroup");
 				int bStep = resultSet.getInt("bStep");
 				int bIndent = resultSet.getInt("bIndent");
-				String boardname = resultSet.getString("boardname"); 
+				String boardname = resultSet.getString("boardname");
 
-				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent,boardname);
+				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
 
 			}
 		} catch (Exception e) {

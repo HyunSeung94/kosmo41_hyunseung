@@ -13,9 +13,11 @@ public class BWriteCommand implements BCommand {
 		String bName = request.getParameter("bName");
 		String bTitle = request.getParameter("bTitle");
 		String bContent = request.getParameter("bContent");
-		
+		String boardname= request.getParameter("board");
 		BDao dao = BDao.getInstance();
-		dao.Write(bName, bTitle, bContent);
+		
+		System.out.println(boardname+"BWriteCommand");
+		dao.Write(bName, bTitle, bContent,boardname);
 	}
 
 }

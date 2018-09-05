@@ -16,7 +16,7 @@ public class BDto {
 	int bIndent;
 	String search;
 	String condition;
-	String boardname;
+
 	
 	// 회원가입
 	private String id;
@@ -29,7 +29,7 @@ public class BDto {
 		
 	}
 	public BDto(int bId, String bName, String bTitle, String bContent,
-			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent,String boardname) 
+			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent) 
 	{
 		this.bId = bId;
 		this.bName = bName;
@@ -40,15 +40,10 @@ public class BDto {
 		this.bGroup = bGroup;
 		this.bStep = bStep;
 		this.bIndent = bIndent;	
-		this.boardname = boardname;
+
 	}
 	
-	public String getBoardname() {
-		return boardname;
-	}
-	public void setBoardname(String boardname) {
-		this.boardname = boardname;
-	}
+
 	public String getId() {
 		return id;
 	}
