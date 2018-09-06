@@ -30,11 +30,30 @@
 	}
 </script>
 <body>
+			<%
+			String boardname = request.getParameter("board");
+			
+			session.setAttribute("cboard", boardname);
+			System.out.println("write_view :"+ boardname);
+			%>
 
 	<div class="container">
 		<table class="table table-bordered">
-			<thead>
+			<% if (boardname.equals("")){ %>
+		<thead>
 				<form name="modify_form" action="modify.do" method="post">
+			
+			
+			<% } else if (!boardname.equals("")){
+			%>
+			<thead>
+				<form name="modify_form" action="modify.do?board=${cboard}" method="post">
+		
+	  <%
+	  }
+	  %>
+			<<!-- thead>
+				<form name="modify_form" action="modify.do" method="post"> -->
 					<input type="hidden" name="bId" value="${content_view.bId }">
 					<tr>
 						<th scope=row >번호</th>

@@ -29,13 +29,22 @@
 </style>
 </head>
 <body>
+	<%
+			String boardname = request.getParameter("board");
+			String condition = request.getParameter("condition");
+			
+ 	System.out.println("list.jsp :"+ boardname);		
+ 	session.setAttribute("cboard", boardname);
+	session.setAttribute("condition",condition);
+			%> 
+
 	<br>
 	<br>
 	<div></div>
 
 
 	<div align="center">
-		<a class="btn btn-outline-secondary" href="list.do?">전체게시글</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-outline-secondary" href="list.do">전체게시글</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a class="btn btn-outline-secondary" href="list.do?board=전우치게시판">전우치게시판</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a class="btn btn-outline-secondary" href="list.do?board=홍길동게시판">홍길동게시판</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
@@ -74,12 +83,14 @@
 					<td colspan="2.5" align="left"><a href="list.do">전체 목록</a> <%
  	}
  %>
-					<td colspan="5" align="right"><a href="write_view.do">글작성</a></td>
+					<td colspan="5" align="right"><a href="write_view.do?board=${cboard}">글작성</a></td>
 				</tr>
 				<tr>
 					<td colspan="5" align="center">
 						<%
-							if ((session.getAttribute("cboard")) == null) {
+						
+							if ((session.getAttribute("cboard")) == null && (session.getAttribute("condition")) == null) {
+								System.out.println("페이징처리 1");
 						%> <!-- 처음 --> <c:choose>
 							<c:when test="${(page.curPage-1)<1}">
 							[처음]
@@ -120,9 +131,65 @@
 								<a href="list.do?page=${page.totalPage}">[끝]</a>
 							</c:otherwise>
 						</c:choose> 
+										<% 
+						 	} else if((session.getAttribute("cboard")) == null && (session.getAttribute("condition")) != null){
+						 		System.out.println("페이징처리 2");
+						%> 
+ 						<!-- 검색한 리스트페이징 출력 --> 
+ 						<!-- 처음 --> <c:choose>
+							<c:when test="${(page.curPage-1)<1}">
+							[처음]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?&search=${search}&condition=${condition}&page=1">[
+									처음 ]</a>
+							</c:otherwise>
+						</c:choose> <!-- 이전 --> <c:choose>
+							<c:when test="${(page.curPage -1) < 1}">
+							[ &lt; ]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.curPage -1}&search=${search}&condition=${condition}">[
+									&lt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 개별 페이지 --> <c:forEach var="num" begin="${page.startPage}"
+							end="${page.endPage}" step="1">
+							<c:choose>
+								<c:when test="${page.curPage == num}">
+            				[${num}] &nbsp;
+            			</c:when>
+
+								<c:otherwise>
+									<a
+										href="list.do?page=${num}&search=${search}&condition=${condition}">[${num}]</a> &nbsp;	
+            			</c:otherwise>
+							</c:choose>
+						</c:forEach> <!-- 다음 --> <c:choose>
+							<c:when test="${(page.curPage +1 ) > page.totalPage }">
+							[ &gt; ]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.curPage +1 }&search=${search}&condition=${condition}">[
+									&gt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 끝 --> <c:choose>
+							<c:when test="${page.curPage == page.totalPage}">
+							[끝]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.totalPage}&search=${search}&condition=${condition}&page=">[끝]</a>
+							</c:otherwise>
+						</c:choose>
 						<%
+						
 						} else if ((session.getAttribute("cboard")) != null && (session.getAttribute("condition")) == null) {
+							System.out.println("페이징처리 3");
 						%>
+						<!--  게시판끼리 페이지 -->
 						 <!-- 처음 --> <c:choose>
 							<c:when test="${(page.curPage-1)<1}">
 							[처음]
@@ -166,7 +233,9 @@
 							</c:otherwise>
 						</c:choose>
 						<% 
+					
 						 	} else {
+						 		System.out.println("페이징처리 4");
 						%> 
  						<!-- 검색한 리스트페이징 출력 --> 
  						<!-- 처음 --> <c:choose>
@@ -224,14 +293,26 @@
 			</tbody>
 		</table>
 	</div>
+	
+ 
 
-	<div id="searchForm" align="center">
-		<form action="list.do">
-			<select name="board">
+	<div id="searchForm" align="center">	
+	<% if (boardname==null){ %>
+			<form action="list.do" method="post">
+	  <%
+	  } else if(boardname != null){ 
+	  %> 
+
+		<form action="list.do?board=${cboard}" method="post">
+	 	<%
+	  }
+		%> 
+			<!-- <select name="board">
 				<option value="null">전체글</option>
 				<option value="전우치게시판">전우치게시판</option>
 				<option value="홍길동게시판">홍길동게시판</option>
-			</select> <select name="search">
+			</select>--> 
+			<select name="search">
 				<option value="0">제목</option>
 				<option value="1">내용</option>
 				<option value="2">작성자</option>

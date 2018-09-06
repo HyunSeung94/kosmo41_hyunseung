@@ -20,6 +20,13 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
+
+<%
+			String boardname = request.getParameter("board");
+			
+			session.setAttribute("cboard", boardname);
+			System.out.println("content_View :"+ boardname);
+			%>
 	<div class="container">
 	<table class="table table-bordered" >
   	<thead>
@@ -44,7 +51,7 @@
 			<td colspan="3">${content_view.bContent}</td>
 		</tr>
 		<tr align="right">
-			<td colspan="2"><a href="modify_view.do?bId=${content_view.bId}">수정</a>&nbsp;&nbsp;
+			<td colspan="2"><a href="modify_view.do?bId=${content_view.bId}&board=${cboard}">수정</a>&nbsp;&nbsp;
 				<a href="list.do?page=<%=session.getAttribute("cpage")%>">목록보기</a>&nbsp;&nbsp;
 				<a href="delete.do?bId=${content_view.bId}">삭제</a> &nbsp;&nbsp; <a
 				href="reply_view.do?bId=${content_view.bId}">답변</a></td>

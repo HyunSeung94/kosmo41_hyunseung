@@ -27,17 +27,35 @@
 	</script>
 </head>
 <body>
+<%
+			String boardname = request.getParameter("board");
+			
+			session.setAttribute("cboard", boardname);
+			System.out.println("write_view :"+ boardname);
+			%>
 	<div class="container">
 		<table class="table table-bordered">
+			<% if (boardname.equals("")){ %>
+			
 			<form name="write_form" action="write.do" method="post">
 			<thead>
-				<tr>
+			
+				 	<tr>
 					<th scope="col">게시판종류<th>
 					<select name="board">
 						<option value="전우치게시판">전우치게시판</option>
 						<option value="홍길동게시판">홍길동게시판</option>				
 					</select>
 				</tr>
+	  
+			<% } else if (!boardname.equals("")){
+			%>
+			<form name="write_form" action="write.do?board=${cboard}" method="post">
+			<thead>
+		
+	  <%
+	  }
+	  %>
 				<tr>
 					<th scope="col" >이름</th>
 					<td><input type="text" name="bName" size="50"></td>

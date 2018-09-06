@@ -316,7 +316,7 @@ public class BDao {
 				resultSet = pstmt.executeQuery();
 				
 				//전체글 검색 쿼리문
-			}else if (search.equals("0") && boardnamelist.equals("null") ) {
+			}else if (search.equals("0") && boardnamelist == null ) {
 				System.out.println("search : 0이다시발");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bTitle like ? "
@@ -328,7 +328,7 @@ public class BDao {
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
 
-			} else if (search.equals("1") && boardnamelist.equals("null") ) {
+			} else if (search.equals("1") && boardnamelist == null ) {
 				System.out.println("search : 1");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bContent like ? "
@@ -339,7 +339,7 @@ public class BDao {
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("2") && boardnamelist.equals("null") ) {
+			} else if (search.equals("2") && boardnamelist == null ) {
 				System.out.println("search : 2");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bName like ? "
@@ -350,7 +350,7 @@ public class BDao {
 				pstmt.setInt(2, nEnd);
 				pstmt.setInt(3, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("3") && boardnamelist.equals("null") ) {
+			} else if (search.equals("3") && boardnamelist == null ) {
 				System.out.println("search : 3");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bTitle like ? or bContent like ? "
@@ -362,7 +362,7 @@ public class BDao {
 				pstmt.setInt(3, nEnd);
 				pstmt.setInt(4, nStart);
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("all") && boardnamelist.equals("null")) {
+			} else if (search.equals("all") && boardnamelist == null) {
 				System.out.println("search : all");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bName like ? or bTitle like ? or bContent like ? "
@@ -501,7 +501,7 @@ public class BDao {
 				//pstmt.setString(1, boardnamelist);
 				resultSet = pstmt.executeQuery();
 			//전체 게시글 검색 페이징
-			} else if (search.equals("0") && boardnamelist.equals("null")) {
+			} else if (search.equals("0") && boardnamelist == null) {
 				query = "select count(*) as total from mvc_board where bTitle like ? ";
 				pstmt = con.prepareStatement(query);
 				pstmt.setString(1, "%" + condition + "%");
@@ -509,26 +509,26 @@ public class BDao {
 				System.out.println("제목 토탈글확인");
 				System.out.println(condition + "검색내용");
 				System.out.println(boardnamelist+"전체검색만되냐고");
-			} else if (search.equals("1") && boardnamelist.equals("null")) {
+			} else if (search.equals("1") && boardnamelist == null) {
 				query = "select count(*) as total from mvc_board where bContent like ? ";
 				pstmt = con.prepareStatement(query);
 				pstmt.setString(1, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
 				System.out.println("내용 토탈글확인");
-			} else if (search.equals("2") && boardnamelist.equals("null")) {
+			} else if (search.equals("2") && boardnamelist == null) {
 				query = "select count(*) as total from mvc_board where bName like ? ";
 				pstmt = con.prepareStatement(query);
 				pstmt.setString(1, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
 				System.out.println("네임 토탈글확인");
-			} else if (search.equals("3") && boardnamelist.equals("null")) {
+			} else if (search.equals("3") && boardnamelist == null) {
 				query = "select count(*) as total from mvc_board where bTitle like ? or bContent like ? ";
 				pstmt = con.prepareStatement(query);
 				pstmt.setString(1, "%" + condition + "%");
 				pstmt.setString(2, "%" + condition + "%");
 				System.out.println("제목+ 내용 글확인");
 				resultSet = pstmt.executeQuery();
-			} else if (search.equals("all") && boardnamelist.equals("null")) {
+			} else if (search.equals("all") && boardnamelist == null) {
 				System.out.println("all 글 확인");
 				query = "select count(*) as total from mvc_board where bName like ? or bTitle like ? or bContent like ? ";
 				pstmt = con.prepareStatement(query);
@@ -546,7 +546,7 @@ public class BDao {
 				pstmt.setString(1, "%" + condition + "%");
 				resultSet = pstmt.executeQuery();
 				System.out.println("제목 토탈글확인");
-				System.out.println(boardnamelist+"111111111");
+				System.out.println(boardnamelist+"널이아닌검색페이징");
 				System.out.println(condition + "검색내용");
 
 			} else if (search.equals("1") && boardnamelist != null) {
@@ -681,12 +681,12 @@ public class BDao {
 		return dto;
 	}
 
-	public void modify(String bId, String bName, String bTitle, String bContent) {
+	public void modify(String bId, String bName, String bTitle, String bContent,String boardname) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
-		String query = "update mvc_board " + "set bName = ?, " + " 	  bTitle = ?, " + "	  bContent = ? "
+		String query = "update mvc_board " + "set bName = ?, " + " 	  bTitle = ?, " + "	  bContent = ? " + "	  boardname = ? "
 				+ " where bId = ?";
 
 		try {
@@ -695,6 +695,7 @@ public class BDao {
 			pstmt.setString(1, bName);
 			pstmt.setString(2, bTitle);
 			pstmt.setString(3, bContent);
+			pstmt.setString(4, boardname);
 			pstmt.setInt(4, Integer.parseInt(bId)); // 스트링을 인티저로 바꿔줌
 			int rn = pstmt.executeUpdate();
 		} catch (Exception e) {
