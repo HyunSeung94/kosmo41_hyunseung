@@ -4,6 +4,7 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,14 +30,25 @@
 </style>
 </head>
 <body>
-	<%
-			String boardname = request.getParameter("board");
-			String condition = request.getParameter("condition");
+<%
+	
+	String name = (String) session.getAttribute("name");
+	String Memberid = (String) session.getAttribute("id");
+	
+	session.setAttribute("id", Memberid);
+	session.setAttribute("name", name);
+
+	System.out.println("listname :"+ name);
+	System.out.println("listID :"+ Memberid);
+%>
+<%
+	String boardname = request.getParameter("board");
+	String condition = request.getParameter("condition");
 			
  	System.out.println("list.jsp :"+ boardname);		
  	session.setAttribute("cboard", boardname);
 	session.setAttribute("condition",condition);
-			%> 
+%> 
 
 	<br>
 	<br>
@@ -47,11 +59,31 @@
 		<a class="btn btn-outline-secondary" href="list.do">전체게시글</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a class="btn btn-outline-secondary" href="list.do?board=전우치게시판">전우치게시판</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a class="btn btn-outline-secondary" href="list.do?board=홍길동게시판">홍길동게시판</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<% if((String) session.getAttribute("id") != null) {   %>
+		<a class="btn btn-outline-secondary" href="client.jsp">채팅입장</a>
+		<% }
+		%>
 	</div>
-
-
-
-
+	<br>
+	
+<%	
+	if(name != null) { 
+%>
+		<h5 align="right"><%=name%>님 안녕하세요.
+		 
+		<form action="logout.do" method="get" align="right">
+			<input type="submit" value="로그아웃" >&nbsp;&nbsp;&nbsp; <input
+				type="button" value="정보수정"
+				onclick="javascript:window.location= 'modify.jsp'">
+		</form>
+		</h5>
+	<% } else if(name == null){ %>
+	<h5 align="right">
+		<a class="btn btn-outline-secondary" href="login.jsp">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-outline-secondary" href="join.jsp">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</h5>
+		
+		<% } %>
 
 	<hr>
 	<div class="container">
@@ -70,8 +102,8 @@
 					<tr align="center">
 						<th scope="row">${dto.bId}</th>
 						<td>${dto.bName}</td>
-						<td><c:forEach begin="1" end="${dto.bIndent}">-</c:forEach> <a
-							href="content_view.do?bId=${dto.bId}&page=$">${dto.bTitle}</a></td>
+						<td><c:forEach begin="1" end="${dto.bIndent}">답변=></c:forEach> <a
+							href="content_view.do?&board=${cboard}&bId=${dto.bId}&page=$">${dto.bTitle}</a></td>
 						<td>${dto.bDate}</td>
 						<td>${dto.bHit}</td>
 					</tr>
@@ -83,7 +115,9 @@
 					<td colspan="2.5" align="left"><a href="list.do">전체 목록</a> <%
  	}
  %>
+ 	<% if((String) session.getAttribute("id") != null) {   %>
 					<td colspan="5" align="right"><a href="write_view.do?board=${cboard}">글작성</a></td>
+	<% } %>
 				</tr>
 				<tr>
 					<td colspan="5" align="center">
@@ -141,9 +175,7 @@
 							[처음]
 						</c:when>
 							<c:otherwise>
-								<a
-									href="list.do?&search=${search}&condition=${condition}&page=1">[
-									처음 ]</a>
+								<a href="list.do?&search=${search}&condition=${condition}&page=1">[처음]</a>
 							</c:otherwise>
 						</c:choose> <!-- 이전 --> <c:choose>
 							<c:when test="${(page.curPage -1) < 1}">
@@ -307,18 +339,15 @@
 	 	<%
 	  }
 		%> 
-			<!-- <select name="board">
-				<option value="null">전체글</option>
-				<option value="전우치게시판">전우치게시판</option>
-				<option value="홍길동게시판">홍길동게시판</option>
-			</select>--> 
+
 			<select name="search">
 				<option value="0">제목</option>
 				<option value="1">내용</option>
 				<option value="2">작성자</option>
 				<option value="3">제목+내용</option>
 				<option value="all">전체</option>
-			</select> <input type="text" size="20" name="condition" /> &nbsp; <input
+			</select> 
+			<input type="text" size="20" name="condition" /> &nbsp; <input
 				type="submit" value="검색" />
 		</form>
 	</div>

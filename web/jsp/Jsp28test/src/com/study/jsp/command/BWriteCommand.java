@@ -16,14 +16,18 @@ public class BWriteCommand implements BCommand {
 		String bTitle = request.getParameter("bTitle");
 		String bContent = request.getParameter("bContent");
 		String boardname= request.getParameter("board");
+		
 		BDao dao = BDao.getInstance();
 		//System.out.println(boardname+"BWriteCommand1");
 		
 		session = request.getSession();
-		
+		String name = (String) session.getAttribute("name");
+		String Memberid = (String) session.getAttribute("id");
+		session.setAttribute("id", Memberid);
+		session.setAttribute("name", name);
 		session.setAttribute("cboard",boardname);
 		//System.out.println(boardname+"BWriteCommand2");
-		dao.Write(bName, bTitle, bContent,boardname);
+		dao.Write(bName, bTitle, bContent,boardname,request);
 	}
 
 }

@@ -32,9 +32,13 @@
 <body>
 			<%
 			String boardname = request.getParameter("board");
+			String Memberid = (String) session.getAttribute("id");
+			String name = (String) session.getAttribute("name");
 			
+			session.setAttribute("id", Memberid);
+			session.setAttribute("name", name);
 			session.setAttribute("cboard", boardname);
-			System.out.println("write_view :"+ boardname);
+			System.out.println("modify_view :"+ boardname);
 			%>
 
 	<div class="container">

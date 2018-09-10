@@ -60,7 +60,7 @@ public class loginOk implements BCommand {
 				session.setAttribute("id", id);
 				session.setAttribute("name", name);
 				session.setAttribute("ValidMem", "yes");
-				response.sendRedirect("main.jsp");
+				response.sendRedirect("list.do");
 			}
 		}
 	}

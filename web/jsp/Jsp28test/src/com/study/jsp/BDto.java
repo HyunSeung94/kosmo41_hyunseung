@@ -16,6 +16,7 @@ public class BDto {
 	int bIndent;
 	String search;
 	String condition;
+	String Memberid;
 
 	
 	// 회원가입
@@ -25,11 +26,12 @@ public class BDto {
 	private String eMail;
 	private Timestamp rDate;
 	private String address;
+	private String position;
 	public BDto() {
 		
 	}
 	public BDto(int bId, String bName, String bTitle, String bContent,
-			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent) 
+			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent,String Memberid) 
 	{
 		this.bId = bId;
 		this.bName = bName;
@@ -39,11 +41,25 @@ public class BDto {
 		this.bHit = bHit;
 		this.bGroup = bGroup;
 		this.bStep = bStep;
-		this.bIndent = bIndent;	
+		this.bIndent = bIndent;
+		this.Memberid = Memberid;
 
 	}
 	
 
+
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	public String getMemberid() {
+		return Memberid;
+	}
+	public void setMemberid(String memberid) {
+		Memberid = memberid;
+	}
 	public String getId() {
 		return id;
 	}

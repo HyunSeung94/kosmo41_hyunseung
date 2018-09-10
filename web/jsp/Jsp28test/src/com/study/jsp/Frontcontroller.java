@@ -71,10 +71,13 @@ public class Frontcontroller extends HttpServlet {
 			command.execute(request, response);
 			return;
 		} else if (com.equals("/logout.do")) {
+			System.out.println("logout.do:");
+			command = new BListCommand();
+			command.execute(request, response);
 			session = request.getSession();
-
 			session.invalidate();
-			viewPage="login.jsp";
+			//response.sendRedirect("list.do");
+			viewPage="list.jsp";
 			// logout(request, response);
 		} else if (com.equals("/write_view.do")) {
 			viewPage = "write_view.jsp";
@@ -123,12 +126,12 @@ public class Frontcontroller extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+/*	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
 
 		session.invalidate();
-		response.sendRedirect("login.jsp");
-	}
+		response.sendRedirect("list.do");
+	}*/
 
 }

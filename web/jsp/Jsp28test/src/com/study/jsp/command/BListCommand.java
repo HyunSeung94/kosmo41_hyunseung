@@ -22,6 +22,8 @@ public class BListCommand implements BCommand {
 		} catch (Exception e) {
 		}
 
+		//아이디 저장 
+		String Memberid = request.getParameter("id");
 		// 게시판 검색 저장
 		String search = request.getParameter("search");
 		String condition = request.getParameter("condition");

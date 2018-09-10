@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
@@ -28,6 +29,7 @@ public class BDao {
 	int listCount = 10; // 한페이지당 보여줄 게시물의 갯수
 	int pageCount = 5; // 하단에 보여줄 페이지 리스트 갯수
 	int searchcount = 0;
+	
 
 	private BDao() {
 		try {
@@ -50,7 +52,7 @@ public class BDao {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into members values (?,?,?,?,?,?)";
+		String query = "insert into members values (?,?,?,?,?,?,0)";
 
 		try {
 			con = getConnection();
@@ -61,6 +63,7 @@ public class BDao {
 			pstmt.setString(4, dto.geteMail());
 			pstmt.setTimestamp(5, dto.getrDate());
 			pstmt.setString(6, dto.getAddress());
+			
 			pstmt.executeUpdate();
 			ri = BDao.MEMBER_JOIN_SUCCESS;
 		} catch (Exception e) {
@@ -245,20 +248,29 @@ public class BDao {
 		return con;
 	}
 
-	public void Write(String bName, String bTitle, String bContent,String boardname) {
+	public void Write(String bName, String bTitle, String bContent,String boardname,HttpServletRequest request) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into mvc_board " + "(bId,bName,bTitle,bContent, bGroup, bStep, bIndent,boardname)" + " values "
-				+ " ( mvc_board_seq.nextval, ?, ?, ?, mvc_board_seq.currval,0,0,?)";
+		HttpSession session = null;
+		session = request.getSession();
+		
+		String name = (String) session.getAttribute("name");
+		String Memberid = (String) session.getAttribute("id");
+		session.setAttribute("id", Memberid);
+		session.setAttribute("name", name);
+		
+		String query = "insert into mvc_board " + "(bId,bName,bTitle,bContent, bGroup, bStep, bIndent,boardname,Memberid)" + " values "
+				+ " ( mvc_board_seq.nextval, ?, ?, ?, mvc_board_seq.currval,0,0,?,?)";
 
 		try {
 			con = dataSource.getConnection();
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, bName);
+			pstmt.setString(1, name);
 			pstmt.setString(2, bTitle);
 			pstmt.setString(3, bContent);
 			pstmt.setString(4, boardname);
+			pstmt.setString(5, Memberid);
 			int rn = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -291,7 +303,6 @@ public class BDao {
 			// 전체글 쿼리문 !
 			con = dataSource.getConnection();
 			if (search == null && boardnamelist == null) {
-				System.out.println("search && boardnamelist(null)");
 				System.out.println(boardnamelist + "전체글 쿼리문!!");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board " + "         order by bgroup desc, bstep asc ) A "
@@ -303,8 +314,7 @@ public class BDao {
 				
 				//게시판글 쿼리문
 			} else if(search == null && boardnamelist != null) {
-				System.out.println("search : true(list)");
-				System.out.println(boardnamelist + "BDao list!!");
+				System.out.println(boardnamelist + "글 쿼리문");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where boardname = '"+boardnamelist+"'"
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
@@ -317,7 +327,7 @@ public class BDao {
 				
 				//전체글 검색 쿼리문
 			}else if (search.equals("0") && boardnamelist == null ) {
-				System.out.println("search : 0이다시발");
+				System.out.println("search : 0이다");
 				query = "select * " + "  from ( " + "   select rownum num, A.*" + "     from ( " + "        select *"
 						+ "          from mvc_board where bTitle like ? "
 						+ "         order by bgroup desc, bstep asc ) A " + "    where rownum <= ? ) B"
@@ -450,8 +460,8 @@ public class BDao {
 				int bGroup = resultSet.getInt("bGroup");
 				int bStep = resultSet.getInt("bStep");
 				int bIndent = resultSet.getInt("bIndent");
-
-				BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+				String Memberid = resultSet.getString("Memberid");
+				BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent, Memberid);
 				dtos.add(dto);
 			}
 		} catch (Exception e) {
@@ -660,8 +670,9 @@ public class BDao {
 				int bStep = resultSet.getInt("bStep");
 				int bIndent = resultSet.getInt("bIndent");
 				String boardname = resultSet.getString("boardname");
+				String Memberid = resultSet.getString("Memberid");
 
-				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent,Memberid);
 
 			}
 		} catch (Exception e) {
@@ -686,16 +697,16 @@ public class BDao {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
-		String query = "update mvc_board " + "set bName = ?, " + " 	  bTitle = ?, " + "	  bContent = ? " + "	  boardname = ? "
+		String query = "update mvc_board " + "set bName = ?, " + " 	  bTitle = ?, " + "	  bContent = ? " 
 				+ " where bId = ?";
 
 		try {
+			System.out.println("BDao-modify:"+boardname);
 			con = dataSource.getConnection();
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, bName);
 			pstmt.setString(2, bTitle);
 			pstmt.setString(3, bContent);
-			pstmt.setString(4, boardname);
 			pstmt.setInt(4, Integer.parseInt(bId)); // 스트링을 인티저로 바꿔줌
 			int rn = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -790,9 +801,10 @@ public class BDao {
 				int bGroup = resultSet.getInt("bGroup");
 				int bStep = resultSet.getInt("bStep");
 				int bIndent = resultSet.getInt("bIndent");
-				String boardname = resultSet.getString("boardname");
+				String Memberid = resultSet.getString("Memberid");
+				
 
-				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent,Memberid);
 
 			}
 		} catch (Exception e) {
@@ -813,7 +825,7 @@ public class BDao {
 	}
 
 	public void reply(String bId, String bName, String bTitle, String bContent, String bGroup, String bStep,
-			String bIndent) {
+			String bIndent, String boardname) {
 
 		replyShape(bGroup, bStep);
 
@@ -821,10 +833,11 @@ public class BDao {
 		PreparedStatement pstmt = null;
 
 		try {
+			System.out.println("reply: "+boardname);
 			con = dataSource.getConnection();
 
-			String query = "insert into mvc_board " + "(bId, bName, bTitle, bContent, bGroup, bStep, bIndent) "
-					+ " values (mvc_board_seq.nextval, ?, ?, ?, ?, ?, ?)";
+			String query = "insert into mvc_board " + "(bId, bName, bTitle, bContent, bGroup, bStep, bIndent,boardname) "
+					+ " values (mvc_board_seq.nextval, ?, ?, ?, ?, ?, ?,?)";
 			pstmt = con.prepareStatement(query);
 
 			pstmt.setString(1, bName);
@@ -833,6 +846,7 @@ public class BDao {
 			pstmt.setInt(4, Integer.parseInt(bGroup));
 			pstmt.setInt(5, Integer.parseInt(bStep) + 1);
 			pstmt.setInt(6, Integer.parseInt(bIndent) + 1);
+			pstmt.setString(7, boardname);
 
 			int rn = pstmt.executeUpdate();
 

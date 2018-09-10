@@ -18,7 +18,7 @@ public class BModifyCommand implements BCommand {
 		String bContent = request.getParameter("bContent");
 		String boardname= request.getParameter("board");
 		
-		System.out.println("BModifyCommand");
+		System.out.println("BModifyCommand:" + boardname);
 		session = request.getSession();
 		session.setAttribute("cboard",boardname);
 		BDao dao = BDao.getInstance();
