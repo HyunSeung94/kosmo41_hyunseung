@@ -5,8 +5,37 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script src="http://code.jquery.com/jquery.js"></script>
+<!-- Required meta tags -->
+<meta name="viewport"
+   content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+   href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+   integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+   crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+   integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+   crossorigin="anonymous">
+</script>
 </head>
+<style>   
+   </style> 
+ <script>
+      $(document).ready(function(){
+         $('#messageinput').keypress(function(e){
+            if(e.which == 13){
+               $(this).blur();                     
+               $('#button1').focus().click();   //엔터로 버튼 누르기
+               $('#messageinput').focus();      //텍스트에 포커스
+               
+            }            
+         });   
+      });
+      
+   </script>
 <body>
+ 
 <!-- client2를 대신해서 만든것 다수정하고 client2 지우면됨 -->
 <%
 	String id = (String) session.getAttribute("id");
@@ -30,16 +59,17 @@
 		사용자 아이디 : <%= id %>
 	</div>
 	<div>
-		<input type ="text" id="messageinput"/>
+		<input type ="text" id="messageinput" />
+		<button type="button" onclick="send();"   id="button1">Send</button>
 	</div>
-	<div>
+	<div>	
 		<button type="button" onclick="openSocket();">Open</button>
-		<button type="button" onclick="send();">Send</button>
+		<!-- <button type="button" onclick="send();">Send</button> -->
 		<button type="button" onclick="closeSocket();">Close</button>
-		<input type="button" onclick="javascript:window.location= 'list.do'" value=메인1>
+		<input type="button" onclick="javascript:window.location= 'list.do'" value=메인>
 	</div>
 	<!--  Server responses get written here -->
-	<div id="messages"></div>
+	<textarea id="messages" cols="40" rows="10" readonly></textarea>
 	
 	<!-- Script to utilise the WebSocket -->
 	<script type="text/javascript">
@@ -47,47 +77,54 @@
 		var messages = document.getElementById("messages");
 		
 		function openSocket(){
-			//Ensures only one connection is open at a time
+			
 			if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
 				writeResponse("WebSocket is already opened.");
 				return;
 			}
 			
-			// Create a new instance of the websocket
-			// webScoket = new WebSocket("ws://localhost/  *projectName*/echo");
-			webSocket = new WebSocket("ws://localhost:8081/WebSocketEx/websocketendpoint2");
+			webSocket = new WebSocket("ws://localhost:8081/Jsp28test/websocketendpoint2");
 			
-			/*
-			Binds functions to the listeners for the websocket.
-			*/
+			
+			
 			webSocket.onopen = function(event) {
-				// for reasons I can't determine, onopen gets called twice
-				// and the first time event.data is undefined
-				// Leave a comment if you know the answer.
+				sendin();
 				if (event.data === undefined)
 					return ;
 				
 				writeResponse(event.data);
+				
 			};
 			
 			webSocket.onmessage = function(event) {
 				writeResponse(event.data);
+				
 			};
 			
 			webSocket.onclose = function(event) {
+				sendin();
 				writeResponse("connection closed");
 			};
 		}
 		
-		/*
-		* Sends the value of the text input to the server
-		*/
+	
 		
 		function send() {
 			var id = "<%= id %>";
 			var text = document.getElementById("messageinput").value;
-			<% System.out.println("1234");%>
-			webSocket.send(id +": "+text);
+			
+			if(id==null){
+				webSocket.send(text);
+			} else
+			 
+			webSocket.send(id + " : " +text);
+			messageinput.value="";
+			
+		}
+		
+		function sendin() {
+		var id = "<%= id %>";
+		webSocket.send(id);
 		}
 		
 		function closeSocket() {
@@ -95,8 +132,21 @@
 		}
 		
 		function writeResponse(text){
-			messages.innerHTML += "<br>" + text;
+			/* messages.innerHTML += "<br>" + text; */
+			messages.innerHTML += text +"\n";
+			
+			 var objDiv = document.getElementById("messages");    //스크롤 하단내리기
+	            objDiv.scrollTop = objDiv.scrollHeight;
 		}
 	</script>
+	
+	<script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"></script>
+   <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"></script>
 </body>
 </html>
