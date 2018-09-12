@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class BDto {
 
+	//게시판 
 	int bId;
 	String bName;
 	String bTitle;
@@ -13,12 +14,24 @@ public class BDto {
 	int bGroup;
 	int bStep;
 	int bIndent;
+	String search;
+	String condition;
+	String Memberid;
+
 	
+	// 회원가입
+	private String id;
+	private String pw;
+	private String name;
+	private String eMail;
+	private Timestamp rDate;
+	private String address;
+	private String position;
 	public BDto() {
 		
 	}
 	public BDto(int bId, String bName, String bTitle, String bContent,
-			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent) 
+			Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent,String Memberid) 
 	{
 		this.bId = bId;
 		this.bName = bName;
@@ -28,9 +41,73 @@ public class BDto {
 		this.bHit = bHit;
 		this.bGroup = bGroup;
 		this.bStep = bStep;
-		this.bIndent = bIndent;	
+		this.bIndent = bIndent;
+		this.Memberid = Memberid;
+
 	}
 	
+
+
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	public String getMemberid() {
+		return Memberid;
+	}
+	public void setMemberid(String memberid) {
+		Memberid = memberid;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPw() {
+		return pw;
+	}
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String geteMail() {
+		return eMail;
+	}
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
+	}
+	public Timestamp getrDate() {
+		return rDate;
+	}
+	public void setrDate(Timestamp rDate) {
+		this.rDate = rDate;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	public String getCondition() {
+		return condition;
+	}
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
 	public int getbIndent() {
 		return bIndent;
 	}

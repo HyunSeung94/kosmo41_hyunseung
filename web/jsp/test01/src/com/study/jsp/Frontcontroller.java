@@ -17,8 +17,10 @@ import com.study.jsp.command.BListCommand;
 import com.study.jsp.command.BModifyCommand;
 import com.study.jsp.command.BReplyCommand;
 import com.study.jsp.command.BReplyViewCommand;
-import com.study.jsp.command.BSearchCommand;
 import com.study.jsp.command.BWriteCommand;
+import com.study.jsp.command.joinOk;
+import com.study.jsp.command.loginOk;
+import com.study.jsp.command.modifyOk;
 
 @WebServlet("*.do")
 public class Frontcontroller extends HttpServlet {
@@ -39,13 +41,12 @@ public class Frontcontroller extends HttpServlet {
 	}
 
 	protected void actionDo(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException 
-	{
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		
+
 		String viewPage = null;
 		BCommand command = null;
-		
+
 		String uri = request.getRequestURI();
 		String conPath = request.getContextPath();
 		String com = uri.substring(conPath.length());
@@ -53,11 +54,32 @@ public class Frontcontroller extends HttpServlet {
 		HttpSession session = null;
 		session = request.getSession();
 		int curPage = 1;
-		if(session.getAttribute("cpage") != null) {
-			curPage = (int)session.getAttribute("cpage");
+		if (session.getAttribute("cpage") != null) {
+			curPage = (int) session.getAttribute("cpage");
 		}
-		
-		if (com.equals("/write_view.do")) {
+
+		if (com.equals("/joinOk.do")) {
+			command = new joinOk();
+			command.execute(request, response);
+			return;
+		} else if (com.equals("/loginOk.do")) {
+			command = new loginOk();
+			command.execute(request, response);
+			return;
+		} else if (com.equals("/modifyOk.do")) {
+			command = new modifyOk();
+			command.execute(request, response);
+			return;
+		} else if (com.equals("/logout.do")) {
+			System.out.println("logout.do:");
+			command = new BListCommand();
+			command.execute(request, response);
+			session = request.getSession();
+			session.invalidate();
+			//response.sendRedirect("list.do");
+			viewPage="list.jsp";
+			// logout(request, response);
+		} else if (com.equals("/write_view.do")) {
 			viewPage = "write_view.jsp";
 		} else if (com.equals("/write.do")) {
 			command = new BWriteCommand();
@@ -78,33 +100,38 @@ public class Frontcontroller extends HttpServlet {
 		} else if (com.equals("/modify.do")) {
 			command = new BModifyCommand();
 			command.execute(request, response);
-			
+
 			command = new BContentCommand();
 			command.execute(request, response);
 			viewPage = "content_view.jsp";
 		} else if (com.equals("/delete.do")) {
 			command = new BDeleteCommand();
 			command.execute(request, response);
-			viewPage = "list.do?page="+curPage;
+			viewPage = "list.do?page=" + curPage;
 		} else if (com.equals("/reply_view.do")) {
 			command = new BReplyViewCommand();
 			command.execute(request, response);
 			viewPage = "reply_view.jsp";
-		}  else if (com.equals("/reply.do")) {
+		} else if (com.equals("/reply.do")) {
 			command = new BReplyCommand();
 			command.execute(request, response);
-			viewPage = "list.do?page="+curPage;
+			viewPage = "list.do?page=" + curPage;
 		} else if (com.equals("/search.do")) {
-			command = new BSearchCommand();
+			command = new BListCommand();
 			command.execute(request, response);
-			viewPage = "list.do";
-			System.out.println("1111");
+			viewPage = "list_search.jsp";
 		} 
-		
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);
 	}
-	
-}
 
+/*	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		HttpSession session = request.getSession();
+
+		session.invalidate();
+		response.sendRedirect("list.do");
+	}*/
+
+}

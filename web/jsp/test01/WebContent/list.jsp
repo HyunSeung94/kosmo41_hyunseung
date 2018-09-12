@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	request.setCharacterEncoding("UTF-8");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,105 +23,334 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 	crossorigin="anonymous"></script>
+<script>
+	
+</script>
 <style>
 </style>
 </head>
 <body>
+<%
+	
+	String name = (String) session.getAttribute("name");
+	String Memberid = (String) session.getAttribute("id");
+	
+	session.setAttribute("id", Memberid);
+	session.setAttribute("name", name);
+
+	System.out.println("listname :"+ name);
+	System.out.println("listID :"+ Memberid);
+%>
+<%
+	String boardname = request.getParameter("board");
+	String condition = request.getParameter("condition");
+			
+ 	System.out.println("list.jsp :"+ boardname);		
+ 	session.setAttribute("cboard", boardname);
+	session.setAttribute("condition",condition);
+%> 
+
+	<br>
+	<br>
+	<div></div>
+
+
+	<div align="center">
+		<a class="btn btn-outline-secondary" href="list.do">전체게시글</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-outline-secondary" href="list.do?board=전우치게시판">전우치게시판</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-outline-secondary" href="list.do?board=홍길동게시판">홍길동게시판</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<% if((String) session.getAttribute("id") != null) {   %>
+		<a class="btn btn-outline-secondary" href="client.jsp">채팅입장</a>
+		<% }
+		%>
+	</div>
+	<br>
+	
+<%	
+	if(name != null) { 
+%>
+		<h5 align="right"><%=name%>님 안녕하세요.
+		 
+		<form action="logout.do" method="get" align="right">
+			<input type="submit" value="로그아웃" >&nbsp;&nbsp;&nbsp; <input
+				type="button" value="정보수정"
+				onclick="javascript:window.location= 'modify.jsp'">
+		</form>
+		</h5>
+	<% } else if(name == null){ %>
+	<h5 align="right">
+		<a class="btn btn-outline-secondary" href="login.jsp">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-outline-secondary" href="join.jsp">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</h5>
+		
+		<% } %>
+
+	<hr>
 	<div class="container">
-	<table class="table">
-		<thead class="thead-dark">
-			<tr align = "center">
-				<th scope="col">번호</th>
-				<th scope="col">이름</th>
-				<th scope="col">제목</th>
-				<th scope="col">날짜</th>
-				<th scope="col">히트</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach items="${list}" var="dto">
-				<tr align = "center">
-					<th scope="row">${dto.bId}</th>
-					<td>${dto.bName}</td>
-					<td><c:forEach begin="1" end="${dto.bIndent}">-</c:forEach> <a
-						href="content_view.do?bId=${dto.bId}&page=$">${dto.bTitle}</a></td>
-					<td>${dto.bDate}</td>
-					<td>${dto.bHit}</td>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr align="center">
+					<th scope="col">번호</th>
+					<th scope="col">이름</th>
+					<th scope="col">제목</th>
+					<th scope="col">날짜</th>
+					<th scope="col">히트</th>
 				</tr>
-			</c:forEach>
-			<tr>
-				<td colspan="5" align= "right"><a href="write_view.do">글작성</a></td>
-			</tr>
-			<tr>
-				<td colspan="5" align = "center">
-					<!-- 처음 --> 
-					<c:choose>
-						<c:when test="${(page.curPage-1)<1}">
+			</thead>
+			<tbody>
+				<c:forEach items="${list}" var="dto">
+					<tr align="center">
+						<th scope="row">${dto.bId}</th>
+						<td>${dto.bName}</td>
+						<td><c:forEach begin="1" end="${dto.bIndent}">답변=></c:forEach> <a
+							href="content_view.do?&board=${cboard}&bId=${dto.bId}&page=$">${dto.bTitle}</a></td>
+						<td>${dto.bDate}</td>
+						<td>${dto.bHit}</td>
+					</tr>
+				</c:forEach>
+				<tr>
+					<%
+						if ((session.getAttribute("condition")) != null) {
+					%>
+					<td colspan="2.5" align="left"><a href="list.do">전체 목록</a> <%
+ 	}
+ %>
+ 	<% if((String) session.getAttribute("id") != null) {   %>
+					<td colspan="5" align="right"><a href="write_view.do?board=${cboard}">글작성</a></td>
+	<% } %>
+				</tr>
+				<tr>
+					<td colspan="5" align="center">
+						<%
+						
+							if ((session.getAttribute("cboard")) == null && (session.getAttribute("condition")) == null) {
+								System.out.println("페이징처리 1");
+						%> <!-- 처음 --> <c:choose>
+							<c:when test="${(page.curPage-1)<1}">
 							[처음]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=1">[ 처음 ]</a>
-						</c:otherwise>
-						</c:choose>
-						<!-- 이전 --> 
-						<c:choose>
-						<c:when test="${(page.curPage -1) < 1}">
+							<c:otherwise>
+								<a href="list.do?page=1">[ 처음 ]</a>
+							</c:otherwise>
+						</c:choose> <!-- 이전 --> <c:choose>
+							<c:when test="${(page.curPage -1) < 1}">
 							[ &lt; ]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=${page.curPage -1}">[ &lt;]</a>
-						</c:otherwise>
-						</c:choose> 
-						<!-- 개별 페이지 --> 
-						<c:forEach var="num" begin="${page.startPage}"
-						end="${page.endPage}" step="1">
-						<c:choose>
-						<c:when test="${page.curPage == num}">
+							<c:otherwise>
+								<a href="list.do?page=${page.curPage -1}">[ &lt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 개별 페이지 --> <c:forEach var="num" begin="${page.startPage}"
+							end="${page.endPage}" step="1">
+							<c:choose>
+								<c:when test="${page.curPage == num}">
             				[${num}] &nbsp;
             			</c:when>
 
-						<c:otherwise>
-							<a href="list.do?page=${num}">[${num}]</a> &nbsp;	
+								<c:otherwise>
+									<a href="list.do?page=${num}">[${num}]</a> &nbsp;	
             			</c:otherwise>
-						</c:choose>
-						</c:forEach>
-						<!-- 다음 -->
-						<c:choose>
-						<c:when test="${(page.curPage +1 ) > page.totalPage }">
+							</c:choose>
+						</c:forEach> <!-- 다음 --> <c:choose>
+							<c:when test="${(page.curPage +1 ) > page.totalPage }">
 							[ &gt; ]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=${page.curPage +1 }">[ &gt;]</a>
-						</c:otherwise>
-						</c:choose>
-					 	<!-- 끝 -->
-					 	<c:choose>
-						<c:when test="${page.curPage == page.totalPage}">
+							<c:otherwise>
+								<a href="list.do?page=${page.curPage +1 }">[ &gt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 끝 --> <c:choose>
+							<c:when test="${page.curPage == page.totalPage}">
 							[끝]
 						</c:when>
-						<c:otherwise>
-							<a href="list.do?page=${page.totalPage}">[끝]</a>
-						</c:otherwise>
+							<c:otherwise>
+								<a href="list.do?page=${page.totalPage}">[끝]</a>
+							</c:otherwise>
+						</c:choose> 
+										<% 
+						 	} else if((session.getAttribute("cboard")) == null && (session.getAttribute("condition")) != null){
+						 		System.out.println("페이징처리 2");
+						%> 
+ 						<!-- 검색한 리스트페이징 출력 --> 
+ 						<!-- 처음 --> <c:choose>
+							<c:when test="${(page.curPage-1)<1}">
+							[처음]
+						</c:when>
+							<c:otherwise>
+								<a href="list.do?&search=${search}&condition=${condition}&page=1">[처음]</a>
+							</c:otherwise>
+						</c:choose> <!-- 이전 --> <c:choose>
+							<c:when test="${(page.curPage -1) < 1}">
+							[ &lt; ]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.curPage -1}&search=${search}&condition=${condition}">[
+									&lt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 개별 페이지 --> <c:forEach var="num" begin="${page.startPage}"
+							end="${page.endPage}" step="1">
+							<c:choose>
+								<c:when test="${page.curPage == num}">
+            				[${num}] &nbsp;
+            			</c:when>
+
+								<c:otherwise>
+									<a
+										href="list.do?page=${num}&search=${search}&condition=${condition}">[${num}]</a> &nbsp;	
+            			</c:otherwise>
+							</c:choose>
+						</c:forEach> <!-- 다음 --> <c:choose>
+							<c:when test="${(page.curPage +1 ) > page.totalPage }">
+							[ &gt; ]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.curPage +1 }&search=${search}&condition=${condition}">[
+									&gt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 끝 --> <c:choose>
+							<c:when test="${page.curPage == page.totalPage}">
+							[끝]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.totalPage}&search=${search}&condition=${condition}&page=">[끝]</a>
+							</c:otherwise>
 						</c:choose>
+						<%
+						
+						} else if ((session.getAttribute("cboard")) != null && (session.getAttribute("condition")) == null) {
+							System.out.println("페이징처리 3");
+						%>
+						<!--  게시판끼리 페이지 -->
+						 <!-- 처음 --> <c:choose>
+							<c:when test="${(page.curPage-1)<1}">
+							[처음]
+						</c:when>
+							<c:otherwise>
+								<a href="list.do?page=1&board=${cboard}">[ 처음 ]</a>
+							</c:otherwise>
+						</c:choose> <!-- 이전 --> <c:choose>
+							<c:when test="${(page.curPage -1) < 1}">
+							[ &lt; ]
+						</c:when>
+							<c:otherwise>
+								<a href="list.do?page=${page.curPage -1}&board=${cboard}">[
+									&lt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 개별 페이지 --> <c:forEach var="num" begin="${page.startPage}"
+							end="${page.endPage}" step="1">
+							<c:choose>
+								<c:when test="${page.curPage == num}">
+            				[${num}] &nbsp;
+            			</c:when>
+
+								<c:otherwise>
+									<a href="list.do?page=${num}&board=${cboard}">[${num}]</a> &nbsp;	
+            			</c:otherwise>
+							</c:choose>
+						</c:forEach> <!-- 다음 --> <c:choose>
+							<c:when test="${(page.curPage +1 ) > page.totalPage }">
+							[ &gt; ]
+						</c:when>
+							<c:otherwise>
+								<a href="list.do?page=${page.curPage +1 }&board=${cboard}">[
+									&gt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 끝 --> <c:choose>
+							<c:when test="${page.curPage == page.totalPage}">
+							[끝]
+						</c:when>
+							<c:otherwise>
+								<a href="list.do?page=${page.totalPage}&board=${cboard}">[끝]</a>
+							</c:otherwise>
+						</c:choose>
+						<% 
+					
+						 	} else {
+						 		System.out.println("페이징처리 4");
+						%> 
+ 						<!-- 검색한 리스트페이징 출력 --> 
+ 						<!-- 처음 --> <c:choose>
+							<c:when test="${(page.curPage-1)<1}">
+							[처음]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?board=${cboard}&search=${search}&condition=${condition}&page=1">[
+									처음 ]</a>
+							</c:otherwise>
+						</c:choose> <!-- 이전 --> <c:choose>
+							<c:when test="${(page.curPage -1) < 1}">
+							[ &lt; ]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.curPage -1}&board=${cboard}&search=${search}&condition=${condition}">[
+									&lt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 개별 페이지 --> <c:forEach var="num" begin="${page.startPage}"
+							end="${page.endPage}" step="1">
+							<c:choose>
+								<c:when test="${page.curPage == num}">
+            				[${num}] &nbsp;
+            			</c:when>
+
+								<c:otherwise>
+									<a
+										href="list.do?page=${num}&board=${cboard}&search=${search}&condition=${condition}">[${num}]</a> &nbsp;	
+            			</c:otherwise>
+							</c:choose>
+						</c:forEach> <!-- 다음 --> <c:choose>
+							<c:when test="${(page.curPage +1 ) > page.totalPage }">
+							[ &gt; ]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.curPage +1 }&board=${cboard}&search=${search}&condition=${condition}">[
+									&gt;]</a>
+							</c:otherwise>
+						</c:choose> <!-- 끝 --> <c:choose>
+							<c:when test="${page.curPage == page.totalPage}">
+							[끝]
+						</c:when>
+							<c:otherwise>
+								<a
+									href="list.do?page=${page.totalPage}&board=${cboard}&search=${search}&condition=${condition}&page=">[끝]</a>
+							</c:otherwise>
+						</c:choose> <%
+ 	}
+ %>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		
-		<div id="searchForm" align="center">
-			<form action = "search.do">
-				<select name="search">
-					<option value="0">제목</option>
-					<option value="1">내용</option>
-					<option value="2">작성자</option>
-					<option value="3">제목+내용</option>
-					<option value="all">전체</option>
-				</select>
-				<input type="text" size="20" name="condition"/> &nbsp;
-				<input type="submit" value="검색" />
- 			</form>
-		</div>
-		
+	</div>
+	
+ 
+
+	<div id="searchForm" align="center">	
+	<% if (boardname==null){ %>
+			<form action="list.do" method="post">
+	  <%
+	  } else if(boardname != null){ 
+	  %> 
+
+		<form action="list.do?board=${cboard}" method="post">
+	 	<%
+	  }
+		%> 
+
+			<select name="search">
+				<option value="0">제목</option>
+				<option value="1">내용</option>
+				<option value="2">작성자</option>
+				<option value="3">제목+내용</option>
+				<option value="all">전체</option>
+			</select> 
+			<input type="text" size="20" name="condition" /> &nbsp; <input
+				type="submit" value="검색" />
+		</form>
+	</div>
 
 
 

@@ -18,6 +18,8 @@ import com.study.jsp.command.BModifyCommand;
 import com.study.jsp.command.BReplyCommand;
 import com.study.jsp.command.BReplyViewCommand;
 import com.study.jsp.command.BWriteCommand;
+import com.study.jsp.command.RBListCommand;
+import com.study.jsp.command.RBWriteCommand;
 import com.study.jsp.command.joinOk;
 import com.study.jsp.command.loginOk;
 import com.study.jsp.command.modifyOk;
@@ -57,8 +59,20 @@ public class Frontcontroller extends HttpServlet {
 		if (session.getAttribute("cpage") != null) {
 			curPage = (int) session.getAttribute("cpage");
 		}
-
-		if (com.equals("/joinOk.do")) {
+		// 채팅
+		if (com.equals("/list_chat.do")) {
+			command = new RBListCommand();
+			command.execute(request, response);
+			viewPage = "list_chat.jsp";
+		}else if (com.equals("/rwrite_view.do")) {
+			viewPage = "rwrite_view.jsp";
+		} else if (com.equals("/rwrite.do")) {
+			command = new RBWriteCommand();
+			command.execute(request, response);
+			viewPage = "list_chat.do";
+		}
+		// 회원연동
+		else if (com.equals("/joinOk.do")) {
 			command = new joinOk();
 			command.execute(request, response);
 			return;
@@ -76,9 +90,11 @@ public class Frontcontroller extends HttpServlet {
 			command.execute(request, response);
 			session = request.getSession();
 			session.invalidate();
-			//response.sendRedirect("list.do");
-			viewPage="list.jsp";
+			// response.sendRedirect("list.do");
+			viewPage = "list.jsp";
 			// logout(request, response);
+
+			// 게시판
 		} else if (com.equals("/write_view.do")) {
 			viewPage = "write_view.jsp";
 		} else if (com.equals("/write.do")) {
@@ -120,18 +136,19 @@ public class Frontcontroller extends HttpServlet {
 			command = new BListCommand();
 			command.execute(request, response);
 			viewPage = "list_search.jsp";
-		} 
-		
+		}
+
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);
 	}
 
-/*	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		HttpSession session = request.getSession();
-
-		session.invalidate();
-		response.sendRedirect("list.do");
-	}*/
+	/*
+	 * public void logout(HttpServletRequest request, HttpServletResponse response)
+	 * throws ServletException, IOException {
+	 * 
+	 * HttpSession session = request.getSession();
+	 * 
+	 * session.invalidate(); response.sendRedirect("list.do"); }
+	 */
 
 }

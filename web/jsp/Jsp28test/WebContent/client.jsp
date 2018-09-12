@@ -19,8 +19,10 @@
    crossorigin="anonymous">
 </script>
 </head>
-<style>   
-   </style> 
+<style>
+
+
+</style>
  <script>
       $(document).ready(function(){
          $('#messageinput').keypress(function(e){
@@ -56,20 +58,27 @@
 	}
 %> --%>
 	<div>
-		사용자 아이디 : <%= id %>
+		<h3>대기실 입니다.</h3>		
 	</div>
+
+
+	<!--  Server responses get written here -->
 	<div>
+	<textarea id="messages" cols="40" rows="10" readonly class="section"></textarea>
+	</div>
+사용자 아이디 : <%= id %>
+		<div>
 		<input type ="text" id="messageinput" />
 		<button type="button" onclick="send();"   id="button1">Send</button>
 	</div>
-	<div>	
+	
+	<div>
 		<button type="button" onclick="openSocket();">Open</button>
 		<!-- <button type="button" onclick="send();">Send</button> -->
 		<button type="button" onclick="closeSocket();">Close</button>
 		<input type="button" onclick="javascript:window.location= 'list.do'" value=메인>
+		<input type="button" onclick="javascript:window.location= 'list_chat.do'" value=방리스트>
 	</div>
-	<!--  Server responses get written here -->
-	<textarea id="messages" cols="40" rows="10" readonly></textarea>
 	
 	<!-- Script to utilise the WebSocket -->
 	<script type="text/javascript">
@@ -88,7 +97,8 @@
 			
 			
 			webSocket.onopen = function(event) {
-				sendin();
+				 sendin(); 
+				/* send(); */
 				if (event.data === undefined)
 					return ;
 				
@@ -103,6 +113,7 @@
 			
 			webSocket.onclose = function(event) {
 				sendin();
+				/* send(); */
 				writeResponse("connection closed");
 			};
 		}
@@ -122,10 +133,10 @@
 			
 		}
 		
-		function sendin() {
+	 	function sendin() {
 		var id = "<%= id %>";
 		webSocket.send(id);
-		}
+		} 
 		
 		function closeSocket() {
 			webSocket.close();

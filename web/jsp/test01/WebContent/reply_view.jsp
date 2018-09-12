@@ -27,10 +27,17 @@
 	}
 </script>
 <body>
+
+<%
+			String boardname = request.getParameter("board");
+			
+			session.setAttribute("cboard", boardname);
+			System.out.println("reply_view :"+ boardname);
+			%>
 	<div class="container">
 		<table class="table table-bordered">
 			<thead>
-			<form name="reply_form" action="reply.do" method="post">
+			<form name="reply_form" action="reply.do?board=${cboard}" method="post">
 			<input type="hidden" name="bId" value="${reply_view.bId }">
 			<input type="hidden" name="bGroup" value="${reply_view.bGroup }">
 			<input type="hidden" name="bStep" value="${reply_view.bStep }">
@@ -76,9 +83,11 @@
 				<a href="JavaScript:form_check();">답변 </a>&nbsp;&nbsp;
 				<a href="list.do?page=<%= session.getAttribute("cpage")%>">목록보기</a>&nbsp;&nbsp;
 				</td>			
+		</form>
 		</thead>
 		</table>
 		</div>
+		
 		
 		
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
