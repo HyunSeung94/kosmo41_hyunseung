@@ -31,8 +31,7 @@
 	%>
 	<div class="container">
 		<table class="table table-bordered">
-					<form name="write_form" action="rwrite.do?rid=${id}"
-						method="post">
+					<form name="write_form" action="rwrite.do?rid=${id}" method="post" >
 						<thead>
 							<tr>
 								<th scope="col">방장</th>
@@ -43,12 +42,11 @@
 								<td><input type="text" name="roomname" size="50"></td>
 							</tr>
 							<tr>
-								<td colspan="2" align="right">
-								<input type="submit" value="방 만들기">
-								<a href="list_chat.do">방목록보기</a></td>
+								<td colspan="2" align="right" >
+								<input type="submit" value="방만들기" class="btn btn-outline-secondary">
+								<a href="list_chat.do"  class="btn btn-outline-secondary" value="방목록보기">방목록보기</a></td>
 							</tr>
 						</thead>
-					</form>
 		</table>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

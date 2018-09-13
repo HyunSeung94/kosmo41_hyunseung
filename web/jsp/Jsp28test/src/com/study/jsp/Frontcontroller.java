@@ -18,8 +18,10 @@ import com.study.jsp.command.BModifyCommand;
 import com.study.jsp.command.BReplyCommand;
 import com.study.jsp.command.BReplyViewCommand;
 import com.study.jsp.command.BWriteCommand;
+import com.study.jsp.command.RBDeleteCommand;
 import com.study.jsp.command.RBListCommand;
 import com.study.jsp.command.RBWriteCommand;
+import com.study.jsp.command.RoomInCommand;
 import com.study.jsp.command.joinOk;
 import com.study.jsp.command.loginOk;
 import com.study.jsp.command.modifyOk;
@@ -60,16 +62,29 @@ public class Frontcontroller extends HttpServlet {
 			curPage = (int) session.getAttribute("cpage");
 		}
 		// 채팅
-		if (com.equals("/list_chat.do")) {
+		if (com.equals("/list_chat.jsp")) {
 			command = new RBListCommand();
 			command.execute(request, response);
 			viewPage = "list_chat.jsp";
-		}else if (com.equals("/rwrite_view.do")) {
+		}else if (com.equals("/list_chat.do")) {
+			command = new RBListCommand();
+			command.execute(request, response);
+			viewPage = "client.jsp";
+		}
+		else if (com.equals("/rwrite_view.do")) {
 			viewPage = "rwrite_view.jsp";
 		} else if (com.equals("/rwrite.do")) {
 			command = new RBWriteCommand();
 			command.execute(request, response);
 			viewPage = "list_chat.do";
+		}  else if (com.equals("/room_view.do")) {
+			command = new RoomInCommand();
+			command.execute(request, response);
+			viewPage = "client.jsp";
+		}  else if (com.equals("/deleteroom.do")) {
+			command = new RBDeleteCommand();
+			command.execute(request, response);
+			viewPage = "client.jsp";
 		}
 		// 회원연동
 		else if (com.equals("/joinOk.do")) {

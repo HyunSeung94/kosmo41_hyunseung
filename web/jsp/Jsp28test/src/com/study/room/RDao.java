@@ -77,6 +77,40 @@ public class RDao {
 		}
 	}
 
+	public void Roomin(String id,String roomname,HttpServletRequest request) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		HttpSession session = null;
+		session = request.getSession();
+		
+		roomname = (String) session.getAttribute("roomname");
+		String Rid = (String) session.getAttribute("id");
+		session.setAttribute("id", Rid);
+		session.setAttribute("Roomname", roomname);
+		String query = "insert into chat "
+				+ "(Id,Room)" + " values "
+				+ " (?, ?)";
+
+		try {
+			con = dataSource.getConnection();
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, Rid);
+			pstmt.setString(2, roomname);
+			int rn = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+	
 	public ArrayList<RDto> Rlist(int curPage) {
 
 		ArrayList<RDto> dtos = new ArrayList<RDto>();
@@ -126,6 +160,7 @@ public class RDao {
 			}
 		}
 		return dtos;
+		
 	}
 
 	public BPageInfo articlePage(int curPage) {
@@ -205,16 +240,19 @@ public class RDao {
 		return pinfo;
 	}
 
-	public void delete(String bId) {
+	public void delete(String rid,String roomname) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String query = "delete from mvc_board where bId = ?";
+		System.out.println("rid:RDAO:"+rid);
+		System.out.println("roomname:RDAO:"+roomname);
+		String query = "delete from room where roomname = ? and rid = ?";
 
 		try {
 			con = dataSource.getConnection();
 			pstmt = con.prepareStatement(query);
-			pstmt.setInt(1, Integer.parseInt(bId)); // 스트링을 인티저로 바꿔줌
+			pstmt.setString(1, roomname);
+			pstmt.setString(2, rid);
 			int rn = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();

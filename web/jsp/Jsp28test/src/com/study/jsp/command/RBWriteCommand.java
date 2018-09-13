@@ -31,11 +31,9 @@ public class RBWriteCommand implements BCommand {
 		session.setAttribute("rid", rid);
 		session.setAttribute("roomname", roomname);
 		position = (String) session.getAttribute("position");
-		System.out.println("position2:"+position);
-		
-		
-		System.out.println("roomid:"+rid);
-		System.out.println("roomname:"+roomname);
+//		System.out.println("position2:"+position);
+//		System.out.println("roomid:"+rid);
+//		System.out.println("roomname:"+roomname);
 		dao.RWrite(rid,roomname,position,request);
 	}
 

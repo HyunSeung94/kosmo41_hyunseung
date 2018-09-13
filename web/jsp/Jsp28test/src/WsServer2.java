@@ -32,9 +32,9 @@ public class WsServer2 {
 	private static final java.util.Map<String, Session> clientMap = java.util.Collections
 			.synchronizedMap(new java.util.HashMap<String, Session>());
 
-	String ID, msg, check;
+	String ID, msg, check, room;
 	String toname;
-	int checkin = 0; // 체크인 ==1 이면 공지 1이아니면 all메세지 
+	int checkin = 0; // 체크인 ==1 이면 공지 1이아니면 all메세지
 	int order = 0; // 명령문
 	int to = 0; // 귓속말 고정
 	Connection con = null;
@@ -97,7 +97,7 @@ public class WsServer2 {
 		}
 
 	}
-	
+
 	public void sendMsg(Session session, String msg, String toname) {
 		System.out.println("귓속말 발견!!!");
 		Iterator<String> it = clientMap.keySet().iterator();
@@ -114,15 +114,26 @@ public class WsServer2 {
 	public void Dblogin(String ID) {
 
 		try {
-			String sql = "insert into chat (id,room) values(?,?)";
+			String sql = "insert into chat (id) values(?)";
 			con = dataSource.getConnection();
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, ID);
-			pstmt.setString(2, "waitingroom");
 			pstmt.executeUpdate();
 
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				System.out.println("2");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -136,6 +147,81 @@ public class WsServer2 {
 			pstmt.executeUpdate();
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void roomcheck(String ID) {
+		try {
+			String sql = "select room from chat where id = ?";
+			con = dataSource.getConnection();
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, ID);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				room = rs.getString("room");
+				System.out.println("room1:"+room);
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void sendroomMsg(String ID) {
+		try {
+			System.out.println("room2:"+room+"ID2 :" + ID);
+			String sql = "select id from chat where room = ? ";
+			con = dataSource.getConnection();
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, room);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				System.out.println("room3:"+room);
+				try {
+					Session pr = (Session) clientMap.get(rs.getString("id"));
+					pr.getBasicRemote().sendText(ID + "(룸 대화): " + msg);
+				} catch (Exception e) {
+					System.out.println("예외:" + e);
+				} 
+
+			}
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -143,21 +229,23 @@ public class WsServer2 {
 	public void onOpen(Session session) {
 		System.out.println("Open session id: " + session.getId());
 
-		try {
-			// lookup 함수의 파라메터는 context.xml에 설정된
-			// name(jdbc/Oracle11g)과 동일해야 한다.
-			Context context = new InitialContext();
-			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/Oracle11g");
-			// 접속 정보만 가지고 있음
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
 
 		try {
 			final Basic basic = session.getBasicRemote();
 			basic.sendText("0 Connection Established");
 			checkin++;
 
+			try {
+				// lookup 함수의 파라메터는 context.xml에 설정된
+				// name(jdbc/Oracle11g)과 동일해야 한다.
+				Context context = new InitialContext();
+				dataSource = (DataSource) context.lookup("java:comp/env/jdbc/Oracle11g");
+				// 접속 정보만 가지고 있음
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -183,7 +271,7 @@ public class WsServer2 {
 	@OnMessage
 	public void onMessage(String message, Session session) {
 		System.out.println("checkin: " + checkin);
-		System.out.println("order: "+order);
+		System.out.println("order: " + order);
 		if (checkin == 0) {
 
 			StringTokenizer t1 = new StringTokenizer(message);
@@ -200,7 +288,6 @@ public class WsServer2 {
 			msg = strTmp;
 			System.out.println("메세지: " + msg);
 			System.out.println("Message from " + session.getId() + " : " + message);
-
 
 			System.out.println("너왜안타니1 ");
 			if (msg.indexOf("/") >= 0) {
@@ -238,23 +325,27 @@ public class WsServer2 {
 			// System.out.println("너왜안타니5 ");
 
 		}
-
+		roomcheck(ID);
+		
 		// 메세지 출력
 		if (order == 0) {
 
-			 if (checkin != 1) {
-				 if(msgCheck(msg) == 1) {
-					 checkin++;
-					 sendAllSessionToMessage(session, ID + "님이 금칙어를 사용했습니다.");
-					 checkin=0;
-				 } else {
-				sendAllSessionToMessage(session, message);
-				 }
+			if (checkin != 1) {
+				if (msgCheck(msg) == 1) {
+					checkin++;
+					sendAllSessionToMessage(session, ID + "님이 금칙어를 사용했습니다.");
+					checkin = 0;
+				} else if(room !=null) {
+					sendroomMsg(ID);
+				}
+					else {
+					sendAllSessionToMessage(session, message);
+				}
 			} else if (checkin == 1) {
 				StringTokenizer t1 = new StringTokenizer(message);
 				ID = t1.nextToken(); // 아이디
 				System.out.println("아이디: " + ID);
-				Dblogin(ID);
+				// Dblogin(ID);
 				System.out.println("666");
 				sendAllSessionToMessage(session, ID + "님이 입장하셨습니다.");
 				clientMap.put(ID, session);
@@ -266,10 +357,23 @@ public class WsServer2 {
 
 		try {
 			final Basic basic = session.getBasicRemote();
-			basic.sendText("to : " + message);
+			if(room ==null) {
+				basic.sendText("to : " + message);
+			}
 		} catch (IOException ex) {
 			System.out.println("오류1");
 			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
