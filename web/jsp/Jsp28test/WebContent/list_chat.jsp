@@ -65,8 +65,8 @@
 	<%
 		if (name != null) {
 	%>
-	<h3 align="center">방리스트 입니다.</h3>
-	<h5 align="right"><%=Memberid%>님 안녕하세요.
+	<h5 align="center">방리스트 입니다.</h5>
+	<h6 align="right"><%=Memberid%>님 안녕하세요.</h6>
 
 		<form action="logout.do" method="get" align="right">
 			<input type="submit" value="로그아웃" class="btn btn-outline-secondary">&nbsp; <input

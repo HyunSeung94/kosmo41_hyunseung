@@ -32,11 +32,11 @@ public class WsServer2 {
 	private static final java.util.Map<String, Session> clientMap = java.util.Collections
 			.synchronizedMap(new java.util.HashMap<String, Session>());
 
-	String ID, msg, check, room;
+	String ID, msg, check, room,myroomlist;
 	String toname;
 	int checkin = 0; // 체크인 ==1 이면 공지 1이아니면 all메세지
 	int order = 0; // 명령문
-	int to = 0; // 귓속말 고정
+	int to,waiting = 0; // 귓속말 고정
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
@@ -112,12 +112,13 @@ public class WsServer2 {
 	}
 
 	public void Dblogin(String ID) {
-
+	
 		try {
-			String sql = "insert into chat (id) values(?)";
+			String sql = "insert into chat (id,room) values(?,?)";
 			con = dataSource.getConnection();
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, ID);
+			pstmt.setString(2, "waitingroom");
 			pstmt.executeUpdate();
 
 		} catch (SQLException sqle) {
@@ -188,7 +189,48 @@ public class WsServer2 {
 			}
 		}
 	}
+	
+	public void myroomlist(Session session,String ID) {
+		 myroomlist = "현재방 리스트 [ ";
+		
+			try {
+//				System.out.println("room2:"+room+"ID2 :" + ID);
+				String sql = "select id from chat where room = ? ";
+				con = dataSource.getConnection();
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, room);
+				rs = pstmt.executeQuery();
 
+				while (rs.next()) {
+//					System.out.println("room3:"+room);
+					myroomlist = myroomlist+ (String) rs.getString(1) + ",";
+				}
+				myroomlist = myroomlist.substring(0, myroomlist.length() - 1) + " ]"; // -1은 , 를 없애기위해서				
+				try {
+					final Basic basic = session.getBasicRemote();
+					basic.sendText(myroomlist);
+
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+				
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (con != null)
+						con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	
 	public void sendroomMsg(String ID) {
 		try {
 			System.out.println("room2:"+room+"ID2 :" + ID);
@@ -225,17 +267,54 @@ public class WsServer2 {
 		}
 	}
 
+	public void sendwaitingMsg(String ID) {
+		try {
+			System.out.println("room2:"+room+"ID2 :" + ID);
+			String sql = "select id from chat where room = ? ";
+			con = dataSource.getConnection();
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, room);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				System.out.println("room3:"+room);
+				try {
+					Session pr = (Session) clientMap.get(rs.getString("id"));
+					pr.getBasicRemote().sendText(ID + "(대기실 대화): " + msg);
+				} catch (Exception e) {
+					System.out.println("예외:" + e);
+				} 
+
+			}
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	@OnOpen
 	public void onOpen(Session session) {
 		System.out.println("Open session id: " + session.getId());
 
+		
 	
 
 		try {
 			final Basic basic = session.getBasicRemote();
 			basic.sendText("0 Connection Established");
 			checkin++;
-
+			
 			try {
 				// lookup 함수의 파라메터는 context.xml에 설정된
 				// name(jdbc/Oracle11g)과 동일해야 한다.
@@ -270,6 +349,7 @@ public class WsServer2 {
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
+		
 		System.out.println("checkin: " + checkin);
 		System.out.println("order: " + order);
 		if (checkin == 0) {
@@ -296,6 +376,8 @@ public class WsServer2 {
 
 			/*------명령어-------명령어------명령어-------명령어------명령어-------명령어------명령어-------명령어------명령어-------명령어*/
 
+			
+			
 			// System.out.println("너왜안타니2 ");
 			if (msg.equals("/alllist")) {
 				list(session, msg);
@@ -320,11 +402,14 @@ public class WsServer2 {
 			} else if (to % 2 != 0) {
 				order++;
 				sendMsg(session, msg, toname);
+			} else if (msg.indexOf("/myroomlist") >= 0) {
+				myroomlist(session,ID);
 			}
 
 			// System.out.println("너왜안타니5 ");
 
 		}
+		
 		roomcheck(ID);
 		
 		// 메세지 출력
@@ -332,10 +417,13 @@ public class WsServer2 {
 
 			if (checkin != 1) {
 				if (msgCheck(msg) == 1) {
+					System.out.println("금칙어!");
 					checkin++;
 					sendAllSessionToMessage(session, ID + "님이 금칙어를 사용했습니다.");
 					checkin = 0;
-				} else if(room !=null) {
+				} else if(room.equals("waitingroom")) {
+					sendwaitingMsg(ID);
+				} else if(room != null) {
 					sendroomMsg(ID);
 				}
 					else {
@@ -358,7 +446,22 @@ public class WsServer2 {
 		try {
 			final Basic basic = session.getBasicRemote();
 			if(room ==null) {
+				StringTokenizer t1 = new StringTokenizer(message);
+				ID = t1.nextToken(); // 아이디
+				check = t1.nextToken(); // 아이디 : 메세지
+				int nTmp1 = message.indexOf(" ");
+				String strTmp = message.substring(nTmp1 + 1);
+				nTmp1 = strTmp.indexOf(" ");
+				strTmp = strTmp.substring(nTmp1 + 1);
+				msg=strTmp;
+				
+				if(msg.equals("waitingroom")) {
+					Dblogin(ID);
+					waiting++;
+				}
+				if(waiting==0) {
 				basic.sendText("to : " + message);
+				}waiting=0;
 			}
 		} catch (IOException ex) {
 			System.out.println("오류1");

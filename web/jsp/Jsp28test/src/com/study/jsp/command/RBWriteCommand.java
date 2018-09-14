@@ -35,6 +35,7 @@ public class RBWriteCommand implements BCommand {
 //		System.out.println("roomid:"+rid);
 //		System.out.println("roomname:"+roomname);
 		dao.RWrite(rid,roomname,position,request);
+		dao.Roomin(rid,roomname,request);
 	}
 
 }

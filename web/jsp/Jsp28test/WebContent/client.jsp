@@ -32,17 +32,22 @@ html, body {
 }
 
 .left {
-	width: 50%;
+	width: 30%;
+	height: 70%;
+	float: left;
+}
+
+.center {
+	width: 35%;
 	height: 70%;
 	float: left;
 }
 
 .aside {
-	width: 50%;
+	width: 35%;
 	height: 70%;
 	float: right;
 	/* background:#008B8B; */
-	
 }
 
 .footer {
@@ -92,10 +97,17 @@ html, body {
 	<br>
 	<div class="header" align="left">
 		<%
-			if ((String) session.getAttribute("roomlist") != "방리스트") {
+			if (roomname == null) {
 		%>
-		<h3>대기실1123 입니다.</h3>
 
+		<h3 align="center">대기실 입니다.</h3>
+
+		<%
+			} else {
+		%>
+		<h3><%=roomname%>
+			방입니다.
+		</h3>
 		<%
 			}
 		%>
@@ -103,51 +115,77 @@ html, body {
 
 
 
-	<div class="aside" style="border: 2px solid black">
+	<div class="aside" style="border: 1px solid black">
+	<div class="container">
 		<%
-			if ((String) session.getAttribute("roomlist") != null) {
-				
+			if ((String) session.getAttribute("roomlist") == null) {
 		%>
 
-		<jsp:include page="list_chat.jsp" />
+		  <!--  <iframe src="list_chat.jsp" id=listchat width="100%" height="400px" frameborder="0" marginwidth="0"></iframe> -->
+		  <jsp:include page="list_chat.jsp" />
 
 		<%
 			}
-		 session.removeAttribute("roomlist");
-		 session.removeAttribute("roomname");
+			session.removeAttribute("roomlist");
+			session.removeAttribute("roomname");
 		%>
-	</div>
-
-	<!--  Server responses get written here -->
-	<div class="left" >
 	
+	</div>
+	</div>
+	<div class="left">
 	<div>
-		<textarea id="messages" cols="50" rows="20" readonly class="container" ></textarea>
+			<button type="button" onclick="openSocket();"
+				class="btn btn-outline-secondary">Open</button>
+			<!-- <button type="button" onclick="send();">Send</button> -->
+			<button type="button" onclick="closeSocket();"
+				class="btn btn-outline-secondary">Close</button>	
+			<input class="btn btn-outline-secondary" type="button"
+				onclick="javascript:window.location= 'list.do'" value=메인>
+			<input class="btn btn-outline-secondary" type="button" name="roomlist"
+				onclick="javascript:window.location= 'list_chat.do'"
+				value="방리스트">
+				<button class="btn btn-outline-secondary" type="button" onclick="roomgo();">초대</button>
+				<button class="btn btn-outline-secondary" type="button" onclick="alllist();">전체리스트</button>
+				<button class="btn btn-outline-secondary" type="button" onclick="myroomlist();">내방리스트</button>
+				<button class="btn btn-outline-secondary" type="button" onclick="roomout();">추방</button>
+			 <%-- <input class="btn btn-outline-secondary" type="button" onclick="javascript:window.location='roomgo?id=<%=id%>&roomname=<%=roomname%>'"
+			value="초대"> --%>
+			
+	</div>
+	 	
+		<!-- 	<div class="row">
+				&nbsp;&nbsp;&nbsp;&nbsp;<div class="col-sm-4" style="border: 1px solid black" align="center" ><h>전체 접속자</h></div>&nbsp;
+
+				<div class="col-sm-4" style="border: 1px solid black" align="center">대기실 접속자</div>&nbsp;&nbsp;&nbsp;&nbsp;
+			</div> -->
+		</div> 
+
+	</div>
+	<!--  Server responses get written here -->
+	<div class="center">
+
+		<div>
+			<textarea id="messages" cols="50" rows="20" readonly
+				class="container"></textarea>
+		</div>
+
+		사용자 아이디1 :
+		<%=id%>
+		, 룸 :
+		<%=roomname%>
+		<%
+			System.out.println("roomname1:" + roomname);
+		%>
+		<div>
+			<input type="text" id="messageinput" />
+			<button type="button" onclick="send();" id="button1" class="btn btn-outline-secondary"
+				>Send</button>
+		</div>
+
+		
 	</div>
 
-	사용자 아이디1 :
-	<%=id%>
-	<%=roomname%>
-	<%
-	System.out.println("roomname1:"+ roomname);	
-	%>
-	<div>
-		<input type="text" id="messageinput" />
-		<button type="button" onclick="send();" id="button1">Send</button>
-	</div>
-
-	<div>
-		<button type="button" onclick="openSocket();">Open</button>
-		<!-- <button type="button" onclick="send();">Send</button> -->
-		<button type="button" onclick="closeSocket();">Close</button>
-		<input type="button" onclick="javascript:window.location= 'list.do'"
-			value=메인> <input type="button" name="roomlist"
-			onclick="javascript:window.location= 'list_chat.do?roomlist=방리스트'"
-			value="방리스트1">
-	</div>
-	</div>
-
-<footer class="footer">footer</footer>
+	<footer class="footer">footer</footer>
 
 	<!-- Script to utilise the WebSocket -->
 	<script type="text/javascript">
@@ -167,7 +205,16 @@ html, body {
 			
 			webSocket.onopen = function(event) {		
 				/* sendin();  */		
-				  send();
+				<%if (roomname == null) {
+				System.out.println("roomname2:" + roomname);%>
+				waiting();
+				
+				<%} else {
+				System.out.println("roomname3:" + roomname);%>
+				send();
+				
+				<%}%>
+				
 				if (event.data === undefined)
 					return ;
 				
@@ -186,16 +233,33 @@ html, body {
 				writeResponse("connection closed");
 			};
 		}
+		function roomout() {
+			var id = "<%=id%>"; 
+			var text = document.getElementById("messageinput").value;
+			text = "/roomout";
+			webSocket.send(id + " : " +text);
+		}
 		
-	
+		function alllist() { //전체리스트
+			var id = "<%=id%>"; 
+			var text = document.getElementById("messageinput").value;
+			text = "/alllist";
+			webSocket.send(id + " : " +text);		
+		}
+		function myroomlist() { //전체리스트
+			var id = "<%=id%>"; 
+			var text = document.getElementById("messageinput").value;
+			text = "/myroomlist";
+			webSocket.send(id + " : " +text);		
+		}
 		
 		function send() {
 			var id = "<%=id%>";
 			var text = document.getElementById("messageinput").value;
 			
-			if(id==null){
+		/* 	if(id==null){
 				webSocket.send(text);
-			} else
+			} else */
 			 
 			webSocket.send(id + " : " +text);
 			messageinput.value="";
@@ -203,10 +267,17 @@ html, body {
 		}
 		
 	 	function sendin() {
-		var id = "<%=id%>";
+			var id = "<%=id%>";
+			
 			webSocket.send(id);
 		}
-
+		
+	 	function waiting(){
+	 		var id = "<%=id%>"; 
+			var waitingroom = "waitingroom";
+			text = waitingroom;
+			webSocket.send(id + " : " + waitingroom);
+		}
 		function closeSocket() {
 			webSocket.close();
 		}
@@ -218,6 +289,11 @@ html, body {
 			var objDiv = document.getElementById("messages"); //스크롤 하단내리기
 			objDiv.scrollTop = objDiv.scrollHeight;
 		}
+
+/* 		window.onload = function() { //새창일때 바로 오픈소켓
+			openSocket();
+		} 난안됨  */
+		
 	</script>
 
 	<script
