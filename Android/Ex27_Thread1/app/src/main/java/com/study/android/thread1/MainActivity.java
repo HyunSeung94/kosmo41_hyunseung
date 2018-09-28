@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 Message msg = handler.obtainMessage();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("data1", "Request Thread .. " + i );
+                bundle.putString("data1", "Request Thread! .. " + i );
                 bundle.putString("data2", String.valueOf(i));
                 msg.setData(bundle);
 
