@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "89944959226",
+    "firebase_url": "https://project-hs-96c87.firebaseio.com",
+    "project_id": "project-hs-96c87",
+    "storage_bucket": "project-hs-96c87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89944959226:android:2dc92e0f85e0d5c3",
+        "android_client_info": {
+          "package_name": "com.example.user1.firebasechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "89944959226-747hidocsbl7de05b5d6dt314uvduv0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXBOBNoK9bGF4ss3KZz-qJ9U3xehxU46o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
