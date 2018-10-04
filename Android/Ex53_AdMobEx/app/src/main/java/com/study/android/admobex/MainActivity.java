@@ -2,13 +2,12 @@ package com.study.android.admobex;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     AdView mAdView;
 
     @Override
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         // 테스트 광고 부르기
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().
-                addTestDevice("HASH_DEVICE_ID").build();
+                addTestDevice("54133B91E943A32B1D1FE3C84114C71A").build();
         mAdView.loadAd(adRequest);
 
     }
