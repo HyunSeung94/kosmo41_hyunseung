@@ -1,6 +1,8 @@
 package com.study.android.memoproject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -25,219 +42,152 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  implements  GoogleApiClient.OnConnectionFailedListener{
     private static final String TAG = "lecture";
 
-    Button btTranslate;
-    EditText etSource;
-    EditText etResult;
 
-    //언어 선택
-    String sourceLang = "";
-    String targetLang = "";
+    SignInButton button;
+    Button button1;
+    private static final int RC_SIGN_IN = 10;
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
+    private EditText etemaill;
+    private EditText etpwd;
 
-    String[] items = { "언어선택","한국","영어","중국","일본"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-        etSource = (EditText) findViewById(R.id.et_source);
-        etResult = (EditText) findViewById(R.id.et_result);
-        btTranslate = (Button) findViewById(R.id.bt_translate);
 
-        //번역 실행버튼 클릭이벤트
-        btTranslate.setOnClickListener(new View.OnClickListener() {
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        //구글 로그인
+        button = findViewById(R.id.login_google);
+        //이메일로그인
+        etemaill = findViewById(R.id.et_email);
+        etpwd = findViewById(R.id.et_pwd);
+        button1 = findViewById(R.id.email_login);
+
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //소스에 입력된 내용이 있는지 체크하고 넘어가자.
-                if(etSource.getText().toString().length() == 0) {
-                    Toast.makeText(MainActivity.this, "번역할 내용을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    etSource.requestFocus();
-                    return;
-                } else if(sourceLang.equals("") || targetLang.equals("")) {
-                    return;
-                }
+                System.out.println("클릭 테스트");
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
 
 
-                //실행버튼을 클릭하면 AsyncTask를 이용 요청하고 결과를 반환받아서 화면에 표시하도록 해보자.
-                NaverTranslateTask asyncTask = new NaverTranslateTask();
-                String sText = etSource.getText().toString();
-                asyncTask.execute(sText);
+
+            }
+        });
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createUser(etemaill.getText().toString(),etpwd.getText().toString());
             }
         });
 
-        //내 언어 선택
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, items );
-        Spinner spinner = findViewById(R.id.spinner1);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            // 아이템이 선택되엇을때 호출 됨
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if(items[position]=="한국"){
-                    sourceLang = "ko";
-                    Log.d("테스트",sourceLang);
-                }else if(items[position]=="영어"){
-                    sourceLang = "en";
-                    Log.d("테스트",sourceLang);
-                }
-                else if(items[position]=="중국"){
-                    sourceLang = "zh-CN";
-                    Log.d("테스트",sourceLang);
-                }
-                else if(items[position]=="일본"){
-                    sourceLang = "ja";
-                    Log.d("테스트",sourceLang);
-                }
+        
 
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                sourceLang="";
-            }
-        });
-
-        // 번역언어
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, items );
-        Spinner spinner2 = findViewById(R.id.spinner2);
-        spinner2.setAdapter(adapter2);
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            // 아이템이 선택되엇을때 호출 됨
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if(items[position]=="한국"){
-                    targetLang = "ko";
-                    Log.d("테스트",sourceLang);
-                }else if(items[position]=="영어"){
-                    targetLang = "en";
-                    Log.d("테스트",sourceLang);
-                }
-                else if(items[position]=="중국"){
-                    targetLang = "zh-CN";
-                    Log.d("테스트",sourceLang);
-                }
-                else if(items[position]=="일본"){
-                    targetLang = "ja";
-                    Log.d("테스트",sourceLang);
-                }
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                targetLang="";
-            }
-        });
-
-
-
-        //음성인식 실행버튼 이벤트
-        //이건 나중에...
     }
 
+    //이메일 회원가입
+    private void createUser(final String email, final String password){
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            Toast.makeText(MainActivity.this, "회원가입 성공!",
+                                    Toast.LENGTH_SHORT).show();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            loginUser(email,password);
+                        }
 
-    //ASYNCTASK
-    public class NaverTranslateTask extends AsyncTask<String, Void, String> {
+                        // ...
+                    }
+                });
+    }
+    //이메일 로그인
+    private void loginUser(String email,String password){
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(MainActivity.this, "로그인 성공!",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "이메일 또는 비밀번호가 틀립니다.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
-        public String resultText;
-        //Naver
-        String clientId = "sbARUH4PVaGXToPs6BiZ";//애플리케이션 클라이언트 아이디값";
-        String clientSecret = "TGfD3aqjej";//애플리케이션 클라이언트 시크릿값";
-        //언어선택도 나중에 사용자가 선택할 수 있게 옵션 처리해 주면 된다.
-       // sourceLang = "";
-       // targetLang = "en";
+                        // ...
+                    }
+                });
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        //AsyncTask 메인처리
-        @Override
-        protected String doInBackground(String... strings) {
-            //네이버제공 예제 복사해 넣자.
-            //Log.d("AsyncTask:", "1.Background");
-
-            String sourceText = strings[0];
-
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                //String text = URLEncoder.encode("만나서 반갑습니다.", "UTF-8");
-                String text = URLEncoder.encode(sourceText, "UTF-8");
-                String apiURL = "https://openapi.naver.com/v1/language/translate";
-                URL url = new URL(apiURL);
-                HttpURLConnection con = (HttpURLConnection)url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("X-Naver-Client-Id", clientId);
-                con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-                // post request
-                String postParams = "source="+sourceLang+"&target="+targetLang+"&text=" + text;
-                con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(postParams);
-                wr.flush();
-                wr.close();
-                int responseCode = con.getResponseCode();
-                BufferedReader br;
-                if(responseCode==200) { // 정상 호출
-                    br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                } else {  // 에러 발생
-                    br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                }
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-                while ((inputLine = br.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                br.close();
-                //System.out.println(response.toString());
-                return response.toString();
-
-            } catch (Exception e) {
-                //System.out.println(e);
-                Log.d("error", e.getMessage());
-                return null;
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
+                // ...
             }
         }
+    }
 
-        //번역된 결과를 받아서 처리
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //최종 결과 처리부
-            Log.d("background result", s.toString()); //네이버에 보내주는 응답결과가 JSON 데이터이다.
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
-            //JSON데이터를 자바객체로 변환해야 한다.
-            //Gson을 사용할 것이다.
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            System.out.println("로그인 테스트");
+                            Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                            //화면전환
+                            Intent intent = new Intent(getApplicationContext(), login.class);
+                            intent.putExtra("CustomerName","홍길동");
+                            startActivity(intent);
+                            System.out.println("클릭 테스트2");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                        }
 
-            Gson gson = new GsonBuilder().create();
-            JsonParser parser = new JsonParser();
-            JsonElement rootObj = parser.parse(s.toString())
-                    //원하는 데이터 까지 찾아 들어간다.
-                    .getAsJsonObject().get("message")
-                    .getAsJsonObject().get("result");
-            //안드로이드 객체에 담기
-            TranslatedItem items = gson.fromJson(rootObj.toString(), TranslatedItem.class);
-            //Log.d("result", items.getTranslatedText());
-            //번역결과를 텍스트뷰에 넣는다.
-            etResult.setText(items.getTranslatedText());
-        }
+                        // ...
+                    }
+                });
+    }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-
-        //자바용 그릇
-        private class TranslatedItem {
-            String translatedText;
-
-            public String getTranslatedText() {
-                return translatedText;
-            }
-        }
     }
 }
