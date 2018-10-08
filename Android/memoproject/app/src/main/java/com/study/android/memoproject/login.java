@@ -2,9 +2,12 @@ package com.study.android.memoproject;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +29,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class login extends AppCompatActivity {
+public class login extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+{
     private static final String TAG = "lecture";
 
     Button btTranslate;
@@ -146,6 +150,16 @@ public class login extends AppCompatActivity {
         //이건 나중에...
     }
 
+    public void btn1Clicked(View v){
+        Toast.makeText(login.this, "채팅방 입장"  ,Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(login.this, ChatLogin.class));
+        finish();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
+    }
 
     //ASYNCTASK
     public class NaverTranslateTask extends AsyncTask<String, Void, String> {

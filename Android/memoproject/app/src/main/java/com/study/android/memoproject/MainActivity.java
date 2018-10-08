@@ -1,5 +1,7 @@
 package com.study.android.memoproject;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -25,9 +27,14 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
@@ -48,11 +55,20 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
     SignInButton button;
     Button button1;
+    Button button2;
     private static final int RC_SIGN_IN = 10;
     private GoogleSignInClient mGoogleSignInClient;
+
+    //이메일 비밀번호 로그인 모듈 변수
     private FirebaseAuth mAuth;
-    private EditText etemaill;
+    private EditText etemail;
     private EditText etpwd;
+    //현재 로그인 된 유저 정보를 담을 변수
+    private FirebaseUser currentUser;
+
+    //
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +87,13 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
         //구글 로그인
         button = findViewById(R.id.login_google);
         //이메일로그인
-        etemaill = findViewById(R.id.et_email);
+        etemail = findViewById(R.id.et_email);
         etpwd = findViewById(R.id.et_pwd);
         button1 = findViewById(R.id.email_login);
+        //이메일회원가입
+        button2 = findViewById(R.id.email_join);
 
+        // 구글로그인
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,16 +105,95 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
             }
         });
-        button1.setOnClickListener(new View.OnClickListener() {
+
+        //이메일 회원가입버튼
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createUser(etemaill.getText().toString(),etpwd.getText().toString());
+                if(!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
+                    System.out.println("이메일 회원가입 테스트메일 "+etemail.getText().toString() + "테스트 pwd:" +etpwd.getText().toString());
+                    createUser(etemail.getText().toString(), etpwd.getText().toString());
+                }else if(etemail.getText().toString().equals("")) {
+                    System.out.println("초기화1");
+                    Toast.makeText(MainActivity.this, "이메일 미입력", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(etpwd.getText().toString().equals("")){
+                    System.out.println("초기화2");
+                    Toast.makeText(MainActivity.this, "비밀번호 미입력", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
 
-        
+        //이메일 로그인버튼
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
+                    System.out.println("이메일 로그인 테스트메일 "+etemail.getText().toString() + "테스트 pwd:" +etpwd.getText().toString());
+                    loginUser(etemail.getText().toString(), etpwd.getText().toString());
+                }else if(etemail.getText().toString().equals("")) {
+                    System.out.println("초기화1");
+                    Toast.makeText(MainActivity.this, "이메일 미입력", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(etpwd.getText().toString().equals("")){
+                    System.out.println("초기화2");
+                    Toast.makeText(MainActivity.this, "비밀번호 미입력", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null){
+                    Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "현승1", Toast.LENGTH_SHORT).show();
+                } else{
+                    Toast.makeText(MainActivity.this, "현승2", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
 
     }
+
+//    public void onBtnClicked(View v){
+//        final Dialog loginDialog = new Dialog(this);
+//        loginDialog.setContentView(R.layout.custom_dialog);
+//        loginDialog.setTitle("로그인 화면");
+//
+//        final EditText username = loginDialog.findViewById(R.id.editText1);
+//        final EditText password = loginDialog.findViewById(R.id.editText2);
+//
+//        Button login = loginDialog.findViewById(R.id.button1);
+//        login.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (username.getText().toString().trim().length() > 0
+//                        && password.getText().toString().trim().length() > 0) {
+//                    Toast.makeText(getApplicationContext(), "로그인 성공",
+//                            Toast.LENGTH_LONG).show();
+//
+//                    loginDialog.dismiss();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "다시 입력하세요.",
+//                            Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
+//        Button cancel = loginDialog.findViewById(R.id.button2);
+//        cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                loginDialog.dismiss();
+//            }
+//        });
+//        loginDialog.show();
+//    }
 
     //이메일 회원가입
     private void createUser(final String email, final String password){
@@ -108,35 +206,74 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(MainActivity.this, "회원가입 성공!",
                                     Toast.LENGTH_SHORT).show();
+
                             FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            loginUser(email,password);
+                        }
+//                        else if(password.length() < 6){
+//                            Toast.makeText(MainActivity.this, "비밀번호는 6자리 이상입니다.", Toast.LENGTH_SHORT).show();
+//                        }
+                        else {
+                            //보통 이메일이 이미 존재하거나, 이메일 형식이아니거나, 비밀번호가 6자리 이상
+                            try {
+                                throw task.getException();
+                            } catch(FirebaseAuthWeakPasswordException e) {
+                                Toast.makeText(MainActivity.this,"비밀번호가 간단해요.." ,Toast.LENGTH_SHORT).show();
+                            } catch(FirebaseAuthInvalidCredentialsException e) {
+                                Toast.makeText(MainActivity.this,"email 형식에 맞지 않습니다." ,Toast.LENGTH_SHORT).show();
+                            } catch(FirebaseAuthUserCollisionException e) {
+                                Toast.makeText(MainActivity.this,"이미존재하는 email 입니다." ,Toast.LENGTH_SHORT).show();
+                            } catch(Exception e) {
+                                Toast.makeText(MainActivity.this,"다시 확인해주세요.." ,Toast.LENGTH_SHORT).show();
+                            }
+
+
+//                            Toast.makeText(MainActivity.this, "이메일 or 비밀번호를 정확히 입력해주세요.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            System.out.println(password+"ㅋㅋ");
                         }
 
-                        // ...
                     }
                 });
     }
+
     //이메일 로그인
     private void loginUser(String email,String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "로그인 성공!",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "이메일 또는 비밀번호가 틀립니다.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+        // Toast.makeText(MainActivity.this,"login 함수 안으로" ,Toast.LENGTH_SHORT).show();
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        // ...
+                //Toast.makeText(MainActivity.this,"mAuth. onComplete 함수" ,Toast.LENGTH_SHORT).show();
+                if (!task.isSuccessful()) {
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthWeakPasswordException e){
+                        Toast.makeText(MainActivity.this,"비밀번호가 틀려요." ,Toast.LENGTH_SHORT).show();
+                    } catch (FirebaseAuthInvalidUserException e) {
+                        Toast.makeText(MainActivity.this,"존재하지 않는 email 입니다." ,Toast.LENGTH_SHORT).show();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        Toast.makeText(MainActivity.this,"이메일 or 비밀번호 형식이 맞지 않습니다." ,Toast.LENGTH_SHORT).show();
+                    } catch (FirebaseNetworkException e) {
+                        Toast.makeText(MainActivity.this,"Firebase NetworkException" ,Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this,"Exception" ,Toast.LENGTH_SHORT).show();
                     }
-                });
+
+                }else{
+
+                    currentUser = mAuth.getCurrentUser();
+
+
+                    Toast.makeText(MainActivity.this, "로그인 성공"+ currentUser.getEmail()  ,Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, login.class));
+                    finish();
+                }
+
+            }
+        });
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -165,18 +302,23 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            currentUser = mAuth.getCurrentUser();
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             System.out.println("로그인 테스트");
-                            Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "구글로그인 성공" +user.getEmail(), Toast.LENGTH_SHORT).show();
+
+
                             //화면전환
                             Intent intent = new Intent(getApplicationContext(), login.class);
                             intent.putExtra("CustomerName","홍길동");
                             startActivity(intent);
+                            finish();
                             System.out.println("클릭 테스트2");
                         } else {
-                            // If sign in fails, display a message to the user.
+
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                         }
@@ -189,5 +331,17 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 }

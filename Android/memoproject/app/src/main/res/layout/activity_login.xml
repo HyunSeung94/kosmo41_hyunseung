@@ -82,5 +82,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="결과" />
+
+        <Button
+            android:id="@+id/chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="btn1Clicked"
+            android:text="채팅방" />
     </LinearLayout>
 </LinearLayout>
