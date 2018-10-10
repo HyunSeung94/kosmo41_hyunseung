@@ -196,7 +196,7 @@ public class login extends AppCompatActivity implements NavigationView.OnNavigat
                 con.setRequestProperty("X-Naver-Client-Id", clientId);
                 con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
                 // post request
-                String postParams = "source="+sourceLang+"&target="+targetLang+"&text=" + text;
+                String postParams = "source="+sourceLang+"&target="+targetLang+"&text=" +text;
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
                 wr.writeBytes(postParams);
