@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +54,10 @@ import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity  implements  GoogleApiClient.OnConnectionFailedListener{
     private static final String TAG = "lecture";
-
+    public static CustomProgressDialog progressDialog = null;
+    private Handler mHandler=new Handler();
+   //시간제한
+    public static int TIME_OUT = 1001;
 
     SignInButton button;
     Button button1;
@@ -100,8 +106,12 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                 System.out.println("클릭 테스트");
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-
-
+                //버튼4: 진행중 표시
+                if(progressDialog == null || !progressDialog.isShowing()) {
+                    // progressDialog = CustomProgressDialog.show(MainActivity.this, "", "", true,true
+                    progressDialog = CustomProgressDialog.show(MainActivity.this, "",
+                            "처리중입니다", true, true, null);
+                }
 
             }
         });
@@ -122,24 +132,44 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                     Toast.makeText(MainActivity.this, "비밀번호 미입력", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
             }
         });
 
         //이메일 로그인버튼
         button1.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                if(!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
-                    System.out.println("이메일 로그인 테스트메일 "+etemail.getText().toString() + "테스트 pwd:" +etpwd.getText().toString());
-                    loginUser(etemail.getText().toString(), etpwd.getText().toString());
-                }else if(etemail.getText().toString().equals("")) {
-                    System.out.println("초기화1");
-                    Toast.makeText(MainActivity.this, "이메일 미입력", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if(etpwd.getText().toString().equals("")){
-                    System.out.println("초기화2");
-                    Toast.makeText(MainActivity.this, "비밀번호 미입력", Toast.LENGTH_SHORT).show();
-                    return;
+                //버튼4: 진행중 표시
+                if (progressDialog == null || !progressDialog.isShowing()) {
+
+                    System.out.println("뜨냐");
+                    progressDialog = CustomProgressDialog.show(MainActivity.this, "",
+                            "처리중입니다.", true, true, null);
+                    // 시간처리
+                    Handler mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    }, 2000); // 2000ms
+
+
+                    if (!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
+                        System.out.println("이메일 로그인 테스트메일 " + etemail.getText().toString() + "테스트 pwd:" + etpwd.getText().toString());
+                        loginUser(etemail.getText().toString(), etpwd.getText().toString());
+                    } else if (etemail.getText().toString().equals("")) {
+                        System.out.println("초기화1");
+                        Toast.makeText(MainActivity.this, "이메일 미입력", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (etpwd.getText().toString().equals("")) {
+                        System.out.println("초기화2");
+                        Toast.makeText(MainActivity.this, "비밀번호 미입력", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                 }
             }
         });

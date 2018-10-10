@@ -32,6 +32,7 @@ public class ChatLogin extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatlogin);
         mAuth = FirebaseAuth.getInstance();
@@ -66,6 +67,7 @@ public class ChatLogin extends AppCompatActivity {
 
                 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
         chat_list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();//새로고침
         chat_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -83,6 +85,7 @@ public class ChatLogin extends AppCompatActivity {
 //                        Toast.LENGTH_SHORT).show();
             }
         });
+        adapter.notifyDataSetChanged();//새로고침
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
         databaseReference.child("chat").addChildEventListener(new ChildEventListener() {
 
