@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,10 +27,25 @@ public class HomeActivity extends AppCompatActivity
     private TextView emailTextView;
     private FirebaseAuth mAuth;
 
+    //fragment
+    private Fragment ChatLogin;
+    private Fragment login;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+// 프래그먼트;
+//        ChatLogin = new Fragment();
+//        login = new Fragment();
+//
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.add(R.id.container, ChatLogin);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
@@ -96,13 +113,19 @@ public class HomeActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+
+        //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
+        //transaction.replace(R.id.container, ChatLogin);
             Intent intent = new Intent(HomeActivity.this,login.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
+      //      transaction.replace(R.id.container, login);
             Intent intent = new Intent(HomeActivity.this,ChatLogin.class);
             startActivity(intent);
         }  else if (id == R.id.nav_logout){
@@ -111,6 +134,10 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
         }
+
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

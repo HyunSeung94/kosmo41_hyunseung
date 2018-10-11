@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,8 +63,13 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     // 이메일
     private FirebaseAuth mAuth;
     //번역
+    String sourceLang = "";
+    String targetLang = "";
     String  translation = "";
-    int translationcheck = 0;
+        int translationcheck = 0;
+
+    String[] items = { "내언어선택","한국","영어","중국","일본"};
+    String[] items2 = { "번역언어선택","한국","영어","중국","일본"};
     //방이름 뷰
     TextView roomView;
 
@@ -85,9 +92,10 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         USER_NAME = intent.getStringExtra("userName");
 
         // 채팅 방 입장
-
         roomView.setText(CHAT_NAME+"방입니다.");
         openChat(CHAT_NAME);
+
+
 
         // 메시지 전송 버튼에 대한 클릭 리스너 지정
         chat_send.setOnClickListener(new View.OnClickListener() {
@@ -96,26 +104,101 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                 if (chat_edit.getText().toString().equals("")) {
                     return;
                 }
-                translationcheck ++;
+                else if(sourceLang.equals("") || targetLang.equals("")) {
+                    Toast.makeText(ChatActivity.this, "번역을 선택하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH시mm분ss초");
                 chatdate = df.format(c.getTime());
 
-                //실행버튼을 클릭하면 AsyncTask를 이용 요청하고 결과를 반환받아서 화면에 표시하도록 해보자.
-                NaverTranslateTask asyncTask = new NaverTranslateTask();
-                String sText = chat_edit.getText().toString();
-                asyncTask.execute(sText);
+
 
                 ChatDTO chat = new ChatDTO(USER_NAME, chat_edit.getText().toString(),chatdate); //ChatDTO를 이용하여 데이터를 묶는다.
                 databaseReference.child("chat").child(CHAT_NAME).child(chatdate).setValue(chat); // 데이터 푸쉬
                 Toast.makeText(ChatActivity.this, "흠3"+translationcheck, Toast.LENGTH_SHORT).show();
+                Log.e("LOG", "과연1111");
                 openChat(CHAT_NAME);
-                translationcheck ++;
+                //실행버튼을 클릭하면 AsyncTask를 이용 요청하고 결과를 반환받아서 화면에 표시하도록 해보자.
+                NaverTranslateTask asyncTask = new NaverTranslateTask();
+                String sText = chat_edit.getText().toString();
+                asyncTask.execute(sText);
+                Log.e("LOG", "과연2222");
 
-
-                Log.e("LOG", "테스트111111");
                 chat_edit.setText(""); //입력창 초기화
 
+            }
+        });
+
+        //내 언어 선택
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, items );
+        Spinner spinner = findViewById(R.id.spinner1);
+        
+        spinner.setAdapter(adapter3);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // 아이템이 선택되엇을때 호출 됨
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if(items[position]=="한국"){
+                    sourceLang = "ko";
+                    Log.d("테스트",sourceLang);
+                }else if(items[position]=="영어"){
+                    sourceLang = "en";
+                    Log.d("테스트",sourceLang);
+                }
+                else if(items[position]=="중국"){
+                    sourceLang = "zh-CN";
+                    Log.d("테스트",sourceLang);
+                }
+                else if(items[position]=="일본"){
+                    sourceLang = "ja";
+                    Log.d("테스트",sourceLang);
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                sourceLang="";
+            }
+        });
+
+        // 번역언어
+        ArrayAdapter<String> adapter4 = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, items2 );
+        Spinner spinner2 = findViewById(R.id.spinner2);
+        spinner2.setAdapter(adapter4);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // 아이템이 선택되엇을때 호출 됨
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if(items2[position]=="한국"){
+                    targetLang = "ko";
+                    Log.d("테스트",sourceLang);
+                }else if(items2[position]=="영어"){
+                    targetLang = "en";
+                    Log.d("테스트",sourceLang);
+                }
+                else if(items2[position]=="중국"){
+                    targetLang = "zh-CN";
+                    Log.d("테스트",sourceLang);
+                }
+                else if(items2[position]=="일본"){
+                    targetLang = "ja";
+                    Log.d("테스트",sourceLang);
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                targetLang="";
             }
         });
 
@@ -125,20 +208,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
         adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
         adapter2.add(chatDTO.getTime());
-
        // Toast.makeText(this, "이거타는거니!?", Toast.LENGTH_SHORT).show();
 
     }
-    private void addppagoMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter,ArrayAdapter<String> adapter2) {
-
-        ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-        adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-        adapter2.add(chatDTO.getTime());
-        // Toast.makeText(this, "이거타는거니!?", Toast.LENGTH_SHORT).show();
-
-    }
-
-
     public void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         Log.e("LOG", "테스트333333");
         ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
@@ -160,8 +232,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         String clientId = "sbARUH4PVaGXToPs6BiZ";//애플리케이션 클라이언트 아이디값";
         String clientSecret = "TGfD3aqjej";//애플리케이션 클라이언트 시크릿값";
         //언어선택도 나중에 사용자가 선택할 수 있게 옵션 처리해 주면 된다.
-        String sourceLang = "ko";
-        String targetLang = "en";
+
 
         @Override
         protected void onPreExecute() {
@@ -235,17 +306,23 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             TranslatedItem items = gson.fromJson(rootObj.toString(), TranslatedItem.class);
             //Log.d("result", items.getTranslatedText());
 
-            //번역결과를 텍스트뷰에 넣는다.
-            //etResult.setText(items.getTranslatedText());
-
             //번역 말
 
             Log.e("LOG", "테스트66666");
             translation = items.getTranslatedText();
-            ChatDTO chat = new ChatDTO("Papago", translation, chatdate); //ChatDTO를 이용하여 데이터를 묶는다.
-            databaseReference.child("chat").child(CHAT_NAME).child("Papago").setValue(chat);
-            Toast.makeText(ChatActivity.this, "흠1" + translationcheck, Toast.LENGTH_SHORT).show();// 데이터 푸쉬
+            ChatDTO chat1 = new ChatDTO("Papago", translation, chatdate); //ChatDTO를 이용하여 데이터를 묶는다.
+            databaseReference.child("chat").child(CHAT_NAME).child("Papago").setValue(chat1);
             openChat(CHAT_NAME);
+            Log.e("LOG", "과연3333");
+            //Toast.makeText(ChatActivity.this, "흠1" + translationcheck, Toast.LENGTH_SHORT).show();// 데이터 푸쉬
+            // 시간처리
+//            Handler mHandler = new Handler();
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                }
+//            }, 1000); // 2000ms
+
 
 
             Log.e("LOG", "테스트77777");
@@ -285,8 +362,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         final ArrayAdapter<String> adapter2
 
                 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        adapter.clear();
+        adapter.notifyDataSetChanged();//새로고침
         chat_view.setAdapter(adapter);
-
         Log.e("LOG", "테스트88888");
         chat_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -302,12 +380,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.e("LOG", "s:"+adapter.getItem(position));
-//                                StringTokenizer t1 = new StringTokenizer(adapter.getItem(position));
-//                                String name = t1.nextToken();
-//                                t1.nextToken();
-//                                String msg = t1.nextToken();
-//                                Log.e("LOG", "s:"+msg);
-//                                Log.e("LOG", "s:"+name);
+
 
                                 //방삭제 databaseReference.child("/chat/"+CHAT_NAME).setValue(null);
 //                                Query applesQuery = ref.child("firebase-test").orderByChild("title").equalTo("Apple");
@@ -339,6 +412,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Log.e("LOG", "테스트99999");
+
                     //listview 자동 스크롤
                     chat_view.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                     chat_view.setSelection(adapter.getCount() - 1);
@@ -348,22 +422,26 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                    adapter.notifyDataSetChanged();//새로고침
+                    addMessage(dataSnapshot, adapter, adapter2);
+                    Log.e("LOG", "새로고침2");
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     removeMessage(dataSnapshot, adapter);
+                    Log.e("LOG", "새로고침3");
                 }
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                    adapter.notifyDataSetChanged();//새로고침
+                    Log.e("LOG", "새로고침4");
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    Log.e("LOG", "새로고침5");
                 }
 
             });

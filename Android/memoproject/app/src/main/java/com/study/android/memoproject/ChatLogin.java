@@ -1,5 +1,6 @@
 package com.study.android.memoproject;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,28 +39,65 @@ public class ChatLogin extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user_chat = (EditText) findViewById(R.id.user_chat);
        // user_edit = (EditText) findViewById(R.id.user_edit);
-        user_next = (Button) findViewById(R.id.user_next);
+//        user_next = (Button) findViewById(R.id.user_next);
         chat_list = (ListView) findViewById(R.id.chat_list);
 
-        user_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //user_edit.getText().toString().equals("") ||
-                if ( user_chat.getText().toString().equals(""))
-                    return;
 
-                Intent intent = new Intent(ChatLogin.this, ChatActivity.class);
-               // intent.putExtra("chatName", adapter.getItem(position));
-                intent.putExtra("chatName", user_chat.getText().toString());
-                //intent.putExtra("userName", user_edit.getText().toString());
-                intent.putExtra("userName", mAuth.getCurrentUser().getEmail());
-                startActivity(intent);
-            }
-        });
+
+//        user_next.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //user_edit.getText().toString().equals("") ||
+//                if ( user_chat.getText().toString().equals(""))
+//                    return;
+//
+//                Intent intent = new Intent(ChatLogin.this, ChatActivity.class);
+//                intent.putExtra("chatName", user_chat.getText().toString());
+//                intent.putExtra("userName", mAuth.getCurrentUser().getEmail());
+//                startActivity(intent);
+//            }
+//        });
 
         showChatList();
 
     }
+
+    public void onBtnClicked(View v) {
+
+        final Dialog loginDialog = new Dialog(this);
+        loginDialog.setContentView(R.layout.room);
+        loginDialog.setTitle("로그인 화면");
+
+        final EditText roomname = loginDialog.findViewById(R.id.Roomname);
+        //final EditText password = loginDialog.findViewById(R.id.editText2);
+
+        Button button1 = loginDialog.findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (roomname.getText().toString().trim().length() > 0) {
+                    Toast.makeText(getApplicationContext(), "방생성",
+                            Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ChatLogin.this, ChatActivity.class);
+                    intent.putExtra("chatName", roomname.getText().toString());
+                    intent.putExtra("userName", mAuth.getCurrentUser().getEmail());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "다시 입력하세요.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        Button button2 = loginDialog.findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginDialog.cancel();
+            }
+        });
+        loginDialog.show();
+
+}
 
     private void showChatList() {
         // 리스트 어댑터 생성 및 세팅
@@ -75,10 +113,10 @@ public class ChatLogin extends AppCompatActivity {
 
                 Intent intent = new Intent(ChatLogin.this, ChatActivity.class);
                 intent.putExtra("chatName", adapter.getItem(position));
-                //intent.putExtra("chatName", user_chat.getText().toString());
-                //intent.putExtra("userName", user_edit.getText().toString());
                 intent.putExtra("userName", mAuth.getCurrentUser().getEmail());
                 startActivity(intent);
+                //intent.putExtra("chatName", user_chat.getText().toString());
+                //intent.putExtra("userName", user_edit.getText().toString());
 
 //                Toast.makeText(getApplicationContext(),
 //                        "selected : " + adapter.getItem(position)+mAuth.getCurrentUser().getEmail(),

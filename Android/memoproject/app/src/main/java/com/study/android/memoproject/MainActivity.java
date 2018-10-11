@@ -31,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
                     System.out.println("이메일 회원가입 테스트메일 "+etemail.getText().toString() + "테스트 pwd:" +etpwd.getText().toString());
                     createUser(etemail.getText().toString(), etpwd.getText().toString());
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                         public void run() {
                             progressDialog.dismiss();
                         }
-                    }, 2000); // 2000ms
+                    }, 3000); // 2000ms
 
 
                     if (!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
@@ -236,12 +238,21 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(MainActivity.this, "회원가입 성공!",
                                     Toast.LENGTH_SHORT).show();
-
                             FirebaseUser user = mAuth.getCurrentUser();
+                            ActionCodeSettings actionCodeSettings =
+                                    ActionCodeSettings.newBuilder()
+                                            // URL you want to redirect back to. The domain (www.example.com) for this
+                                            // URL must be whitelisted in the Firebase Console.
+                                            .setUrl("https://www.example.com/finishSignUp?cartId=1234")
+                                            // This must be true
+                                            .setHandleCodeInApp(true)
+                                            .setIOSBundleId("com.example.ios")
+                                            .setAndroidPackageName(
+                                                    "com.example.android",
+                                                    true, /* installIfNotAvailable */
+                                                    "12"    /* minimumVersion */)
+                                            .build();
                         }
-//                        else if(password.length() < 6){
-//                            Toast.makeText(MainActivity.this, "비밀번호는 6자리 이상입니다.", Toast.LENGTH_SHORT).show();
-//                        }
                         else {
                             //보통 이메일이 이미 존재하거나, 이메일 형식이아니거나, 비밀번호가 6자리 이상
                             try {
@@ -255,11 +266,6 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                             } catch(Exception e) {
                                 Toast.makeText(MainActivity.this,"다시 확인해주세요.." ,Toast.LENGTH_SHORT).show();
                             }
-
-
-//                            Toast.makeText(MainActivity.this, "이메일 or 비밀번호를 정확히 입력해주세요.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            System.out.println(password+"ㅋㅋ");
                         }
 
                     }
@@ -268,7 +274,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
     //이메일 로그인
     private void loginUser(String email,String password){
-        // Toast.makeText(MainActivity.this,"login 함수 안으로" ,Toast.LENGTH_SHORT).show();
+         Toast.makeText(MainActivity.this,"login 함수 안으로" ,Toast.LENGTH_SHORT).show();
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -290,10 +296,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                     }
 
                 }else{
-
                     currentUser = mAuth.getCurrentUser();
-
-
                     Toast.makeText(MainActivity.this, "로그인 성공"+ currentUser.getEmail()  ,Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivity.this, login.class));
                     finish();

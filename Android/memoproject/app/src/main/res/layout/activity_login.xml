@@ -70,13 +70,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="음성인식" />
-
-        <Button
             android:id="@+id/bt_translate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
