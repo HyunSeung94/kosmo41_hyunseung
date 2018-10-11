@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                 }else{
                     currentUser = mAuth.getCurrentUser();
                     Toast.makeText(MainActivity.this, "로그인 성공"+ currentUser.getEmail()  ,Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, login.class));
+                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
                     finish();
                 }
 
@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
 
                             //화면전환
-                            Intent intent = new Intent(getApplicationContext(), login.class);
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                             intent.putExtra("CustomerName","홍길동");
                             startActivity(intent);
                             finish();

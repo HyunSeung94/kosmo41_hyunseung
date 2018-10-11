@@ -143,18 +143,18 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             // 아이템이 선택되엇을때 호출 됨
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if(items[position]=="한국"){
+                if(items[position].equals("한국")){
                     sourceLang = "ko";
                     Log.d("테스트",sourceLang);
-                }else if(items[position]=="영어"){
+                }else if(items[position].equals("영어")){
                     sourceLang = "en";
                     Log.d("테스트",sourceLang);
                 }
-                else if(items[position]=="중국"){
+                else if(items[position].equals("중국")){
                     sourceLang = "zh-CN";
                     Log.d("테스트",sourceLang);
                 }
-                else if(items[position]=="일본"){
+                else if(items[position].equals("일본")){
                     sourceLang = "ja";
                     Log.d("테스트",sourceLang);
                 }
@@ -177,18 +177,18 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             // 아이템이 선택되엇을때 호출 됨
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if(items2[position]=="한국"){
+                if(items2[position].equals("한국")){
                     targetLang = "ko";
                     Log.d("테스트",sourceLang);
-                }else if(items2[position]=="영어"){
+                }else if(items2[position].equals("영어")){
                     targetLang = "en";
                     Log.d("테스트",sourceLang);
                 }
-                else if(items2[position]=="중국"){
+                else if(items2[position].equals("중국")){
                     targetLang = "zh-CN";
                     Log.d("테스트",sourceLang);
                 }
-                else if(items2[position]=="일본"){
+                else if(items2[position].equals("일본")){
                     targetLang = "ja";
                     Log.d("테스트",sourceLang);
                 }

@@ -36,13 +36,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -51,15 +50,6 @@
                 android:gravity="center"
                 android:text="채팅방 새로 만들기"
                 android:textSize="20dp" />
-
-            <EditText
-                android:id="@+id/user_chat"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:hint="Room NAME"
-                android:inputType="textPersonName" />
 
         </LinearLayout>
 
