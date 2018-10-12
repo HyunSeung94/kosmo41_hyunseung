@@ -13,27 +13,54 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:ems="10"
-        android:hint="contents"
+        android:hint="20자 이내로 작성하시오."
         android:inputType="textPersonName" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onButton1Clicked"
-        app:srcCompat="@android:drawable/ic_menu_save" />
-
-    <Button
-        android:id="@+id/button2"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onBtn2Clicked"
-        android:text="조회" />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            android:onClick="onButton1Clicked"
+            app:srcCompat="@android:drawable/ic_menu_save" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            android:onClick="onButton2Clicked"
+            app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            android:onClick="onButton3Clicked"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_margin="5dp">
+
+    </ListView>
 
 </LinearLayout>

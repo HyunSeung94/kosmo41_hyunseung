@@ -20,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -61,8 +63,8 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
     public static int TIME_OUT = 1001;
 
     SignInButton button;
-    Button button1;
-    Button button2;
+    BootstrapButton button1;
+    BootstrapButton button2;
     private static final int RC_SIGN_IN = 10;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
     private EditText etpwd;
     //현재 로그인 된 유저 정보를 담을 변수
     private FirebaseUser currentUser;
-
+    private String UserName;
     //
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -81,7 +83,11 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TypefaceProvider.registerDefaultIconSets();
         mAuth = FirebaseAuth.getInstance();
+
+
+
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -113,7 +119,6 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                     progressDialog = CustomProgressDialog.show(MainActivity.this, "",
                             "처리중입니다", true, true, null);
                 }
-
             }
         });
 
@@ -138,15 +143,13 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
             }
         });
 
+
         //이메일 로그인버튼
         button1.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 //버튼4: 진행중 표시
                 if (progressDialog == null || !progressDialog.isShowing()) {
-
-                    System.out.println("뜨냐");
                     progressDialog = CustomProgressDialog.show(MainActivity.this, "",
                             "처리중입니다.", true, true, null);
                     // 시간처리
@@ -156,9 +159,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                         public void run() {
                             progressDialog.dismiss();
                         }
-                    }, 3000); // 2000ms
-
-
+                    }, 1500); // 2000ms
                     if (!etemail.getText().toString().equals("") && !etpwd.getText().toString().equals("")) {
                         System.out.println("이메일 로그인 테스트메일 " + etemail.getText().toString() + "테스트 pwd:" + etpwd.getText().toString());
                         loginUser(etemail.getText().toString(), etpwd.getText().toString());
@@ -278,7 +279,6 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-
                 //Toast.makeText(MainActivity.this,"mAuth. onComplete 함수" ,Toast.LENGTH_SHORT).show();
                 if (!task.isSuccessful()) {
                     try {
@@ -301,7 +301,6 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                     startActivity(new Intent(MainActivity.this, HomeActivity.class));
                     finish();
                 }
-
             }
         });
     }
@@ -346,7 +345,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
                             //화면전환
                             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                            intent.putExtra("CustomerName","홍길동");
+//                            intent.putExtra("CustomerName","홍길동");
                             startActivity(intent);
                             finish();
                             System.out.println("클릭 테스트2");

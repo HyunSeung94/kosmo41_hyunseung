@@ -10,7 +10,7 @@ public class ChatDTO {
 
     public ChatDTO() {}
 
-    public ChatDTO(String userName, String message,String time) {
+    public ChatDTO(String userName, String message, String time) {
         this.userName = userName;
         this.message = message;
         this.time = time;

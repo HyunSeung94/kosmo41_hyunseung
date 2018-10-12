@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -51,7 +52,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
     private ListView chat_view;
     private EditText chat_edit;
-    private Button chat_send;
+    private BootstrapButton chat_send;
 
 
 
@@ -72,6 +73,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     String[] items2 = { "번역언어선택","한국","영어","중국","일본"};
     //방이름 뷰
     TextView roomView;
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +86,13 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         chat_view = (ListView) findViewById(R.id.chat_view);
         roomView = (TextView)findViewById(R.id.roomView);
         chat_edit = (EditText) findViewById(R.id.chat_edit);
-        chat_send = (Button) findViewById(R.id.chat_sent);
+        chat_send = findViewById(R.id.chat_sent);
 
         // 로그인 화면에서 받아온 채팅방 이름, 유저 이름 저장
         Intent intent = getIntent();
         CHAT_NAME = intent.getStringExtra("chatName");
         USER_NAME = intent.getStringExtra("userName");
-
+        name=mAuth.getCurrentUser().getDisplayName();
         // 채팅 방 입장
         roomView.setText(CHAT_NAME+"방입니다.");
         openChat(CHAT_NAME);
@@ -208,7 +210,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
         adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
         adapter2.add(chatDTO.getTime());
-       // Toast.makeText(this, "이거타는거니!?", Toast.LENGTH_SHORT).show();
 
     }
     public void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
@@ -358,12 +359,14 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         // 리스트 어댑터 생성 및 세팅
         final ArrayAdapter<String> adapter
 
-                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+                = new ArrayAdapter<String>(this, R.layout.chat, R.id.textView1);
         final ArrayAdapter<String> adapter2
 
-                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+                = new ArrayAdapter<String>(this, R.layout.chat, R.id.textView2);
         adapter.clear();
         adapter.notifyDataSetChanged();//새로고침
+        adapter2.clear();
+        adapter2.notifyDataSetChanged();//새로고침
         chat_view.setAdapter(adapter);
         Log.e("LOG", "테스트88888");
         chat_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -406,8 +409,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
 
+        // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
             databaseReference.child("chat").child(chatName).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {

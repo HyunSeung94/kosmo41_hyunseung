@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,8 +26,6 @@ public class ChatLogin extends AppCompatActivity {
 
     // 로그인 및 채팅 방 리스트 화면
     private FirebaseAuth mAuth;
-    private EditText user_edit;
-    private Button user_next;
     private ListView chat_list;
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -39,8 +38,6 @@ public class ChatLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatlogin);
         mAuth = FirebaseAuth.getInstance();
-       // user_edit = (EditText) findViewById(R.id.user_edit);
-//        user_next = (Button) findViewById(R.id.user_next);
         chat_list = (ListView) findViewById(R.id.chat_list);
 
 
@@ -72,9 +69,8 @@ public class ChatLogin extends AppCompatActivity {
         loginDialog.setTitle("방생성");
 
         final EditText roomname = loginDialog.findViewById(R.id.Roomname);
-        //final EditText password = loginDialog.findViewById(R.id.editText2);
 
-        Button button1 = loginDialog.findViewById(R.id.button1);
+        BootstrapButton button1 = loginDialog.findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +88,7 @@ public class ChatLogin extends AppCompatActivity {
                 }
             }
         });
-        Button button2 = loginDialog.findViewById(R.id.button2);
+        BootstrapButton button2 = loginDialog.findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,7 +103,7 @@ public class ChatLogin extends AppCompatActivity {
         // 리스트 어댑터 생성 및 세팅
         final ArrayAdapter<String> adapter
 
-                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+                = new ArrayAdapter<String>(this, R.layout.singer_item_view, R.id.textView1);
         chat_list.setAdapter(adapter);
         adapter.clear();
         adapter.notifyDataSetChanged();//새로고침

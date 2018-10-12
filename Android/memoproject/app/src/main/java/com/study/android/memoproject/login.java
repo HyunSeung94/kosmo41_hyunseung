@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -34,7 +35,7 @@ public class login extends AppCompatActivity implements NavigationView.OnNavigat
 {
     private static final String TAG = "lecture";
 
-    Button btTranslate;
+    BootstrapButton btTranslate;
     EditText etSource;
     EditText etResult;
     String sName ;
@@ -50,7 +51,7 @@ public class login extends AppCompatActivity implements NavigationView.OnNavigat
 
         etSource = (EditText) findViewById(R.id.et_source);
         etResult = (EditText) findViewById(R.id.et_result);
-        btTranslate = (Button) findViewById(R.id.bt_translate);
+        btTranslate = (BootstrapButton) findViewById(R.id.bt_translate);
 
         // 인텐트에 전달된 데이타 구하기
         Intent intent = getIntent();

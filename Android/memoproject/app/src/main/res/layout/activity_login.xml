@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".login">
 
@@ -69,19 +70,33 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/bt_translate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="결과"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="lg"
+            app:buttonMode="regular"
+            app:showOutline="true"
+            app:roundedCorners="true"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="결과" />
+            />
 
-        <Button
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="채팅방"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="lg"
+            app:buttonMode="regular"
+            app:showOutline="true"
+            app:roundedCorners="true"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:onClick="btn1Clicked"
-            android:text="채팅방" />
+            />
     </LinearLayout>
 </LinearLayout>

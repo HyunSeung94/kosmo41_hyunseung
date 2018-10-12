@@ -8,6 +8,14 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 
 public class SingerAdapter extends BaseAdapter {
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     Context context;
     ArrayList<SingerItem> items = new ArrayList<>();
 
@@ -34,6 +42,12 @@ public class SingerAdapter extends BaseAdapter {
         return position;
     }
 
+
+
+    public void clear(){
+        items.clear();
+    }
+
     public View getView(int position, View convertView, ViewGroup parent){
 
         SingerItemView view = null;
@@ -46,6 +60,8 @@ public class SingerAdapter extends BaseAdapter {
 
         final SingerItem item = items.get(position);
         view.setContents(item.getContents());
+
+
 
         return view;
     }

@@ -57,22 +57,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Button
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/user_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:text="방만들기"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="lg"
+                app:buttonMode="regular"
+                app:showOutline="true"
+                app:roundedCorners="true"
+                android:layout_gravity="center"
                 android:onClick="onBtnClicked"
-                android:text="방만들기" />
-
-            <Button
-                android:id="@+id/roomdelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="방삭제" />
+                />
         </LinearLayout>
 
     </LinearLayout>

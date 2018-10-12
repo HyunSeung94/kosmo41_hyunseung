@@ -96,10 +96,9 @@ public class MainActivity extends AppCompatActivity {
                 view2.setAddress2(Address1[position]);
                 layout.addView(view2);
             }
-            // 남자
 
 
-            //여자
+
 
             return layout;
 
