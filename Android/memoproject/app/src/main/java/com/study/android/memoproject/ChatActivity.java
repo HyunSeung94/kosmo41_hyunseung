@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     private String USER_NAME;
 
     private ListView chat_view;
+    private ListView chat_view2;
     private EditText chat_edit;
     private BootstrapButton chat_send;
 
@@ -84,6 +86,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
        // etResult = (EditText) findViewById(R.id.etResult);
         // 위젯 ID 참조
         chat_view = (ListView) findViewById(R.id.chat_view);
+        chat_view2 = (ListView) findViewById(R.id.chat_view2);
         roomView = (TextView)findViewById(R.id.roomView);
         chat_edit = (EditText) findViewById(R.id.chat_edit);
         chat_send = findViewById(R.id.chat_sent);
@@ -121,7 +124,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
                 ChatDTO chat = new ChatDTO(USER_NAME, chat_edit.getText().toString(),chatdate); //ChatDTO를 이용하여 데이터를 묶는다.
                 databaseReference.child("chat").child(CHAT_NAME).child(chatdate).setValue(chat); // 데이터 푸쉬
-                Toast.makeText(ChatActivity.this, "흠3"+translationcheck, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ChatActivity.this, "흠3"+translationcheck, Toast.LENGTH_SHORT).show();
                 Log.e("LOG", "과연1111");
                 openChat(CHAT_NAME);
                 //실행버튼을 클릭하면 AsyncTask를 이용 요청하고 결과를 반환받아서 화면에 표시하도록 해보자.
@@ -359,15 +362,18 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         // 리스트 어댑터 생성 및 세팅
         final ArrayAdapter<String> adapter
 
-                = new ArrayAdapter<String>(this, R.layout.chat, R.id.textView1);
+                = new ArrayAdapter<String>(this, R.layout.chat,R.id.textView1);
         final ArrayAdapter<String> adapter2
 
-                = new ArrayAdapter<String>(this, R.layout.chat, R.id.textView2);
+                = new ArrayAdapter<String>(this, R.layout.chat2, R.id.textView2);
         adapter.clear();
         adapter.notifyDataSetChanged();//새로고침
         adapter2.clear();
         adapter2.notifyDataSetChanged();//새로고침
         chat_view.setAdapter(adapter);
+        chat_view2.setAdapter(adapter2);
+
+//        chat_view.setAdapter(adapter2);
         Log.e("LOG", "테스트88888");
         chat_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -419,6 +425,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                     //listview 자동 스크롤
                     chat_view.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                     chat_view.setSelection(adapter.getCount() - 1);
+                    chat_view2.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                    chat_view2.setSelection(adapter2.getCount() - 1);
                     addMessage(dataSnapshot, adapter, adapter2);
                     Log.e("LOG", "s:" + s);
                 }

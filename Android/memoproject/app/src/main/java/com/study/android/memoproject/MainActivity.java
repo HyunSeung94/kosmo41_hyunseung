@@ -184,9 +184,9 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
                 if(user != null){
                     Intent intent = new Intent(MainActivity.this,HomeActivity.class);
                     startActivity(intent);
-                    Toast.makeText(MainActivity.this, "현승1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "로그인자동 성공", Toast.LENGTH_SHORT).show();
                 } else{
-                    Toast.makeText(MainActivity.this, "현승2", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "로그인자동 실패", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
     //이메일 로그인
     private void loginUser(String email,String password){
-         Toast.makeText(MainActivity.this,"login 함수 안으로" ,Toast.LENGTH_SHORT).show();
+         //Toast.makeText(MainActivity.this,"login 함수 안으로" ,Toast.LENGTH_SHORT).show();
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
