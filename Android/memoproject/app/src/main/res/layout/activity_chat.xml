@@ -35,14 +35,6 @@
 
             </ListView>
 
-            <ListView
-
-                android:id="@+id/chat_view2"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-            </ListView>
         </LinearLayout>
 
         <LinearLayout

@@ -86,7 +86,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
        // etResult = (EditText) findViewById(R.id.etResult);
         // 위젯 ID 참조
         chat_view = (ListView) findViewById(R.id.chat_view);
-        chat_view2 = (ListView) findViewById(R.id.chat_view2);
         roomView = (TextView)findViewById(R.id.roomView);
         chat_edit = (EditText) findViewById(R.id.chat_edit);
         chat_send = findViewById(R.id.chat_sent);
@@ -371,7 +370,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         adapter2.clear();
         adapter2.notifyDataSetChanged();//새로고침
         chat_view.setAdapter(adapter);
-        chat_view2.setAdapter(adapter2);
 
 //        chat_view.setAdapter(adapter2);
         Log.e("LOG", "테스트88888");
@@ -425,8 +423,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                     //listview 자동 스크롤
                     chat_view.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                     chat_view.setSelection(adapter.getCount() - 1);
-                    chat_view2.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-                    chat_view2.setSelection(adapter2.getCount() - 1);
+//                    chat_view2.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+//                    chat_view2.setSelection(adapter2.getCount() - 1);
                     addMessage(dataSnapshot, adapter, adapter2);
                     Log.e("LOG", "s:" + s);
                 }
