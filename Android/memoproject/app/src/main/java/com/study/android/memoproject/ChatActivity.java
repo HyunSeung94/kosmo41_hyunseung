@@ -12,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -81,6 +83,10 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        // 3단계
+        final MyAdapter adapter5 = new MyAdapter();
+        chat_view.setAdapter(adapter5);
 
         mAuth = FirebaseAuth.getInstance();
        // etResult = (EditText) findViewById(R.id.etResult);
@@ -208,10 +214,29 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
     }
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter,ArrayAdapter<String> adapter2) {
-        Log.e("LOG", "테스트222222");
+
         ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-        adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-        adapter2.add(chatDTO.getTime());
+        LinearLayout layout = new LinearLayout(getApplicationContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+//
+//            layout.addView(view1);
+
+
+        if(USER_NAME.equals(chatDTO.getUserName())) {
+            SingerItemView view = new SingerItemView(getApplicationContext());
+
+            view.setName(chatDTO.getUserName() +" : "+chatDTO.getMessage());
+            layout.addView(view);
+
+        } else{
+            SingerItemView1 view2 = new SingerItemView1(getApplicationContext());
+            view2.setName2(chatDTO.getMessage());
+            layout.addView(view2);
+        }
+        Log.e("LOG", "테스트222222");
+
+        //adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
+        //adapter2.add(chatDTO.getTime());
 
     }
     public void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
@@ -357,6 +382,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+
     private void openChat(final String chatName) {
         // 리스트 어댑터 생성 및 세팅
         final ArrayAdapter<String> adapter
@@ -369,7 +395,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         adapter.notifyDataSetChanged();//새로고침
         adapter2.clear();
         adapter2.notifyDataSetChanged();//새로고침
-        chat_view.setAdapter(adapter);
+//        chat_view.setAdapter(adapter);
 
 //        chat_view.setAdapter(adapter2);
         Log.e("LOG", "테스트88888");
@@ -416,6 +442,40 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
             databaseReference.child("chat").child(chatName).addChildEventListener(new ChildEventListener() {
+                class MyAdapter extends BaseAdapter {
+                    ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+
+                    @Override
+                    public int getCount() {
+                        return chatDTO.getUserName();
+                    }
+
+                    @Override
+                    public Object getItem(int position) {
+                        return chatDTO.get;
+
+                    }
+
+                    @Override
+                    public long getItemId(int position) {
+                        return position;
+                    }
+
+
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+
+//            TextView view1 = new TextView ( getApplicationContext());
+//            view1.setText(names[position]);
+//            view1.setTextSize(40.0f);
+//            view1.setTextColor(Color.BLUE);
+//
+//            //return view1;
+//
+
+                    }
+                }
+
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Log.e("LOG", "테스트99999");

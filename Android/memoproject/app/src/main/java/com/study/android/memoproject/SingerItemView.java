@@ -9,8 +9,6 @@ import android.widget.TextView;
 public class SingerItemView extends LinearLayout {
 
     TextView textView1;
-    TextView textView2;
-    TextView textView3;
     ImageView imageView1;
 
 
@@ -23,7 +21,6 @@ public class SingerItemView extends LinearLayout {
 
 
         textView1 = findViewById(R.id.textView1);
-        textView2 = findViewById(R.id.textView2);
         imageView1 = findViewById(R.id.imageView1);
 
 
@@ -33,43 +30,12 @@ public class SingerItemView extends LinearLayout {
         textView1.setText(name);
     }
 
-    public void setAge(String Age) {
-        textView2.setText(Age);
-    }
-    public void setAddress(String address) {
-        textView3.setText(address);
-    }
-
-    public void setImage(int imgNum) {
-        imageView1.setImageResource(imgNum);
-    }
-
-
-
-    public TextView getTextView3() {
-        return textView3;
-    }
-
-    public void setTextView3(TextView textView3) {
-        this.textView3 = textView3;
-    }
-
-
-
     public TextView getTextView1() {
         return textView1;
     }
 
     public void setTextView1(TextView textView1) {
         this.textView1 = textView1;
-    }
-
-    public TextView getTextView2() {
-        return textView2;
-    }
-
-    public void setTextView2(TextView textView2) {
-        this.textView2 = textView2;
     }
 
     public ImageView getImageView1() {

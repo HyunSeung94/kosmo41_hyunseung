@@ -2,10 +2,12 @@ package com.study.spring.command;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.study.spring.dao.BDao;
 import com.study.spring.dto.BDto;
+
 
 public class BListCommand implements BCommand {
 

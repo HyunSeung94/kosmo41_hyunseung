@@ -1,0 +1,31 @@
+package com.study.spring.command;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+
+import com.study.spring.dao.BDao;
+import com.study.spring.dto.BDto;
+
+//빈으로 등록하기 위해 어노테이션(Compontent) 지정
+//별칭도 지정
+
+@Component("contentHandler")
+public class BContentCommand implements BCommand {
+
+	@Override
+	public void execute(Model model)  
+	{
+		Map<String,Object> map= model.asMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		String bId = request.getParameter("bId");
+		BDao dao = BDao.getInstance();
+		BDto dto = dao.contentView(bId);
+		
+		model.addAttribute("content_view", dto);
+	}
+
+}
