@@ -84,9 +84,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // 3단계
-        final MyAdapter adapter5 = new MyAdapter();
-        chat_view.setAdapter(adapter5);
+
 
         mAuth = FirebaseAuth.getInstance();
        // etResult = (EditText) findViewById(R.id.etResult);
@@ -395,9 +393,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         adapter.notifyDataSetChanged();//새로고침
         adapter2.clear();
         adapter2.notifyDataSetChanged();//새로고침
-//        chat_view.setAdapter(adapter);
+        chat_view.setAdapter(adapter);
 
-//        chat_view.setAdapter(adapter2);
+        chat_view.setAdapter(adapter2);
         Log.e("LOG", "테스트88888");
         chat_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -442,39 +440,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
             databaseReference.child("chat").child(chatName).addChildEventListener(new ChildEventListener() {
-                class MyAdapter extends BaseAdapter {
-                    ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-
-                    @Override
-                    public int getCount() {
-                        return chatDTO.getUserName();
-                    }
-
-                    @Override
-                    public Object getItem(int position) {
-                        return chatDTO.get;
-
-                    }
-
-                    @Override
-                    public long getItemId(int position) {
-                        return position;
-                    }
-
-
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-
-//            TextView view1 = new TextView ( getApplicationContext());
-//            view1.setText(names[position]);
-//            view1.setTextSize(40.0f);
-//            view1.setTextColor(Color.BLUE);
-//
-//            //return view1;
-//
-
-                    }
-                }
 
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
