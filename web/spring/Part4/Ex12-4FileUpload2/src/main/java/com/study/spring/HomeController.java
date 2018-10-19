@@ -11,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Handles requests for the application home page.
+ */
 @Controller
 public class HomeController {
 	
@@ -32,17 +35,5 @@ public class HomeController {
 		
 		return "home";
 	}
-	
-	// 파일 업로드 폼
-	@RequestMapping("/fileForm")
-	public String uploadForm() {
-		return "FileUpload/fileForm";
-	}
-	//파일 업로드 처리
-	@RequestMapping("/fileFormOk")
-	public String uploadAction() {
-		return "FileUpload/fileFormOk";
-	}
-	
 	
 }
