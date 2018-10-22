@@ -149,7 +149,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="Ex12-6-WebSocket2" path="/spring22" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-6-WebSocket2"/><Context docBase="Ex12-4FileUpload2" path="/spring20" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-4FileUpload2"/><Context docBase="Ex12-1-Bootstrap" path="/spring" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-1-Bootstrap"/></Host>
+      <Context docBase="Ex12-6-WebSocket2" path="/spring22" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-6-WebSocket2"/><Context docBase="Ex12-4FileUpload2" path="/spring20" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-4FileUpload2"/><Context docBase="Ex10-2-Security-LoginPage" path="/spring27" reloadable="true" source="org.eclipse.jst.jee.server:Ex10-2-Security-LoginPage"/><Context docBase="Ex10-3-Security-StatusCheck" path="/spring28" reloadable="true" source="org.eclipse.jst.jee.server:Ex10-3-Security-StatusCheck"/><Context docBase="Ex11-1-MyBatis" path="/spring29" reloadable="true" source="org.eclipse.jst.jee.server:Ex11-1-MyBatis"/><Context docBase="Ex11-2-MyBatis-List" path="/spring30" reloadable="true" source="org.eclipse.jst.jee.server:Ex11-2-MyBatis-List"/></Host>
     </Engine>
   </Service>
 </Server>
