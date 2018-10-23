@@ -3,44 +3,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<script type="text/javascript"
-	src="./naver_editor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script>
 </head>
 <body>
 
-	<table width="800" cellpadding ="0" cellspacing="0" border="1">
+	<table cellpadding="0" cellspacing="0" border="1">
 		<form action="write.do" method="post">
 			<tr>
 				<td> 이름 </td>
-				<td> <input type="text" name="bName" size = "50"></td>
+				<td> <input type="text" name="bName" size="50"> </td>
 			</tr>
 			<tr>
 				<td> 제목 </td>
-				<td> <input type="text" name="bTitle" size = "50"></td>
+				<td> <input type="text" name="bTitle" size="50"> </td>
 			</tr>
 			<tr>
 				<td> 내용 </td>
 				<td> 
-				 <textarea name="bContent" id="ir1" rows="10" cols="100">${content_view.bContent}</textarea>
-					<script type="text/javascript">
-						var oEditors = [];
-						nhn.husky.EZCreator.createInIFrame({
-							oAppRef : oEditors,
-							elPlaceHolder : "ir1",
-							sSkinURI : "./naver_editor/SmartEditor2Skin.html",
-							fCreator : "createSEditor2"
-						});
-					</script>
+					<textarea name="bContent" id="editor1" rows="10" cols="80">
+		                This is my textarea to be replaced with CKEditor.
+		            </textarea>
+		            <script>
+		                // Replace the <textarea id="editor1"> with a CKEditor
+		                // instance, using default configuration.
+		                CKEDITOR.replace( 'editor1' );
+		            </script>
+				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
 					<input type="submit" value="입력"> &nbsp;&nbsp;
-					<a href="list.do">목록보기</a>
+					<a href="list.do?page=<%=session.getAttribute("curpage")%>">목록보기</a>
 				</td>
 			</tr>
 		</form>
 	</table>
+
 </body>
 </html>

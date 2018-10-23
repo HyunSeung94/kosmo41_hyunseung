@@ -4,12 +4,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.study.jsp.BDao;
+import com.study.jsp.BDto;
 
 public class BReplyCommand implements BCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) 
-	{
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		String bId = request.getParameter("bId");
 		String bName = request.getParameter("bName");
 		String bTitle = request.getParameter("bTitle");

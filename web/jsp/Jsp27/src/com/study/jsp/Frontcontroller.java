@@ -20,26 +20,22 @@ import com.study.jsp.command.BReplyViewCommand;
 import com.study.jsp.command.BWriteCommand;
 
 @WebServlet("*.do")
-public class Frontcontroller extends HttpServlet {
+public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public Frontcontroller() {
-		super();
-	}
+    public FrontController() {
+        super();
+    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		actionDo(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		actionDo(request, response);
 	}
 
-	protected void actionDo(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException 
-	{
+	private void actionDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		request.setCharacterEncoding("UTF-8");
 		
 		String viewPage = null;
@@ -48,57 +44,55 @@ public class Frontcontroller extends HttpServlet {
 		String uri = request.getRequestURI();
 		String conPath = request.getContextPath();
 		String com = uri.substring(conPath.length());
-
+		
 		HttpSession session = null;
 		session = request.getSession();
 		int curPage = 1;
-		if(session.getAttribute("cpage") != null) {
-			curPage = (int)session.getAttribute("cpage");
+		if(session.getAttribute("curpage")!=null) {
+			curPage = (int)session.getAttribute("curpage");
 		}
 		
-		if (com.equals("/write_view.do")) {
+		if(com.equals("/write_view.do")) {
 			viewPage = "write_view.jsp";
-		} else if (com.equals("/write.do")) {
+		}else if(com.equals("/write.do")) {
 			command = new BWriteCommand();
 			command.execute(request, response);
 			viewPage = "list.do";
-		} else if (com.equals("/list.do")) {
+		}else if(com.equals("/list.do")) {
 			command = new BListCommand();
 			command.execute(request, response);
 			viewPage = "list.jsp";
-		} else if (com.equals("/content_view.do")) {
+		}else if(com.equals("/content_view.do")) {
 			command = new BContentCommand();
 			command.execute(request, response);
 			viewPage = "content_view.jsp";
-		} else if (com.equals("/modify_view.do")) {
+		}else if(com.equals("/modify_view.do")) {
 			command = new BContentCommand();
 			command.execute(request, response);
 			viewPage = "modify_view.jsp";
-		} else if (com.equals("/modify.do")) {
+		}else if(com.equals("/modify.do")) {
 			command = new BModifyCommand();
 			command.execute(request, response);
 			
 			command = new BContentCommand();
 			command.execute(request, response);
 			viewPage = "content_view.jsp";
-		} else if (com.equals("/delete.do")) {
+		}else if(com.equals("/delete.do")) {
 			command = new BDeleteCommand();
 			command.execute(request, response);
 			viewPage = "list.do?page="+curPage;
-		} else if (com.equals("/reply_view.do")) {
+		}else if(com.equals("/reply_view.do")) {
 			command = new BReplyViewCommand();
 			command.execute(request, response);
 			viewPage = "reply_view.jsp";
-		}  else if (com.equals("/reply.do")) {
+		}else if(com.equals("/reply.do")) {
 			command = new BReplyCommand();
 			command.execute(request, response);
 			viewPage = "list.do?page="+curPage;
-		} 
-		
+		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);
 	}
-	
-}
 
+}

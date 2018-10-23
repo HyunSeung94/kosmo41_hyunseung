@@ -8,14 +8,13 @@ import com.study.jsp.BDao;
 public class BWriteCommand implements BCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) 
-	{
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		String bName = request.getParameter("bName");
 		String bTitle = request.getParameter("bTitle");
 		String bContent = request.getParameter("bContent");
 		
 		BDao dao = BDao.getInstance();
-		dao.Write(bName, bTitle, bContent);
+		dao.write(bName, bTitle, bContent);
 	}
 
 }

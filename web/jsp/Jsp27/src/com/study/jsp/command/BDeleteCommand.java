@@ -8,8 +8,7 @@ import com.study.jsp.BDao;
 public class BDeleteCommand implements BCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) 
-	{
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		String bId = request.getParameter("bId");
 		
 		BDao dao = BDao.getInstance();

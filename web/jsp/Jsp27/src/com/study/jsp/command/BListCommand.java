@@ -13,30 +13,27 @@ import com.study.jsp.BPageInfo;
 public class BListCommand implements BCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) 
-	{
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		int nPage = 1;
 		try {
 			String sPage = request.getParameter("page");
 			nPage = Integer.parseInt(sPage);
-		} catch (Exception e) {
+		}catch(Exception e) {
 			
 		}
 		
 		BDao dao = BDao.getInstance();
-		BPageInfo pinfo = dao.articlePage(nPage);
-		request.setAttribute("page", pinfo);
+		BPageInfo pInfo = dao.articlePage(nPage);
+		request.setAttribute("page", pInfo);
 		
-		nPage = pinfo.getCurPage();
+		nPage = pInfo.getCurPage();
 		
 		HttpSession session = null;
 		session = request.getSession();
-		session.setAttribute("cpage", nPage);
-		
-		
+		session.setAttribute("curpage", nPage);
+
 		ArrayList<BDto> dtos = dao.list(nPage);
 		request.setAttribute("list", dtos);
-			
 		
 	}
 

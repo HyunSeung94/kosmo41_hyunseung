@@ -71,7 +71,7 @@ public class HomeController {
 	@RequestMapping("/write")
 	public String write(HttpServletRequest request, Model model) {
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.writeDao(request.getParameter("mWriter"), request.getParameter("mContent"));
+		dao.writeDao(request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"));
 		return "redirect:list";
 	}
 	
@@ -83,8 +83,48 @@ public class HomeController {
 	@RequestMapping("/delete")
 	public String delete(HttpServletRequest request, Model model) {
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.deleteDao(request.getParameter("mId"));
+		dao.deleteDao(request.getParameter("bId"));
 		return "redirect:list";
 	}
+	
+	@RequestMapping("/content_view")
+	public String content_view(HttpServletRequest request, Model model) {
+		IDao dao = sqlSession.getMapper(IDao.class);
+		model.addAttribute("content_view",dao.content_view(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bHit")));
+		return "/content_view";
+	}
+	
+	@RequestMapping("modify_view")
+	public String modify_view(HttpServletRequest request, Model model) {
+		IDao dao = sqlSession.getMapper(IDao.class);
+		model.addAttribute("content_view",dao.content_view(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bHit")));
+		return "/modify_view";
+	}
+	@RequestMapping("/modify")
+	public String modify(HttpServletRequest request, Model model) {
+		IDao dao = sqlSession.getMapper(IDao.class);
+		dao.modify(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"));
+		return "redirect:list";
+	}
+	
+	@RequestMapping("/reply_view")
+	public String reply_view(HttpServletRequest request, Model model) {
+		IDao dao = sqlSession.getMapper(IDao.class);
+		model.addAttribute("reply_view");
+		return "reply_view";
+	}
+	@RequestMapping("/reply")
+	public String reply(HttpServletRequest request, Model model) {
+		IDao dao = sqlSession.getMapper(IDao.class);
+		dao.reply(request.getParameter("bId"),request.getParameter("bName"),request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bGroup"),request.getParameter("bStep"),request.getParameter("bIndent"));
+		return "redirect:list";
+	}
+//	@RequestMapping("/replyShape")
+//	public String replyShape(HttpServletRequest request, Model model) {
+//		IDao dao = sqlSession.getMapper(IDao.class);
+//		dao.replyShape(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"));
+//		return "redirect:list";
+//	}
+	
 	
 }

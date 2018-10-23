@@ -9,10 +9,8 @@ import com.study.jsp.BDto;
 public class BReplyViewCommand implements BCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) 
-	{
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		String bId = request.getParameter("bId");
-		
 		BDao dao = BDao.getInstance();
 		BDto dto = dao.reply_view(bId);
 		

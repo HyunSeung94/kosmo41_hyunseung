@@ -8,8 +8,7 @@ import com.study.jsp.BDao;
 public class BModifyCommand implements BCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) 
-	{
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		String bId = request.getParameter("bId");
 		String bName = request.getParameter("bName");
 		String bTitle = request.getParameter("bTitle");
