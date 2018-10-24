@@ -116,15 +116,15 @@ public class HomeController {
 	@RequestMapping("/reply")
 	public String reply(HttpServletRequest request, Model model) {
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.reply(request.getParameter("bId"),request.getParameter("bName"),request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bGroup"),request.getParameter("bStep"),request.getParameter("bIndent"));
+		model.addAttribute("reply_view",dao.reply(request.getParameter("bId"),request.getParameter("bName"),request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bGroup"),request.getParameter("bStep"),request.getParameter("bIndent")));
 		return "redirect:list";
 	}
+	
 //	@RequestMapping("/replyShape")
 //	public String replyShape(HttpServletRequest request, Model model) {
 //		IDao dao = sqlSession.getMapper(IDao.class);
 //		dao.replyShape(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"));
 //		return "redirect:list";
 //	}
-	
 	
 }
