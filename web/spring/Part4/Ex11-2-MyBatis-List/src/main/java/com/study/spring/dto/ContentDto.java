@@ -26,7 +26,7 @@ public class ContentDto {
 		this.bContent = bContent;
 		this.bDate = bDate;
 	}
-
+	
 
 	public int getbId() {
 		return bId;

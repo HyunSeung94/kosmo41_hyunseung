@@ -14,7 +14,8 @@ public interface IDao {
 	public ContentDto content_view(String bId,String bName, String bTitle, String bConten,String bHit);
 	public void modify_view(String bId);
 	public void modify(String bId,String bName,String bTitle,String bContent);
-	public String reply_view(String bid);
-	public String reply(String bId, String bName, String bTitle, String bContent, String bGroup, String bStep, String bIndent);
+	public ContentDto reply_view(String bId,String bName, String bTitle, String bConten,String bHit);
+	public void reply(String bId, String bName, String bTitle, String bContent, String bGroup, String bStep, String bIndent);
 	public void replyShape(String strGroup, String strStep);
+	public void upHit(String bId);
 }

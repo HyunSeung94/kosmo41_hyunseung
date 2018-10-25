@@ -90,6 +90,7 @@ public class HomeController {
 	@RequestMapping("/content_view")
 	public String content_view(HttpServletRequest request, Model model) {
 		IDao dao = sqlSession.getMapper(IDao.class);
+		dao.upHit(request.getParameter("bId"));
 		model.addAttribute("content_view",dao.content_view(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bHit")));
 		return "/content_view";
 	}
@@ -110,20 +111,21 @@ public class HomeController {
 	@RequestMapping("/reply_view")
 	public String reply_view(HttpServletRequest request, Model model) {
 		IDao dao = sqlSession.getMapper(IDao.class);
-		model.addAttribute("reply_view");
+		model.addAttribute("reply_view",dao.content_view(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bHit")));
 		return "reply_view";
 	}
 	@RequestMapping("/reply")
 	public String reply(HttpServletRequest request, Model model) {
 		IDao dao = sqlSession.getMapper(IDao.class);
-		model.addAttribute("reply_view",dao.reply(request.getParameter("bId"),request.getParameter("bName"),request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bGroup"),request.getParameter("bStep"),request.getParameter("bIndent")));
+		dao.replyShape(request.getParameter("bGroup"),request.getParameter("bStep"));
+		dao.reply(request.getParameter("bId"),request.getParameter("bName"),request.getParameter("bTitle"),request.getParameter("bContent"),request.getParameter("bGroup"),request.getParameter("bStep"),request.getParameter("bIndent"));
 		return "redirect:list";
 	}
 	
 //	@RequestMapping("/replyShape")
 //	public String replyShape(HttpServletRequest request, Model model) {
 //		IDao dao = sqlSession.getMapper(IDao.class);
-//		dao.replyShape(request.getParameter("bId"),request.getParameter("bName"), request.getParameter("bTitle"),request.getParameter("bContent"));
+//		dao.replyShape(request.getParameter("bGroup"),request.getParameter("bStep"));
 //		return "redirect:list";
 //	}
 	
