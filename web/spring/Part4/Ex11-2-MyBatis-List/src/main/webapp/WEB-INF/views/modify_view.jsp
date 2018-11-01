@@ -11,7 +11,7 @@
 <script>
 	function form_check() {
 		//oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
-
+		
 		document.modify_form.submit();
 	}
 </script>

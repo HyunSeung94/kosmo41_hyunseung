@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.proj4.spacepool.dao.MemContentDao">
+	
+	<select id="listMDao" resultType="com.proj4.spacepool.dto.MemContentDto">
+    	select mId, mName, mTitle, mContent, mDate, mHit, mGroup, mStep, mIndent, mBnum from sp_memcontent where mBnum=#{param1} order by mGroup desc, mStep asc 
+   	</select>
+   
+   	<insert id="writeMDao">
+    	insert into sp_memcontent(mId, mName, mTitle, mContent, mHit, mGroup, mStep, mIndent) values(sp_memContent_seq.nextval, #{param1}, #{param2}, #{param3}, 0, sp_memContent_seq.currval, 0, 0)
+   	</insert>
+   
+   	<select id="contentViewMDao" resultType="com.proj4.spacepool.dto.MemContentDto">
+    	select * from sp_memcontent where mId=#{param1}
+   	</select>
+   
+   	<delete id="deleteMDao">
+		delete from sp_memcontent where mId=#{param1}
+   	</delete>
+   	
+   	<update id="upHitMDao">
+   		update sp_memcontent set mHit=mHit+1 where mId=#{param1}
+   	</update>
+   
+   	<update id="modifyMDao">
+   		update sp_memcontent set mName=#{param2}, mTitle=#{param3}, mContent=#{param4} where mId=#{param1}
+   	</update>
+   
+   	<select id="reply_viewMDao" resultType="com.proj4.spacepool.dto.MemContentDto">
+    	select * from sp_memcontent where mId=#{param1}
+   	</select>
+   	
+   	<insert id="replyMDao">
+    	insert into sp_memcontent(mId, mName, mTitle, mContent, mGroup, mStep, mIndent) values(sp_memContent_seq.nextval, #{param2}, #{param3}, #{param4}, #{param5}, #{param6}+1, #{param7}+1)
+   	</insert>
+   	
+   	<update id="replyShapeMDao">
+   		update sp_memcontent set mStep = mStep+1 where mGroup=#{param1} and mStep > #{param2}
+   	</update>
+</mapper>

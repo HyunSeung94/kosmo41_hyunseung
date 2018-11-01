@@ -31,6 +31,8 @@ public class HomeController {
 //	   public void setDao(ContentDao dao) {
 //	      this.dao = dao;
 //	   }
+	
+	// log4j.xml로들어가라 src/main/resources에 있음
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@Autowired

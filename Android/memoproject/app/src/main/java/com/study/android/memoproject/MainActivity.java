@@ -194,39 +194,6 @@ public class MainActivity extends AppCompatActivity  implements  GoogleApiClient
 
     }
 
-//    public void onBtnClicked(View v){
-//        final Dialog loginDialog = new Dialog(this);
-//        loginDialog.setContentView(R.layout.custom_dialog);
-//        loginDialog.setTitle("로그인 화면");
-//
-//        final EditText username = loginDialog.findViewById(R.id.editText1);
-//        final EditText password = loginDialog.findViewById(R.id.editText2);
-//
-//        Button login = loginDialog.findViewById(R.id.button1);
-//        login.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (username.getText().toString().trim().length() > 0
-//                        && password.getText().toString().trim().length() > 0) {
-//                    Toast.makeText(getApplicationContext(), "로그인 성공",
-//                            Toast.LENGTH_LONG).show();
-//
-//                    loginDialog.dismiss();
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "다시 입력하세요.",
-//                            Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
-//        Button cancel = loginDialog.findViewById(R.id.button2);
-//        cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                loginDialog.dismiss();
-//            }
-//        });
-//        loginDialog.show();
-//    }
 
     //이메일 회원가입
     private void createUser(final String email, final String password){

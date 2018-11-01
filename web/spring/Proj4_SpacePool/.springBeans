@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+<<<<<<< HEAD
+	<pluginVersion><![CDATA[3.9.5.201807030714-RELEASE]]></pluginVersion>
+=======
+	<pluginVersion><![CDATA[3.9.4.201804120850-RELEASE]]></pluginVersion>
+>>>>>>> 580796bf02a8b5ab1167940ce333dba2625cb2cc
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[true]]></enableImports>
+	<configs>
+<<<<<<< HEAD
+		<config>src/main/java/com/proj4/spacepool/dao/mapper/HostContentDao.xml</config>
+	</configs>
+	<autoconfigs>
+=======
+		<config>src/main/java/com/proj4/spacepool/dao/mapper/AccountDao.xml</config>
+		<config>src/main/java/com/proj4/spacepool/dao/mapper/HostContentDao.xml</config>
+		<config>src/main/java/com/proj4/spacepool/dao/mapper/MemCommentDao.xml</config>
+	</configs>
+	<autoconfigs>
+		<config>src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/root-context.xml</config>
+>>>>>>> 580796bf02a8b5ab1167940ce333dba2625cb2cc
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

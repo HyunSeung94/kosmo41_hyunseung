@@ -30,14 +30,14 @@
 			// 여기서부터가 프로그래밍에 잘 필요함! 
 			$.ajax({
 				url : '/jquery/data.html',
-				type : 'GET',
+				type : 'POST',
 				data : queryString3,
 				//dataType : 'json',
 				error : function(xhr, status, error){
-					alert(error);
+					alert(error+"11");
 				},
 				success : function(json){
-					alert(json)
+					alert(json+"22")
 				}
 			});
 		}
@@ -45,7 +45,7 @@
 </head>
 <body>
 	
-	<form name= "testForm" id="testForm">
+	<form name= "testForm1" id="testForm">
 	이름 <input type="text" name="name" id="name" value="Hong Gil-Dong" /><br>
 	아이디 <input type = "text" name="id" id="id" value="1234567" /><br><p>
 	

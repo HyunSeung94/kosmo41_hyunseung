@@ -11,9 +11,10 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.study.spring">
+	<!-- 로그찍히게하는법 -->
+	<!-- <logger name="com.study.spring">
 		<level value="info" />
-	</logger>
+	</logger> -->
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
@@ -34,7 +35,10 @@
 
 	<!-- Root Logger -->
 	<root>
-		<priority value="warn" />
+		<!-- 이게기본-->
+		<!-- <priority value="warn" /> -->
+		<!--로그볼려고하는것  -->
+		<priority value="debug" />
 		<appender-ref ref="console" />
 	</root>
 	
