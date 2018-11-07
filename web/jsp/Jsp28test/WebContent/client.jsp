@@ -100,7 +100,7 @@ html, body {
 			if (roomname == null) {
 		%>
 
-		<h3 align="center">대기실 입니다.</h3>
+		<h3>대기실 입니다.</h3>
 
 		<%
 			} else {
@@ -116,49 +116,61 @@ html, body {
 
 
 	<div class="aside" style="border: 1px solid black">
-	<div class="container">
-		<%
-			if ((String) session.getAttribute("roomlist") == null) {
-		%>
+		<div class="container">
+			<%
+				if ((String) session.getAttribute("roomlist") != null) {
+			%>
 
-		  <!--  <iframe src="list_chat.jsp" id=listchat width="100%" height="400px" frameborder="0" marginwidth="0"></iframe> -->
-		  <jsp:include page="list_chat.jsp" />
+			<!--  <iframe src="list_chat.jsp" id=listchat width="100%" height="400px" frameborder="0" marginwidth="0"></iframe> -->
+			<jsp:include page="list_chat.jsp" />
 
-		<%
-			}
-			session.removeAttribute("roomlist");
-			session.removeAttribute("roomname");
-		%>
-	
-	</div>
+			<%
+				}
+				session.removeAttribute("roomlist");
+				session.removeAttribute("roomname");
+			%>
+
+		</div>
 	</div>
 	<div class="left">
-	<div>
+		<div>
 			<button type="button" onclick="openSocket();"
 				class="btn btn-outline-secondary">Open</button>
-			<!-- <button type="button" onclick="send();">Send</button> -->
 			<button type="button" onclick="closeSocket();"
-				class="btn btn-outline-secondary">Close</button>	
-			<input class="btn btn-outline-secondary" type="button"
-				onclick="javascript:window.location= 'list.do'" value=메인>
-			<input class="btn btn-outline-secondary" type="button" name="roomlist"
-				onclick="javascript:window.location= 'list_chat.do'"
+				class="btn btn-outline-secondary">Close</button>
+			<br> <br> <input class="btn btn-outline-secondary"
+				type="button" onclick="javascript:window.location= 'list.do'"
+				value=메인> <input class="btn btn-outline-secondary"
+				type="button" id="roomlist"
+				onclick="javascript:window.location= 'list_chat.do?roomlist=방리스트'"
 				value="방리스트">
-				<button class="btn btn-outline-secondary" type="button" onclick="roomgo();">초대</button>
-				<button class="btn btn-outline-secondary" type="button" onclick="alllist();">전체리스트</button>
-				<button class="btn btn-outline-secondary" type="button" onclick="myroomlist();">내방리스트</button>
-				<button class="btn btn-outline-secondary" type="button" onclick="roomout();">추방</button>
-			 <%-- <input class="btn btn-outline-secondary" type="button" onclick="javascript:window.location='roomgo?id=<%=id%>&roomname=<%=roomname%>'"
+			<button class="btn btn-outline-secondary" type="button"
+				onclick="alllist();">전체리스트</button>
+			<%
+				if (roomname != null) {
+			%>
+			<button class="btn btn-outline-secondary" type="button"
+				onclick="myroomlist();">내방리스트</button>
+			<button class="btn btn-outline-secondary" type="button"
+				onclick="roomgo();">초대</button>
+			<button class="btn btn-outline-secondary" type="button"
+				onclick="roomout();">추방</button>
+			<button class="btn btn-outline-secondary" type="button"
+				onclick="roompass();">방장위임</button>
+			<%
+				}
+			%>
+			<%-- <input class="btn btn-outline-secondary" type="button" onclick="javascript:window.location='roomgo?id=<%=id%>&roomname=<%=roomname%>'"
 			value="초대"> --%>
-			
-	</div>
-	 	
+
+		</div>
+
 		<!-- 	<div class="row">
 				&nbsp;&nbsp;&nbsp;&nbsp;<div class="col-sm-4" style="border: 1px solid black" align="center" ><h>전체 접속자</h></div>&nbsp;
 
 				<div class="col-sm-4" style="border: 1px solid black" align="center">대기실 접속자</div>&nbsp;&nbsp;&nbsp;&nbsp;
 			</div> -->
-		</div> 
+	</div>
 
 	</div>
 	<!--  Server responses get written here -->
@@ -178,11 +190,12 @@ html, body {
 		%>
 		<div>
 			<input type="text" id="messageinput" />
-			<button type="button" onclick="send();" id="button1" class="btn btn-outline-secondary"
-				>Send</button>
+			<button type="button" onclick="send();" id="button1"
+				class="btn btn-outline-secondary">Send</button>
+
 		</div>
 
-		
+
 	</div>
 
 	<footer class="footer">footer</footer>
@@ -273,7 +286,7 @@ html, body {
 		}
 		
 	 	function waiting(){
-	 		var id = "<%=id%>"; 
+	 		var id = "<%=id%>";
 			var waitingroom = "waitingroom";
 			text = waitingroom;
 			webSocket.send(id + " : " + waitingroom);
@@ -291,9 +304,8 @@ html, body {
 		}
 
 /* 		window.onload = function() { //새창일때 바로 오픈소켓
-			openSocket();
-		} 난안됨  */
-		
+		 }  */
+		 
 	</script>
 
 	<script

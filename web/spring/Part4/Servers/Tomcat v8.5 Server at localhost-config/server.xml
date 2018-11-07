@@ -149,7 +149,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="Ex12-6-WebSocket2" path="/spring22" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-6-WebSocket2"/><Context docBase="Ex12-4FileUpload2" path="/spring20" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-4FileUpload2"/><Context docBase="Proj4_SpacePool" path="/spacepool" reloadable="true" source="org.eclipse.jst.jee.server:Proj4_SpacePool"/></Host>
+      <Context docBase="Ex12-6-WebSocket2" path="/spring22" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-6-WebSocket2"/><Context docBase="Ex12-4FileUpload2" path="/spring20" reloadable="true" source="org.eclipse.jst.jee.server:Ex12-4FileUpload2"/><Context docBase="Proj4_SpacePool" path="/spacepool" reloadable="true" source="org.eclipse.jst.jee.server:Proj4_SpacePool"/><Context docBase="Ex11-2-MyBatis-List" path="/spring30" reloadable="true" source="org.eclipse.jst.jee.server:Ex11-2-MyBatis-List"/><Context docBase="Jsp28test" path="/Jsp28test" reloadable="true" source="org.eclipse.jst.jee.server:Jsp28test"/></Host>
     </Engine>
   </Service>
 </Server>

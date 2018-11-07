@@ -4,7 +4,6 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,8 +71,8 @@
 		<h5 align="right"><%=name%>님 안녕하세요.
 		 
 		<form action="logout.do" method="get" align="right">
-			<input type="submit" value="로그아웃" >&nbsp;&nbsp;&nbsp; <input
-				type="button" value="정보수정"
+			<input type="submit" value="로그아웃"  class="btn btn-outline-secondary">&nbsp;&nbsp;&nbsp; <input
+				type="button" value="정보수정" class="btn btn-outline-secondary"
 				onclick="javascript:window.location= 'modify.jsp'">
 		</form>
 		</h5>
@@ -348,7 +347,7 @@
 				<option value="all">전체</option>
 			</select> 
 			<input type="text" size="20" name="condition" /> &nbsp; <input
-				type="submit" value="검색" />
+				type="submit" value="검색"  class="btn btn-outline-secondary"/>
 		</form>
 	</div>
 
